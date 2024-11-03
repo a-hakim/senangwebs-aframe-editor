@@ -1,5 +1,7 @@
 # SenangWebs A-Frame Editor / Webverse Editor
-A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.com.
+A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.
+
+![SenangWebs Preview](https://github.com/a-hakim/senangwebs-aframe-editor/blob/master/senangwebs-webverse-editor.png)
 
 # A-Frame Inspector
 
