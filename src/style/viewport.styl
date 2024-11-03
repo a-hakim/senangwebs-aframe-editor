@@ -4,35 +4,60 @@
   align-items center
   background-color $bg
   color $white
-  display flex
+  position absolute
   flex-grow 2
-  height 32px
+  display flex
+  height 40px
   font-size 15px
   justify-content space-between
-  left 0
   margin 0 auto
-  right 0
-  top 0
+  right 8px
+  top 8px
+  width calc(100vw - 21rem)
+  border-radius .5rem
+  overflow hidden
+
+#pageToolbar
+  display flex
+  align-items center
+  height 48px
+
+  .button
+    width 48px
+    height 48px
+    border 0
+    background none
+    font-size 16px
+    cursor pointer
+
+  .button:hover
+    background #141417
+
+    svg
+      color $primary
 
 .toolbarButtons
   display flex
   align-items center
-  gap 6px
+  height 48px
 
   *
     margin-left 0 !important
     vertical-align middle
+    height 48px
+    display flex
+    align-items center
 
   a.button
     & svg
-      padding 8px
+      padding 12px
 
     &:not(.active) svg:hover
-      background-color $grayhover
+      background-color #141417
 
   .active svg
-    background-color $primary
-    color #fff
+    background-color #141417
+    color $primary
 
   .active:hover svg
     color #fff !important
@@ -43,20 +68,21 @@
 
 .local-transform label
   color $lightgray
-  padding-left 5px
+  padding-left 8px
+  font-size 14px
 
 .local-transform a.button
   padding-top 0
 
 #cameraSelect
   cursor pointer
-  width 110px
+  width 120px
   .select__dropdown-indicator
     padding-left 3px
     padding-right 3px
 
 #cameraToolbar
-  margin-left 5px
+  margin-right 8px
   align-items center
   display flex
   a
@@ -65,6 +91,7 @@
     background none
   .select__single-value
     color $white
+    font-size 14px
     &:hover
       color $primary
 

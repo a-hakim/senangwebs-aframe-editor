@@ -26,26 +26,18 @@ export default class TransformToolbar extends React.Component {
     };
   }
 
-  onTransformModeChange = (mode) => {
-    this.setState({ selectedTransform: mode });
-  };
-
-  onTransformSpaceChange = () => {
-    Events.emit(
-      'transformspacechanged',
-      this.state.localSpace ? 'world' : 'local'
-    );
-    this.setState({ localSpace: !this.state.localSpace });
-  };
-
   componentDidMount() {
-    Events.on('transformmodechange', this.onTransformModeChange);
-    Events.on('transformspacechange', this.onTransformSpaceChange);
-  }
+    Events.on('transformmodechange', (mode) => {
+      this.setState({ selectedTransform: mode });
+    });
 
-  componentWillUnmount() {
-    Events.off('transformmodechange', this.onTransformModeChange);
-    Events.off('transformspacechange', this.onTransformSpaceChange);
+    Events.on('transformspacechange', () => {
+      Events.emit(
+        'transformspacechanged',
+        this.state.localSpace ? 'world' : 'local'
+      );
+      this.setState({ localSpace: !this.state.localSpace });
+    });
   }
 
   changeTransformMode = (mode) => {
@@ -101,7 +93,7 @@ export default class TransformToolbar extends React.Component {
             htmlFor="local"
             title="Toggle between local and world space transforms"
           >
-            local
+            Local Space Transform
           </label>
         </span>
       </div>

@@ -29,21 +29,15 @@ export default class Component extends React.Component {
     };
   }
 
-  onEntityUpdate = (detail) => {
-    if (detail.entity !== this.props.entity) {
-      return;
-    }
-    if (detail.component === this.props.name) {
-      this.forceUpdate();
-    }
-  };
-
   componentDidMount() {
-    Events.on('entityupdate', this.onEntityUpdate);
-  }
-
-  componentWillUnmount() {
-    Events.off('entityupdate', this.onEntityUpdate);
+    Events.on('entityupdate', (detail) => {
+      if (detail.entity !== this.props.entity) {
+        return;
+      }
+      if (detail.component === this.props.name) {
+        this.forceUpdate();
+      }
+    });
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -125,7 +119,7 @@ export default class Component extends React.Component {
             <span>{subComponentName || componentName}</span>
           </span>
           <div className="componentHeaderActions">
-            <a
+            {/* <a
               title="Copy to clipboard"
               className="button"
               onClick={(event) => {
@@ -140,7 +134,7 @@ export default class Component extends React.Component {
               }}
             >
               <AwesomeIcon icon={faClipboard} />
-            </a>
+            </a> */}
             <a
               title="Remove component"
               className="button"

@@ -32,7 +32,7 @@ body.aframe-inspector-opened
   textarea,
   select
     font-family $monospace
-    font-size 13px
+    font-size 14px
 
   .wf-robotomono-n4-active .Select,
   .wf-robotomono-n4-active code,
@@ -84,7 +84,7 @@ body.aframe-inspector-opened
 
   #scenegraph,
   #rightPanel
-    z-index 9998
+    z-index 20
 
   #sidebar,
   #scenegraph,
@@ -92,27 +92,83 @@ body.aframe-inspector-opened
       cursor default
       user-select none
 
+  #sceneActions
+    display flex
+    flex-direction row
+    position absolute
+    bottom 0
+    z-index 40
+    width calc(20rem - 48px)
+    height 48px
+    background $bg
+    padding-left 48px
+
+  #sceneActions .sceneActionsTitle
+    letter-spacing 0.1em
+    line-height 1rem
+    font-size 0.75rem
+    padding 0.25rem
+    text-align center
+    background #303032
+    color #989899
+    font-weight 500
+
+  #sceneActions .sceneActionsButton
+    display flex
+
   .toggle-edit
-    background-color $red
+    background-color $bg
     box-sizing content-box
-    color #FAFAFA
-    font-size 13px
-    left 3px
+    color white
+    font-size 16px
+    left 0px
     line-height normal
     margin 0
-    padding 6px 10px
     position fixed
     text-align center
     text-decoration none
-    top 3px
-    width 204px
-    z-index 999999999
+    bottom 0px
+    width 0
+    height 0
+    opacity 0
+    display flex
+    align-items center
+    justify-content center
+    z-index 40
+    font-weight 500
+    border-top 1px solid $bgdark
 
-  .toggle-edithover
-    background-color rgb(228, 43, 90)
+  .toggle-edit:hover
+    background-color $bgdark
+    color white
+
+    svg
+      color $red
+
+  .toggle-save,
+  .toggle-live
+    background-color $bg
+    color white
+    height 40px
+    display flex
+    align-items center
+    justify-content center
+    border 0
+    font-size 16px
+    font-weight 500
+    cursor pointer
+
+  .toggle-save:hover,
+  .toggle-live:hover
+    background-color $bgdark
+
+  #saveSceneBtn
+    width 10rem
+
+  #liveSceneBtn
+    width 10rem
 
   input
-    background-color transparent
     border 1px solid #555
     color #fff
 
@@ -138,11 +194,10 @@ body.aframe-inspector-opened
     box-shadow none
 
   input.number
-    background-color transparent !important
     border 0
-    color #2cb7ff !important
+    color white !important
     cursor col-resize
-    font-size 13px
+    font-size 14px
     padding 2px
 
   input.stringfocus,
@@ -156,7 +211,9 @@ body.aframe-inspector-opened
 
   #sidebar
     background $bg
-    width 331px
+    height calc(100% - 3.5rem)
+    width 20rem
+    border-radius .5rem
 
   #sidebar *
     vertical-align middle
@@ -201,13 +258,16 @@ body.aframe-inspector-opened
     visibility hidden
 
   a.button
-    color #bcbcbc
+    color #A3A3A3
     font-size 16px
-    margin-left 10px
+    margin-left 8px
+    display flex
+    align-items center
+    justify-content center
     text-decoration none
 
-    &:hover
-      color $primary
+  a.buttonhover
+    color #1faaf2
 
   @keyframes animateopacity
     from { opacity: 0 }
@@ -223,6 +283,9 @@ body.aframe-inspector-opened
     align-items stretch
     display flex
     justify-content flex-end
+    height calc(100% - .5rem)
+    padding-top 3.5rem
+    padding-right .5rem
 
   #inspectorContainer
     display flex
@@ -233,7 +296,7 @@ body.aframe-inspector-opened
     position fixed
     top 0
     width 100%
-    z-index 999999
+    z-index 20
 
   #scenegraph,
   #viewportBar,
@@ -242,20 +305,20 @@ body.aframe-inspector-opened
 
   .aframe-inspector-opened a-scene .a-canvas
     background-color #191919
-    z-index 9998
+    z-index 9999
 
   .toggle-sidebar
     align-items center
     display flex
     height 100%
     position absolute
-    z-index 9998
+    z-index 40
 
     a
       background-color #262626
-      color #bcbcbc
+      color #A3A3A3
       padding 5px
-      z-index 9998
+      z-index 40
 
     a.hover
       background-color #1faaf2

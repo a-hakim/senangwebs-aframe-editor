@@ -1,5 +1,15 @@
 import React from 'react';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faCog,
+  faCode,
+  faBars,
+  faEye,
+  faCube,
+  faCubes,
+  faFileUpload,
+  faFolderOpen
+} from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from './AwesomeIcon';
 import Events from '../lib/Events';
 import ComponentsSidebar from './components/Sidebar';
@@ -148,13 +158,25 @@ export default class Main extends React.Component {
 
   render() {
     const scene = this.state.sceneEl;
-    const toggleButtonText = this.state.inspectorEnabled
-      ? 'Back to Scene'
-      : 'Inspect Scene';
+    const toggleButtonText = this.state.inspectorEnabled ? (
+      <>
+        {/* <AwesomeIcon icon={faCube} /> */}
+        <p>Show</p>
+      </>
+    ) : (
+      <>
+        {/* <AwesomeIcon icon={faCube} /> */}
+        <p>Edit</p>
+      </>
+    );
 
     return (
       <div>
-        <a className="toggle-edit" onClick={this.toggleEdit}>
+        <a
+          id="previewSceneBtn"
+          className="toggle-edit"
+          onClick={this.toggleEdit}
+        >
           {toggleButtonText}
         </a>
 
@@ -172,9 +194,22 @@ export default class Main extends React.Component {
           />
 
           <div id="viewportBar">
-            <CameraToolbar />
-            <ViewportHUD />
             <TransformToolbar />
+            <div style={{ padding: '0 .5rem' }}>
+              <ViewportHUD />
+            </div>
+            {/* <CameraToolbar /> */}
+            {/* <div id="pageToolbar">
+              <button id="templateToggle" className="button">
+                <AwesomeIcon icon={faFolderOpen} />
+              </button>
+              <button id="editorToggle" className="button">
+                <AwesomeIcon icon={faCode} />
+              </button>
+              <button id="menuToggle" className="button">
+                <AwesomeIcon icon={faBars} />
+              </button>
+            </div> */}
           </div>
 
           <div id="rightPanel">

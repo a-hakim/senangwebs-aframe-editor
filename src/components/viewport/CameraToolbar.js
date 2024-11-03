@@ -60,24 +60,19 @@ export default class CameraToolbar extends React.Component {
     this.justChangedCamera = false;
   }
 
-  onCameraToggle = (data) => {
-    if (this.justChangedCamera) {
-      // Prevent recursion.
-      this.justChangedCamera = false;
-      return;
-    }
-    this.setState({ selectedCamera: data.value });
-  };
-
   componentDidMount() {
-    Events.on('cameratoggle', this.onCameraToggle);
-  }
-
-  componentWillUnmount() {
-    Events.off('cameratoggle', this.onCameraToggle);
+    Events.on('cameratoggle', (data) => {
+      if (this.justChangedCamera) {
+        // Prevent recursion.
+        this.justChangedCamera = false;
+        return;
+      }
+      this.setState({ selectedCamera: data.value });
+    });
   }
 
   onChange(option) {
+    console.log(option);
     this.justChangedCamera = true;
     this.setState({ selectedCamera: option.value });
     Events.emit(option.event, option.payload);

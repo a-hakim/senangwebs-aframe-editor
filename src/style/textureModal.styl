@@ -12,13 +12,14 @@
   z-index 9999999999
 
 .modal h3
-  font-size 18px
-  font-weight 100
+  font-size 16px
+  font-weight 500
   margin 0.6em 0
 
 #textureModal .modal-content
-  height calc(100% - 50px)
-  width calc(100% - 50px)
+  height calc(100% - 96px)
+  width calc(100% - 96px)
+  border-radius 8px
 
 .modal-content
   animation animatetop 0.2s ease-out
@@ -31,13 +32,13 @@
   padding 0
 
 .close
-  color white
+  color #ffffff80
   float right
-  font-size 28px
+  font-size 24px
   font-weight bold
 
-.close:hover,
-.close:focus
+.closehover,
+.closefocus
   color #08f
   cursor pointer
   text-decoration none
@@ -49,6 +50,7 @@
 .modal-body
   overflow auto
   padding 16px
+  height inherit
 
 .modal-footer
   color white
@@ -64,10 +66,10 @@
   padding 15px 3px 3px
 
 .newimage .gallery
-  padding 16px
+  padding 8px
 
 .gallery li
-  border-radius 2px
+  border-radius 8px
   box-shadow 0 0 6px rgba(0, 0, 0, 0.6)
   cursor pointer
   margin 8px
@@ -76,13 +78,13 @@
 
 .gallery li.selected,
 .gallery li:hover
-  box-shadow 0 0 0 2px #1eaaf1
+  box-shadow 0 0 0 2px #00ff99
 
 .gallery li .detail
   background-color #323232
   margin 0
   min-height 60px
-  padding 3px 10px
+  padding 4px 8px 8px 8px
 
 .preview
   padding 10px
@@ -135,40 +137,45 @@
   margin 0 10px 0 0
   padding 5px 10px
 
-.modal button:focus
+.modal buttonfocus
   outline none
 
 .modal button
-  background-color #1eaaf1
+  background-color #09090b
   border none
   color #fff
+  border-radius 8px
+  font-weight 500
+  padding 8px 16px
+  text-transform capitalize
 
-.modal button:hover,
+.modal buttonhover,
 .modal button.hover
   background-color #346392
   text-shadow -1px 1px #27496d
 
-.modal button:active,
+.modal buttonactive,
 .modal button.active
   background-color #27496d
   text-shadow -1px 1px #193047
 
-.modal button:disabled
+.modal buttondisabled
   background-color #888
   cursor none
 
 .newimage
   background-color #323232
-  color #bcbcbc
+  color #A3A3A3
   display flex
-  font-size 13px
+  font-size 14px
   justify-content space-between
-  margin-top 10px
+  margin-top 16px
   overflow auto
-  padding 10px
+  padding 8px
+  border-radius 8px
 
 .newimage input
-  color #1eaaf1
+  color #00ff99
   padding 3px 5px
 
 .texture canvas + input
@@ -205,5 +212,6 @@
   width 350px
 
 .texture canvas
-  border 1px solid $bglight
+  border 1px solid rgba(255, 255, 255, .15)
+  border-radius 8px
   cursor pointer

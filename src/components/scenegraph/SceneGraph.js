@@ -8,16 +8,21 @@ import debounce from 'lodash.debounce';
 import Entity from './Entity';
 import Toolbar from './Toolbar';
 import Events from '../../lib/Events';
+import CameraToolbar from '../viewport/CameraToolbar';
 
 export default class SceneGraph extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    onChange: PropTypes.func,
     scene: PropTypes.object,
     selectedEntity: PropTypes.object,
     visible: PropTypes.bool
   };
 
   static defaultProps = {
-    selectedEntity: ''
+    selectedEntity: '',
+    index: -1,
+    id: 'left-sidebar'
   };
 
   constructor(props) {
@@ -30,31 +35,26 @@ export default class SceneGraph extends React.Component {
       selectedIndex: -1
     };
 
+    this.rebuildEntityOptions = debounce(
+      this.rebuildEntityOptions.bind(this),
+      1000
+    );
     this.updateFilteredEntities = debounce(
       this.updateFilteredEntities.bind(this),
-      100
+      500
     );
   }
-
-  onEntityUpdate = (detail) => {
-    if (detail.component === 'mixin' || detail.component === 'visible') {
-      this.rebuildEntityOptions();
-    }
-  };
 
   componentDidMount() {
     this.rebuildEntityOptions();
     Events.on('entityidchange', this.rebuildEntityOptions);
     Events.on('entitycreated', this.rebuildEntityOptions);
     Events.on('entityclone', this.rebuildEntityOptions);
-    Events.on('entityupdate', this.onEntityUpdate);
-  }
-
-  componentWillUnmount() {
-    Events.off('entityidchange', this.rebuildEntityOptions);
-    Events.off('entitycreated', this.rebuildEntityOptions);
-    Events.off('entityclone', this.rebuildEntityOptions);
-    Events.off('entityupdate', this.onEntityUpdate);
+    Events.on('entityupdate', (detail) => {
+      if (detail.component === 'mixin') {
+        this.rebuildEntityOptions();
+      }
+    });
   }
 
   /**
@@ -71,22 +71,19 @@ export default class SceneGraph extends React.Component {
     for (let i = 0; i < this.state.filteredEntities.length; i++) {
       const entityOption = this.state.filteredEntities[i];
       if (entityOption.entity === entity) {
-        this.setState({ selectedIndex: i });
-        setTimeout(() => {
-          // wait 500ms to allow user to double click on entity
-          document
-            .getElementById('sgnode' + i)
-            ?.scrollIntoView({ behavior: 'smooth' });
-        }, 500);
+        this.setState({ selectedEntity: entity, selectedIndex: i });
         // Make sure selected value is visible in scenegraph
         this.expandToRoot(entity);
-        Events.emit('entityselect', entity);
+        if (this.props.onChange) {
+          this.props.onChange(entity);
+        }
+        Events.emit('entityselect', entity, true);
         found = true;
       }
     }
 
     if (!found) {
-      this.setState({ selectedIndex: -1 });
+      this.setState({ selectedEntity: null, selectedIndex: -1 });
     }
   };
 
@@ -111,11 +108,7 @@ export default class SceneGraph extends React.Component {
           continue;
         }
 
-        entities.push({
-          entity: entity,
-          depth: depth,
-          id: 'sgnode' + entities.length
-        });
+        entities.push({ entity: entity, depth: depth });
 
         treeIterate(entity, depth);
       }
@@ -194,7 +187,7 @@ export default class SceneGraph extends React.Component {
     if (!curr) {
       return false;
     }
-    while (curr?.isEntity) {
+    while (curr !== undefined && curr.isEntity) {
       if (!this.isExpanded(curr)) {
         return false;
       }
@@ -298,6 +291,10 @@ export default class SceneGraph extends React.Component {
 
     return (
       <div id="scenegraph" className="scenegraph">
+        <div className="scenegraph-menubar">
+          <div id="scenegraph-menu-back"></div>
+          <CameraToolbar />
+        </div>
         <div className="scenegraph-toolbar">
           <Toolbar />
           <div className="search">

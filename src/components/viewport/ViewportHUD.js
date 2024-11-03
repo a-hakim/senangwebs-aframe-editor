@@ -6,26 +6,19 @@ export default class ViewportHUD extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hoveredEntity: null
+      hoveredEntity: null,
+      selectedEntity: null
     };
   }
 
-  onRaycasterMouseEnter = (el) => {
-    this.setState({ hoveredEntity: el });
-  };
-
-  onRaycasterMouseLeave = (el) => {
-    this.setState({ hoveredEntity: el });
-  };
-
   componentDidMount() {
-    Events.on('raycastermouseenter', this.onRaycasterMouseEnter);
-    Events.on('raycastermouseleave', this.onRaycasterMouseLeave);
-  }
+    Events.on('raycastermouseenter', (el) => {
+      this.setState({ hoveredEntity: el });
+    });
 
-  componentWillUnmount() {
-    Events.off('raycastermouseenter', this.onRaycasterMouseEnter);
-    Events.off('raycastermouseleave', this.onRaycasterMouseLeave);
+    Events.on('raycastermouseleave', (el) => {
+      this.setState({ hoveredEntity: el });
+    });
   }
 
   render() {

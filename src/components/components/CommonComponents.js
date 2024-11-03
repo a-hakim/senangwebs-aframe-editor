@@ -7,7 +7,10 @@ import DEFAULT_COMPONENTS from './DefaultComponents';
 import PropertyRow from './PropertyRow';
 import Collapsible from '../Collapsible';
 import Mixins from './Mixins';
-import { getEntityClipboardRepresentation } from '../../lib/entity';
+import {
+  updateEntity,
+  getEntityClipboardRepresentation
+} from '../../lib/entity';
 import EntityRepresentation from '../EntityRepresentation';
 import Events from '../../lib/Events';
 import copy from 'clipboard-copy';
@@ -28,24 +31,18 @@ export default class CommonComponents extends React.Component {
     entity: PropTypes.object
   };
 
-  onEntityUpdate = (detail) => {
-    if (detail.entity !== this.props.entity) {
-      return;
-    }
-    if (
-      DEFAULT_COMPONENTS.indexOf(detail.component) !== -1 ||
-      detail.component === 'mixin'
-    ) {
-      this.forceUpdate();
-    }
-  };
-
   componentDidMount() {
-    Events.on('entityupdate', this.onEntityUpdate);
-  }
-
-  componentWillUnmount() {
-    Events.off('entityupdate', this.onEntityUpdate);
+    Events.on('entityupdate', (detail) => {
+      if (detail.entity !== this.props.entity) {
+        return;
+      }
+      if (
+        DEFAULT_COMPONENTS.indexOf(detail.component) !== -1 ||
+        detail.component === 'mixin'
+      ) {
+        this.forceUpdate();
+      }
+    });
   }
 
   renderCommonAttributes() {
@@ -62,8 +59,10 @@ export default class CommonComponents extends React.Component {
       }
       return (
         <PropertyRow
+          onChange={updateEntity}
           key={componentName}
           name={componentName}
+          showHelp={true}
           schema={schema}
           data={data}
           isSingle={true}
@@ -125,7 +124,7 @@ export default class CommonComponents extends React.Component {
       <Collapsible id="componentEntityHeader" className="commonComponents">
         <div className="collapsible-header">
           <EntityRepresentation entity={entity} />
-          {entityButtons}
+          {/* {entityButtons} */}
         </div>
         <div className="collapsible-content">
           <div className="propertyRow">

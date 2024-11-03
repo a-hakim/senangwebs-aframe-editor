@@ -9,29 +9,24 @@ export default class Sidebar extends React.Component {
     visible: PropTypes.bool
   };
 
-  onComponentRemove = (detail) => {
-    if (detail.entity !== this.props.entity) {
-      return;
-    }
-    this.forceUpdate();
-  };
-
-  onComponentAdd = (detail) => {
-    if (detail.entity !== this.props.entity) {
-      return;
-    }
-    this.forceUpdate();
-  };
+  constructor(props) {
+    super(props);
+    this.state = { open: false };
+  }
 
   componentDidMount() {
-    Events.on('componentremove', this.onComponentRemove);
-    Events.on('componentadd', this.onComponentAdd);
+    Events.on('componentremove', (event) => {
+      this.forceUpdate();
+    });
+
+    Events.on('componentadd', (event) => {
+      this.forceUpdate();
+    });
   }
 
-  componentWillUnmount() {
-    Events.off('componentremove', this.onComponentRemove);
-    Events.off('componentadd', this.onComponentAdd);
-  }
+  handleToggle = () => {
+    this.setState({ open: !this.state.open });
+  };
 
   render() {
     const entity = this.props.entity;

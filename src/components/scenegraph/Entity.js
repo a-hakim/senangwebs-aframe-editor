@@ -17,7 +17,6 @@ import Events from '../../lib/Events';
 
 export default class Entity extends React.Component {
   static propTypes = {
-    id: PropTypes.string,
     depth: PropTypes.number,
     entity: PropTypes.object,
     isExpanded: PropTypes.bool,
@@ -26,6 +25,11 @@ export default class Entity extends React.Component {
     selectEntity: PropTypes.func,
     toggleExpandedCollapsed: PropTypes.func
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
   onClick = () => this.props.selectEntity(this.props.entity);
 
@@ -115,7 +119,7 @@ export default class Entity extends React.Component {
     });
 
     return (
-      <div className={className} onClick={this.onClick} id={this.props.id}>
+      <div className={className} onClick={this.onClick}>
         <span>
           {visibilityButton}
           <span

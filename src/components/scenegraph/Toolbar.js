@@ -3,8 +3,9 @@ import {
   faPlus,
   faPause,
   faPlay,
-  faFloppyDisk,
-  faQuestion
+  faCube,
+  faCode,
+  faFloppyDisk
 } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import Events from '../../lib/Events';
@@ -101,10 +102,6 @@ export default class Toolbar extends React.Component {
     this.setState({ isPlaying: true });
   };
 
-  openHelpModal = () => {
-    Events.emit('openhelpmodal');
-  };
-
   render() {
     const watcherTitle = 'Write changes with aframe-watcher.';
 
@@ -117,6 +114,7 @@ export default class Toolbar extends React.Component {
             onClick={this.addEntity}
           >
             <AwesomeIcon icon={faPlus} />
+            <span>Add Entity</span>
           </a>
           <a
             id="playPauseScene"
@@ -125,10 +123,24 @@ export default class Toolbar extends React.Component {
             onClick={this.toggleScenePlaying}
           >
             {this.state.isPlaying ? (
-              <AwesomeIcon icon={faPause} />
+              <>
+                <AwesomeIcon icon={faPause} />
+                <span>Pause Scene</span>
+              </>
             ) : (
-              <AwesomeIcon icon={faPlay} />
+              <>
+                <AwesomeIcon icon={faPlay} />
+                <span>Play Scene</span>
+              </>
             )}
+          </a>
+          {/* <a id="addPrimitives" className="button" title="Add primitives">
+            <AwesomeIcon icon={faCube} />
+            <span>Primitives</span>
+          </a>
+          <a id="codeScene" className="button" title="Code scene">
+            <AwesomeIcon icon={faCode} />
+            <span>Code</span>
           </a>
           <a
             className="gltfIcon"
@@ -143,12 +155,7 @@ export default class Toolbar extends React.Component {
             onClick={this.writeChanges}
           >
             <AwesomeIcon icon={faFloppyDisk} />
-          </a>
-          <div className="helpButtonContainer">
-            <a className="button" title="Help" onClick={this.openHelpModal}>
-              <AwesomeIcon icon={faQuestion} />
-            </a>
-          </div>
+          </a> */}
         </div>
       </div>
     );

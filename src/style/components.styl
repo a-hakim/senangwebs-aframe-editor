@@ -8,20 +8,21 @@ propertyRowDefined() {
 
 .components
   background-color $bg
-  color $white
+  color #A3A3A3
   height 100%
   overflow auto
-  position fixed
-  width 331px
+  width 20rem
+  border-radius .5rem
 
 div.vec2,
 div.vec3,
 div.vec4
-  display inline
+  display flex
+  gap 4px
 
 .vec2 input.number,
 .vec3 input.number
-  width 40px
+  width 50px
 
 .vec4 input.number
   width 34px
@@ -35,6 +36,9 @@ div.vec4
 
 .collapsible-content
   padding 5px 0
+  display flex
+  flex-direction column
+  gap 8px
 
 .componentTitle span
   max-width 200px
@@ -51,10 +55,9 @@ div.vec4
   border-bottom 2px solid $bg
   box-sizing content-box
   cursor pointer
-  height 16px
-  padding 8px 10px 12px 10px
+  padding 12px 10px
   vertical-align bottom
-  font-size 13px
+  font-size 12px
   &:hover
     background $bglighter
 /*
@@ -97,9 +100,9 @@ div.vec4
   margin-top 7px
 
 .propertyRow
-  align-items center
   display flex
-  font-size 13px
+  flex-direction column
+  font-size 12px
   min-height 30px
   padding 2px 15px
 
@@ -107,10 +110,11 @@ div.vec4
     cursor default
     display inline-block
     overflow hidden
-    padding-right 10px
+    padding-bottom 4px
     text-overflow ellipsis
     vertical-align middle
-    width 118px
+    width 180px
+    text-transform capitalize
 
   .map_value
     margin 0 0 0 5px
@@ -132,11 +136,12 @@ div.vec4
   input.string,
   input.number
     background $bgdark
-    color #1faaf2
-    min-height 26px
+    border-radius 8px
+    color white
+    min-height 32px
     padding-bottom 1px
-    padding-left 5px
-    padding-right 5px
+    padding-left 8px
+    padding-right 8px
     padding-top 1px
     &:last-child
       padding-right 0
@@ -144,7 +149,7 @@ div.vec4
   input.string
     padding-left 8px
     box-sizing border-box
-    width 165px
+    width 100%
 
   input[type=text]:focus,
   input.string:focus
@@ -156,7 +161,7 @@ div.vec4
     letter-spacing 1px
 
 .propertyRowDefined .text
-  color #FAFAFA
+  color $red
   font-weight 500
 
 .components *
@@ -216,7 +221,7 @@ a.help-linkhover
   .collapse-button
     display none
   .static
-    height 13px
+    height 14px
   .entityPrint
     font-size 15px
     padding-left 5px
@@ -227,13 +232,18 @@ a.help-linkhover
     color #FAFAFA
 
 #mixinSelect
-  width 160px
+  width 100%
 
 .propertyRow .texture
   display flex
+  gap 4px
   input
     margin-left 0
-    width 120px
 
 #componentEntityHeader .gltfIcon img
   top 0
+
+svg
+  color $white
+  &:hover
+    color $primary
