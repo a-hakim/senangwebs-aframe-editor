@@ -195,9 +195,7 @@ export default class Main extends React.Component {
 
           <div id="viewportBar">
             <TransformToolbar />
-            <div style={{ padding: '0 .5rem' }}>
-              <ViewportHUD />
-            </div>
+            <ViewportHUD />
             {/* <CameraToolbar /> */}
             {/* <div id="pageToolbar">
               <button id="templateToggle" className="button">
