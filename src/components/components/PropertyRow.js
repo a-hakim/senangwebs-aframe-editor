@@ -25,7 +25,6 @@ export default class PropertyRow extends React.Component {
       PropTypes.string.isRequired
     ]),
     entity: PropTypes.object.isRequired,
-    id: PropTypes.string,
     isSingle: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     schema: PropTypes.object.isRequired
@@ -49,7 +48,7 @@ export default class PropertyRow extends React.Component {
 
     const value =
       props.schema.type === 'selector'
-        ? props.entity.getDOMAttribute(props.componentname)[props.name]
+        ? props.entity.getDOMAttribute(props.componentname)?.[props.name]
         : props.data;
 
     const widgetProps = {
@@ -57,14 +56,13 @@ export default class PropertyRow extends React.Component {
       entity: props.entity,
       isSingle: props.isSingle,
       name: props.name,
-      // Wrap updateEntity for tracking.
       onChange: function (name, value) {
-        var propertyName = props.componentname;
-        if (!props.isSingle) {
-          propertyName += '.' + props.name;
-        }
-
-        updateEntity.apply(this, [props.entity, propertyName, value]);
+        updateEntity(
+          props.entity,
+          props.componentname,
+          !props.isSingle ? props.name : '',
+          value
+        );
       },
       value: value
     };
@@ -105,6 +103,14 @@ export default class PropertyRow extends React.Component {
         return <BooleanWidget {...widgetProps} />;
       }
       default: {
+        if (
+          props.schema.type === 'string' &&
+          widgetProps.value &&
+          typeof widgetProps.value !== 'string'
+        ) {
+          // Allow editing a custom type like event-set component schema
+          widgetProps.value = props.schema.stringify(widgetProps.value);
+        }
         return <InputWidget {...widgetProps} />;
       }
     }
@@ -114,7 +120,7 @@ export default class PropertyRow extends React.Component {
     const props = this.props;
     const value =
       props.schema.type === 'selector'
-        ? props.entity.getDOMAttribute(props.componentname)[props.name]
+        ? props.entity.getDOMAttribute(props.componentname)?.[props.name]
         : JSON.stringify(props.data);
     const title =
       props.name + '\n - type: ' + props.schema.type + '\n - value: ' + value;
