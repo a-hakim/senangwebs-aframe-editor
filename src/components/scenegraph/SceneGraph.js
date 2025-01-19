@@ -291,10 +291,6 @@ export default class SceneGraph extends React.Component {
 
     return (
       <div id="scenegraph" className="scenegraph">
-        <div className="scenegraph-menubar">
-          <div id="scenegraph-menu-back"></div>
-          <CameraToolbar />
-        </div>
         <div className="scenegraph-toolbar">
           <Toolbar />
           <div className="search">

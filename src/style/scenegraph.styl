@@ -36,12 +36,9 @@
   flex-direction column
   overflow auto
   width 20rem
-  height 100vh
-
-  .scenegraph-menubar
-    display flex
-    height 40px
-    justify-content space-between
+  height calc(100vh - 40px)
+  top 40px
+  position absolute
 
   .entity
     background $bg

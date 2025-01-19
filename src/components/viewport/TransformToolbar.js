@@ -78,7 +78,7 @@ export default class TransformToolbar extends React.Component {
     return (
       <div id="transformToolbar" className="toolbarButtons">
         {this.renderTransformButtons()}
-        <span className="local-transform">
+        {/* <span className="local-transform">
           <input
             id="local"
             type="checkbox"
@@ -95,7 +95,7 @@ export default class TransformToolbar extends React.Component {
           >
             Local Space Transform
           </label>
-        </span>
+        </span> */}
       </div>
     );
   }

@@ -194,20 +194,14 @@ export default class Main extends React.Component {
           />
 
           <div id="viewportBar">
-            <TransformToolbar />
-            <ViewportHUD />
-            {/* <CameraToolbar /> */}
-            {/* <div id="pageToolbar">
-              <button id="templateToggle" className="button">
-                <AwesomeIcon icon={faFolderOpen} />
-              </button>
-              <button id="editorToggle" className="button">
-                <AwesomeIcon icon={faCode} />
-              </button>
-              <button id="menuToggle" className="button">
-                <AwesomeIcon icon={faBars} />
-              </button>
-            </div> */}
+            <div className="scenegraph-menubar">
+              <div id="scenegraph-menu-back"></div>
+              <TransformToolbar />
+            </div>
+            <CameraToolbar />
+            <div className="viewportHud-menubar">
+              <ViewportHUD />
+            </div>
           </div>
 
           <div id="rightPanel">
