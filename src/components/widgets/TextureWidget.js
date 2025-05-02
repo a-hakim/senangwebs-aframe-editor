@@ -88,7 +88,7 @@ export default class TextureWidget extends React.Component {
     this.setValue(this.props.value || '');
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     var component = this.props.entity.components[this.props.componentname];
     if (!component) {
       return;
@@ -97,7 +97,8 @@ export default class TextureWidget extends React.Component {
     var newValue = component.attrValue && component.attrValue[this.props.name];
 
     // This will be triggered typically when the element is changed directly with element.setAttribute
-    if (newValue && newValue !== this.state.value) {
+    // Compare with prevProps.value instead of this.state.value to avoid infinite loops
+    if (newValue && newValue !== prevProps.value) {
       this.setValue(newValue);
     }
   }
