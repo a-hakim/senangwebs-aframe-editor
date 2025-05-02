@@ -4,6 +4,7 @@ import {
   faCog,
   faCode,
   faBars,
+  faTimes,
   faEye,
   faCube,
   faCubes,
@@ -33,7 +34,7 @@ export default class Main extends React.Component {
       sceneEl: AFRAME.scenes[0],
       visible: {
         scenegraph: true,
-        attributes: true
+        attributes: false // Set this to false
       }
     };
 
@@ -101,6 +102,10 @@ export default class Main extends React.Component {
     });
   }
 
+  handleClose = () => {
+    Events.emit('togglesidebar', { which: 'attributes' });
+  };
+
   onCloseHelpModal = (value) => {
     this.setState({ isHelpOpen: false });
   };
@@ -119,28 +124,6 @@ export default class Main extends React.Component {
       AFRAME.INSPECTOR.open();
     }
   };
-
-  renderComponentsToggle() {
-    if (
-      !this.state.inspectorEnabled ||
-      !this.state.entity ||
-      this.state.visible.attributes
-    ) {
-      return null;
-    }
-    return (
-      <div className="toggle-sidebar right">
-        <a
-          onClick={() => {
-            Events.emit('togglesidebar', { which: 'attributes' });
-          }}
-          title="Show components"
-        >
-          <AwesomeIcon icon={faPlus} />
-        </a>
-      </div>
-    );
-  }
 
   renderSceneGraphToggle() {
     if (!this.state.inspectorEnabled || this.state.visible.scenegraph) {
@@ -177,33 +160,46 @@ export default class Main extends React.Component {
         </a>
 
         {this.renderSceneGraphToggle()}
-        {this.renderComponentsToggle()}
 
         <div
           id="inspectorContainer"
           className={this.state.inspectorEnabled ? '' : 'hidden'}
         >
-          <SceneGraph
-            scene={scene}
-            selectedEntity={this.state.entity}
-            visible={this.state.visible.scenegraph}
-          />
-
-          <div id="viewportBar">
+          <div id="leftPanel">
             <div className="scenegraph-menubar">
               <div id="scenegraph-menu-back"></div>
               <TransformToolbar />
             </div>
-            <CameraToolbar />
-            <div className="viewportHud-menubar">
-              <ViewportHUD />
-            </div>
+            <SceneGraph
+              scene={scene}
+              selectedEntity={this.state.entity}
+              visible={this.state.visible.scenegraph}
+            />
           </div>
 
-          <div id="rightPanel">
+          <div id="viewportBar">
+            <CameraToolbar />
+            {/* <div className="viewportHud-menubar">
+              <ViewportHUD />
+            </div> */}
+          </div>
+
+          <div
+            id="rightPanel"
+            className={this.state.visible.attributes ? '' : 'hidden'}
+          >
+            <div className="componentHeader title">
+              {/* <a>
+                <AwesomeIcon icon={faBars} />
+              </a> */}
+              <h3>COMMON PROPERTIES</h3>
+              <a onClick={this.handleClose}>
+                <AwesomeIcon icon={faTimes} />
+              </a>
+            </div>
             <ComponentsSidebar
               entity={this.state.entity}
-              visible={this.state.visible.attributes}
+              visible={this.state.visible.attributes} // This prop might become redundant depending on CSS, but leave for now
             />
           </div>
         </div>

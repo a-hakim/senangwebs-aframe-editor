@@ -209,6 +209,8 @@ body.aframe-inspector-opened
   #sidebar
     background $bg
     width 20rem
+    height calc(100vh - 40px)
+    padding-bottom 15px
 
   #sidebar *
     vertical-align middle
@@ -275,15 +277,10 @@ body.aframe-inspector-opened
     cursor grabbing
 
   #rightPanel
-    align-items stretch
     display flex
-    justify-content flex-end
-    height calc(100vh - 40px)
-    padding-top 0rem
-    padding-right 0
-    position absolute
-    right 0
-    top 40px
+    flex-direction column
+    justify-content center
+    height 100vh
 
   #inspectorContainer
     display flex
@@ -298,6 +295,7 @@ body.aframe-inspector-opened
 
   #scenegraph,
   #viewportBar,
+  #leftPanel,
   #rightPanel
     pointer-events all
 

@@ -29,6 +29,17 @@
       color #666
       cursor default
 
+#leftPanel
+  display flex
+  flex-direction column
+
+.scenegraph-menubar
+    display flex
+    height 40px
+    width 20rem
+    justify-content space-between
+    background-color $bg
+
 #scenegraph
   background $bg
   border-top 1px solid #111
@@ -37,8 +48,6 @@
   overflow auto
   width 20rem
   height calc(100vh - 40px)
-  top 40px
-  position absolute
 
   .entity
     background $bg

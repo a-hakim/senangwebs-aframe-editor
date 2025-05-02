@@ -46,10 +46,6 @@ export default class CommonComponents extends React.Component {
     });
   }
 
-  handleClose = () => {
-    Events.emit('togglesidebar', { which: 'attributes' });
-  };
-
   renderCommonAttributes() {
     const entity = this.props.entity;
     return ['position', 'rotation', 'scale', 'visible'].map((componentName) => {
@@ -136,8 +132,8 @@ export default class CommonComponents extends React.Component {
     return (
       <Collapsible id="componentEntityHeader" className="commonComponents">
         <div className="collapsible-header sidebar-header">
-          <AwesomeIcon icon={faBars} /> COMMON PROPERTIES
-          {entityButtons}
+          <EntityRepresentation entity={entity} />
+          {/* {entityButtons} */}
         </div>
         <div className="collapsible-content">
           <div className="propertyRow">
