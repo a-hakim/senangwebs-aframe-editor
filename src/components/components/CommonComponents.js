@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import { InputWidget } from '../widgets';
 import DEFAULT_COMPONENTS from './DefaultComponents';
@@ -136,7 +136,7 @@ export default class CommonComponents extends React.Component {
     return (
       <Collapsible id="componentEntityHeader" className="commonComponents">
         <div className="collapsible-header sidebar-header">
-          COMMON PROPERTIES
+          <AwesomeIcon icon={faBars} /> COMMON PROPERTIES
           {entityButtons}
         </div>
         <div className="collapsible-content">
