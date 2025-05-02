@@ -1,7 +1,7 @@
 {
-  "name": "aframe-inspector",
+  "name": "senangwebs-aframe-editor",
   "version": "1.5.0",
-  "description": "A visual inspector tool for A-Frame.",
+  "description": "A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.",
   "main": "dist/aframe-inspector.min.js",
   "scripts": {
     "build": "webpack --progress",

@@ -158,17 +158,8 @@ export default class Main extends React.Component {
 
   render() {
     const scene = this.state.sceneEl;
-    const toggleButtonText = this.state.inspectorEnabled ? (
-      <>
-        {/* <AwesomeIcon icon={faCube} /> */}
-        <p>Show</p>
-      </>
-    ) : (
-      <>
-        {/* <AwesomeIcon icon={faCube} /> */}
-        <p>Edit</p>
-      </>
-    );
+    // Simplified toggle button text logic
+    const buttonText = this.state.inspectorEnabled ? 'Show' : 'Edit';
 
     return (
       <div>
@@ -177,7 +168,8 @@ export default class Main extends React.Component {
           className="toggle-edit"
           onClick={this.toggleEdit}
         >
-          {toggleButtonText}
+          {/* <AwesomeIcon icon={faCube} /> */}
+          <p>{buttonText}</p>
         </a>
 
         {this.renderSceneGraphToggle()}

@@ -3,14 +3,13 @@ import {
   faPlus,
   faPause,
   faPlay,
-  faCube,
-  faCode,
-  faFloppyDisk
+  // faCube, // Removed as it's not used directly here anymore
+  // faCode, // Removed as it's not used directly here anymore
+  // faFloppyDisk // Removed as it's not used directly here anymore
 } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import Events from '../../lib/Events';
-import { saveBlob } from '../../lib/utils';
-import GLTFIcon from '../../../assets/gltf.svg';
+import ModalPrimitive from '../modals/ModalPrimitive'; // Import the new modal component
 
 function filterHelpers(scene, visible) {
   scene.traverse((o) => {
@@ -48,7 +47,8 @@ export default class Toolbar extends React.Component {
     super(props);
 
     this.state = {
-      isPlaying: false
+      isPlaying: false,
+      isAddEntityModalOpen: false // Add state for modal visibility
     };
   }
 
@@ -70,24 +70,19 @@ export default class Toolbar extends React.Component {
     );
   }
 
-  addEntity() {
-    Events.emit('entitycreate', { element: 'a-entity', components: {} });
-  }
-
-  /**
-   * Try to write changes with aframe-inspector-watcher.
-   */
-  writeChanges = () => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:51234/save');
-    xhr.onerror = () => {
-      alert(
-        'aframe-watcher not running. This feature requires a companion service running locally. npm install aframe-watcher to save changes back to file. Read more at https://github.com/supermedium/aframe-watcher'
-      );
-    };
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify(AFRAME.INSPECTOR.history.updates));
+  // Renamed original addEntity to toggleAddEntityModal
+  toggleAddEntityModal = () => {
+    this.setState({ isAddEntityModalOpen: !this.state.isAddEntityModalOpen });
   };
+
+  // New function to handle entity creation based on modal selection
+  createEntity = (primitiveType) => {
+    if (primitiveType) {
+      Events.emit('entitycreate', { element: primitiveType, components: {} });
+    }
+    this.setState({ isAddEntityModalOpen: false }); // Close modal after selection or cancellation
+  };
+
 
   toggleScenePlaying = () => {
     if (this.state.isPlaying) {
@@ -103,7 +98,7 @@ export default class Toolbar extends React.Component {
   };
 
   render() {
-    const watcherTitle = 'Write changes with aframe-watcher.';
+    // const watcherTitle = 'Write changes with aframe-watcher.'; // Keep or remove as needed
 
     return (
       <div id="toolbar">
@@ -111,11 +106,12 @@ export default class Toolbar extends React.Component {
           <a
             className="button"
             title="Add a new entity"
-            onClick={this.addEntity}
+            onClick={this.toggleAddEntityModal} // Changed onClick handler
           >
             <AwesomeIcon icon={faPlus} />
             <span>Add Entity</span>
           </a>
+          {/* Play/Pause Button */}
           <a
             id="playPauseScene"
             className="button"
@@ -134,29 +130,17 @@ export default class Toolbar extends React.Component {
               </>
             )}
           </a>
-          {/* <a id="addPrimitives" className="button" title="Add primitives">
-            <AwesomeIcon icon={faCube} />
-            <span>Primitives</span>
-          </a>
-          <a id="codeScene" className="button" title="Code scene">
-            <AwesomeIcon icon={faCode} />
-            <span>Code</span>
-          </a>
-          <a
-            className="gltfIcon"
-            title="Export to GLTF"
-            onClick={this.exportSceneToGLTF}
-          >
-            <img src={GLTFIcon} />
-          </a>
-          <a
-            className="button"
-            title={watcherTitle}
-            onClick={this.writeChanges}
-          >
-            <AwesomeIcon icon={faFloppyDisk} />
-          </a> */}
+          {/* Add other buttons like export, save if needed */}
         </div>
+
+        {/* Conditionally render the modal */}
+        {this.state.isAddEntityModalOpen && (
+          <ModalPrimitive
+            isOpen={this.state.isAddEntityModalOpen}
+            onClose={this.toggleAddEntityModal} // Pass function to close modal
+            onSelectPrimitive={this.createEntity} // Pass function to create entity
+          />
+        )}
       </div>
     );
   }

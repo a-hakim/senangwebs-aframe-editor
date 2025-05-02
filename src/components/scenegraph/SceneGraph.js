@@ -128,17 +128,17 @@ export default class SceneGraph extends React.Component {
   };
 
   onFilterKeyUp = (event) => {
-    if (event.keyCode === 27) {
+    if (event.key === 'Escape') { // Use event.key for consistency
       this.clearFilter();
     }
   };
 
   onKeyDown = (event) => {
-    switch (event.keyCode) {
-      case 37: // left
-      case 38: // up
-      case 39: // right
-      case 40: // down
+    switch (event.key) {
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'ArrowRight':
+      case 'ArrowDown':
         event.preventDefault();
         event.stopPropagation();
         break;
@@ -150,23 +150,23 @@ export default class SceneGraph extends React.Component {
       return;
     }
 
-    switch (event.keyCode) {
-      case 37: // left
+    switch (event.key) {
+      case 'ArrowLeft':
         if (this.isExpanded(this.props.selectedEntity)) {
           this.toggleExpandedCollapsed(this.props.selectedEntity);
         }
         break;
-      case 38: // up
+      case 'ArrowUp':
         this.selectIndex(
           this.previousExpandedIndexTo(this.state.selectedIndex)
         );
         break;
-      case 39: // right
+      case 'ArrowRight':
         if (!this.isExpanded(this.props.selectedEntity)) {
           this.toggleExpandedCollapsed(this.props.selectedEntity);
         }
         break;
-      case 40: // down
+      case 'ArrowDown':
         this.selectIndex(this.nextExpandedIndexTo(this.state.selectedIndex));
         break;
     }
