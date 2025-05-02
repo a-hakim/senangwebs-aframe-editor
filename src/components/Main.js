@@ -85,7 +85,11 @@ export default class Main extends React.Component {
     );
 
     Events.on('entityselect', (entity) => {
-      this.setState({ entity: entity });
+      // Set the selected entity and ensure the attributes sidebar is visible
+      this.setState({
+        entity: entity,
+        visible: { ...this.state.visible, attributes: true }
+      });
     });
 
     Events.on('inspectortoggle', (enabled) => {

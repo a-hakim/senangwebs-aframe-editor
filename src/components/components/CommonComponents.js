@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import { InputWidget } from '../widgets';
 import DEFAULT_COMPONENTS from './DefaultComponents';
@@ -44,6 +45,10 @@ export default class CommonComponents extends React.Component {
       }
     });
   }
+
+  handleClose = () => {
+    Events.emit('togglesidebar', { which: 'attributes' });
+  };
 
   renderCommonAttributes() {
     const entity = this.props.entity;
@@ -96,6 +101,14 @@ export default class CommonComponents extends React.Component {
     const entityButtons = (
       <div>
         <a
+          title="Close components"
+          onClick={(event) => {
+            this.handleClose();
+          }}
+        >
+          <AwesomeIcon icon={faTimes} />
+        </a>
+        {/* <a
           title="Export entity to GLTF"
           className="gltfIcon"
           onClick={(event) => {
@@ -116,15 +129,15 @@ export default class CommonComponents extends React.Component {
           }}
         >
           <AwesomeIcon icon={faClipboard} />
-        </a>
+        </a> */}
       </div>
     );
 
     return (
       <Collapsible id="componentEntityHeader" className="commonComponents">
-        <div className="collapsible-header">
-          <EntityRepresentation entity={entity} />
-          {/* {entityButtons} */}
+        <div className="collapsible-header sidebar-header">
+          COMMON PROPERTIES
+          {entityButtons}
         </div>
         <div className="collapsible-content">
           <div className="propertyRow">

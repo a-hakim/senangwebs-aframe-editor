@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { AwesomeIcon } from '../AwesomeIcon'; // Assuming AwesomeIcon is in the parent directory
 import ComponentsContainer from './ComponentsContainer';
+import EntityRepresentation from '../EntityRepresentation';
 import Events from '../../lib/Events';
 
 export default class Sidebar extends React.Component {
@@ -26,6 +29,10 @@ export default class Sidebar extends React.Component {
 
   handleToggle = () => {
     this.setState({ open: !this.state.open });
+  };
+
+  handleClose = () => {
+    Events.emit('togglesidebar', { which: 'attributes' });
   };
 
   render() {
