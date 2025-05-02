@@ -104,18 +104,57 @@
   margin-right 8px
   align-items center
   display flex
-  background-color $bgdark
-  border-radius 8px
-  height 28px
-  a
-    margin-right 10px
-  .select__control
-    background none
-  .select__single-value
-    color $white
-    font-size 14px
-    &:hover
-      color $primary
+
+  #cameraSelect
+    width 160px // Adjust width to accommodate icon + text
+    .select__control
+      background-color $bgdark
+      border none
+      min-height 30px // Adjust height
+      height 30px
+      box-shadow none
+      &:hover
+        border-color $grey
+    .select__value-container
+      padding 0 4px
+    .select__single-value
+      color $white
+      display flex
+      align-items center
+      svg
+        margin-right 8px
+        width 16px
+        height 16px
+    .select__indicator-separator
+      display none
+    .select__dropdown-indicator
+      padding 4px
+      color $grey
+      &:hover
+        color $white
+    .select__menu
+      background-color $bgdark
+    .select__option
+      background-color $bgdark
+      color $white
+      display flex
+      align-items center
+      svg
+        margin-right 8px
+        width 24px
+        height 24px
+      &:hover
+        background-color #141417
+        color $primary
+        svg
+          fill $primary
+      &--is-focused
+        background-color #141417 // Keep focus style consistent with hover
+      &--is-selected
+        background-color $bgdark // Keep selected background subtle if needed
+        color $primary
+        svg
+          fill $primary
 
 #viewportHud
   display none
