@@ -28,9 +28,52 @@ export default class Entity extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isDragOver: false, dragPosition: null };
   }
 
+  onDragStart = (e) => {
+    e.stopPropagation();
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('application/entity-id', this.props.entity.id);
+    this.setState({ dragging: true });
+  };
+
+  onDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const bounding = e.currentTarget.getBoundingClientRect();
+    const offsetY = e.clientY - bounding.top;
+    let dragPosition = 'center';
+    if (offsetY < bounding.height * 0.25) dragPosition = 'above';
+    else if (offsetY > bounding.height * 0.75) dragPosition = 'below';
+    else dragPosition = 'center';
+    if (!this.state.isDragOver || this.state.dragPosition !== dragPosition) {
+      this.setState({ isDragOver: true, dragPosition });
+    }
+  };
+
+  onDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.state.isDragOver)
+      this.setState({ isDragOver: false, dragPosition: null });
+  };
+
+  onDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ isDragOver: false, dragPosition: null });
+    const draggedId = e.dataTransfer.getData('application/entity-id');
+    if (draggedId && draggedId !== this.props.entity.id) {
+      if (this.props.onDropEntity) {
+        this.props.onDropEntity(
+          draggedId,
+          this.props.entity.id,
+          this.state.dragPosition
+        );
+      }
+    }
+  };
   onClick = () => this.props.selectEntity(this.props.entity);
 
   onDoubleClick = () => Events.emit('objectfocus', this.props.entity.object3D);
@@ -115,11 +158,35 @@ export default class Entity extends React.Component {
       active: this.props.isSelected,
       entity: true,
       novisible: !visible,
-      option: true
+      option: true,
+      'drag-over': this.state.isDragOver,
+      'drag-above':
+        this.state.isDragOver && this.state.dragPosition === 'above',
+      'drag-below':
+        this.state.isDragOver && this.state.dragPosition === 'below',
+      'drag-center':
+        this.state.isDragOver && this.state.dragPosition === 'center'
     });
 
     return (
-      <div className={className} onClick={this.onClick}>
+      <div
+        className={className}
+        onClick={this.onClick}
+        draggable
+        onDragStart={this.onDragStart}
+        onDragOver={this.onDragOver}
+        onDragLeave={this.onDragLeave}
+        onDrop={this.onDrop}
+      >
+        {this.state.isDragOver && this.state.dragPosition === 'above' && (
+          <div className="drop-indicator drop-above" />
+        )}
+        {/* {this.state.isDragOver && this.state.dragPosition === 'center' && (
+          <div className="drop-indicator drop-center" />
+        )} */}
+        {this.state.isDragOver && this.state.dragPosition === 'below' && (
+          <div className="drop-indicator drop-below" />
+        )}
         <span>
           {visibilityButton}
           <span

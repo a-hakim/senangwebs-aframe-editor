@@ -75,7 +75,7 @@ export default class EntityRepresentation extends React.Component {
             &nbsp;{entityName}
           </span>
         )}
-        {icons.length > 0 && <span className="entityIcons">{icons}</span>}
+        {/* {icons.length > 0 && <span className="entityIcons">{icons}</span>} */}
         <span className="entityCloseTag">{'>'}</span>
       </span>
     );

@@ -54,17 +54,65 @@
     cursor pointer
     display flex
     justify-content space-between
-    padding 10px
+    padding 8px
     white-space nowrap
+    transition background 0.2s, box-shadow 0.2s
+    position relative
+
+    // first <span> element child
+
+    span:first-child
+      max-width 260px
+      overflow hidden
+
+      i:first-child
+        margin-right 8px
+
+    &.drag-above .drop-indicator.drop-above
+      position absolute
+      left: 0
+      right: 0
+      top: 0
+      height: 4px
+      background white
+      border-radius 2px
+      z-index 2
+      transition background 0.15s, opacity 0.15s
+      opacity 1
+
+    &.drag-below .drop-indicator.drop-below
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 4px
+      background: #00FF99
+      border-radius: 2px
+      z-index: 2
+      transition: background 0.15s, opacity 0.15s
+      opacity: 1
+
+    &.drag-center .drop-indicator.drop-center
+      position: absolute
+      left: 4px
+      right: 4px
+      top: 25%
+      height: 50%
+      background: rgba(24,136,193,0.15)
+      border-radius: 4px
+      z-index: 1
+      transition: background 0.15s, opacity 0.15s
+      opacity: 1
 
     &:hover
-      background #1d2f39
+      background #ffffff1a
 
     &.active
-      background-color #09090B
+      background-color #ffffff1a
+      border-top 2px solid #00FF99
       color #fff
       .component:hover
-        color #1888c1
+        color yellow
       .entityActions
         display flex
 
@@ -83,14 +131,32 @@
         .id
           color #626262
 
+    &.drag-over
+      background #ffffff1a !important
+      color #fff !important
+      box-shadow 0 0 0 0 #00FF99
+      z-index 2
+      transition background 0.2s, box-shadow 0.2s
+
+  .drop-indicator
+    height 4px
+    background #ffffff1a
+    border-radius 2px
+    margin 0 4px
+    opacity 0.85
+    transition background 0.2s
+    position relative
+    z-index 3
+
   .component:hover
-    color #1faaf2
+    color #09090B
 
   .entityIcons
     margin-left 2px
 
   .entityActions
-    display none
+    display flex
+    gap 4px
     margin 0 4px
 
     .button
@@ -118,7 +184,7 @@
     display inline-block
     text-align center
     width 14px
-    margin-left 8px
+    margin-right 4px
 
   .fa-eye
     color #bbb

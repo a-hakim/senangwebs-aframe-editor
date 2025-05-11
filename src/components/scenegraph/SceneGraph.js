@@ -128,7 +128,8 @@ export default class SceneGraph extends React.Component {
   };
 
   onFilterKeyUp = (event) => {
-    if (event.key === 'Escape') { // Use event.key for consistency
+    if (event.key === 'Escape') {
+      // Use event.key for consistency
       this.clearFilter();
     }
   };
@@ -272,8 +273,58 @@ export default class SceneGraph extends React.Component {
           isSelected={this.props.selectedEntity === entityOption.entity}
           selectEntity={this.selectEntity}
           toggleExpandedCollapsed={this.toggleExpandedCollapsed}
+          onDropEntity={this.handleDropEntity}
         />
       );
+    });
+  };
+
+  handleDropEntity = (draggedId, targetId, dragPosition) => {
+    if (!draggedId || !targetId || draggedId === targetId) return;
+    const draggedOption = this.state.entities.find(
+      (opt) => opt.entity.id === draggedId
+    );
+    const targetOption = this.state.entities.find(
+      (opt) => opt.entity.id === targetId
+    );
+    if (!draggedOption || !targetOption) return;
+    const draggedEntity = draggedOption.entity;
+    const targetEntity = targetOption.entity;
+    // Prevent nesting inside itself or its descendants
+    let curr = targetEntity;
+    while (curr) {
+      if (curr === draggedEntity) return;
+      curr = curr.parentNode;
+    }
+    // Remove from old parent
+    if (draggedEntity.parentNode) {
+      draggedEntity.parentNode.removeChild(draggedEntity);
+    }
+    if (dragPosition === 'above') {
+      targetEntity.parentNode.insertBefore(draggedEntity, targetEntity);
+    } else if (dragPosition === 'below') {
+      // NEST as child inside hovered element
+      targetEntity.appendChild(draggedEntity);
+      // Ensure the parent is expanded after nesting
+      this.state.expandedElements.set(targetEntity, true);
+      this.setState({ expandedElements: this.state.expandedElements });
+    } else {
+      // Default: rearrange among siblings (insert after target)
+      if (targetEntity.nextSibling) {
+        targetEntity.parentNode.insertBefore(
+          draggedEntity,
+          targetEntity.nextSibling
+        );
+      } else {
+        targetEntity.parentNode.appendChild(draggedEntity);
+      }
+    }
+    this.rebuildEntityOptions();
+    this.selectEntity(draggedEntity);
+    Events.emit('entityreparented', {
+      dragged: draggedEntity,
+      target: targetEntity,
+      position: dragPosition
     });
   };
 
