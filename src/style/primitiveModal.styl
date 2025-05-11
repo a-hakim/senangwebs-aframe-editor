@@ -4,14 +4,14 @@
   left 0
   right 0
   bottom 0
-  background-color rgba(0, 0, 0, 0.5)
+  backdrop-filter blur(4px)
+  background-color rgba(0, 0, 0, .5)
   display flex
   justify-content center
   align-items center
   z-index 1000 /* Ensure modal is on top */
 
 .modal-content
-  background-color #333 /* Dark background for the modal */
   color #eee /* Light text */
   border-radius 8px
   min-width 300px
@@ -41,23 +41,23 @@
   gap 16px
 
 .primitive-button
-  background-color #555 /* Button background */
-  color #eee /* Button text color */
-  border 1px solid #777
+  background-color #09090B
+  color white
   padding 10px 15px
-  border-radius 4px
+  border-radius 8px
   cursor pointer
   transition background-color 0.2s ease, transform 0.1s ease
-  font-size 0.9em
   text-align center
   aspect-ratio 1
+  border none
 
 .primitive-button:hover
-  background-color #666 /* Darker hover */
+  background-color #00FF99
+  color #18181B
 
 .primitive-button:active
-  background-color #444
-  transform scale(0.98) /* Slight press effect */
+  background-color #00FF99
+  color #18181B
 
 .modal-close-button
   background-color #777 /* Different color for cancel */
