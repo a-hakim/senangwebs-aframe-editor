@@ -44,8 +44,8 @@ export default class Entity extends React.Component {
     const bounding = e.currentTarget.getBoundingClientRect();
     const offsetY = e.clientY - bounding.top;
     let dragPosition = 'center';
-    if (offsetY < bounding.height * 0.25) dragPosition = 'above';
-    else if (offsetY > bounding.height * 0.75) dragPosition = 'below';
+    if (offsetY < bounding.height * 0.5) dragPosition = 'above';
+    else if (offsetY > bounding.height * 0.5) dragPosition = 'below';
     else dragPosition = 'center';
     if (!this.state.isDragOver || this.state.dragPosition !== dragPosition) {
       this.setState({ isDragOver: true, dragPosition });

@@ -920,15 +920,18 @@
       };
 
       this.update = function(updateScale) {
-        if (scope.object === undefined) return;
+        if (scope.object === undefined || scope.object === null) return;
 
-        scope.object.updateMatrixWorld();
+        scope.object.updateMatrixWorld && scope.object.updateMatrixWorld();
+        if (!scope.object.matrixWorld) return;
         worldPosition.setFromMatrixPosition(scope.object.matrixWorld);
         worldRotation.setFromRotationMatrix(
           tempMatrix.extractRotation(scope.object.matrixWorld)
         );
 
-        camera.updateMatrixWorld();
+        if (!camera) return;
+        camera.updateMatrixWorld && camera.updateMatrixWorld();
+        if (!camera.matrixWorld) return;
         camPosition.setFromMatrixPosition(camera.matrixWorld);
         camRotation.setFromRotationMatrix(
           tempMatrix.extractRotation(camera.matrixWorld)

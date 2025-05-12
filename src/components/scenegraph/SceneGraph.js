@@ -55,6 +55,7 @@ export default class SceneGraph extends React.Component {
         this.rebuildEntityOptions();
       }
     });
+    Events.on('entityreparented', this.rebuildEntityOptions);
   }
 
   /**
@@ -99,11 +100,15 @@ export default class SceneGraph extends React.Component {
       for (let i = 0; i < element.children.length; i++) {
         let entity = element.children[i];
 
+        if (!entity) {
+          continue;
+        }
+
         if (
-          entity.dataset.isInspector ||
+          (entity.dataset && entity.dataset.isInspector) ||
           !entity.isEntity ||
           entity.isInspector ||
-          'aframeInspector' in entity.dataset
+          (entity.dataset && 'aframeInspector' in entity.dataset)
         ) {
           continue;
         }
@@ -189,6 +194,9 @@ export default class SceneGraph extends React.Component {
       return false;
     }
     while (curr !== undefined && curr.isEntity) {
+      if (!curr) {
+        break;
+      }
       if (!this.isExpanded(curr)) {
         return false;
       }
@@ -207,12 +215,21 @@ export default class SceneGraph extends React.Component {
 
   expandToRoot = (x) => {
     // Expand element all the way to the scene element
-    let curr = x.parentNode;
-    while (curr !== undefined && curr.isEntity) {
-      this.state.expandedElements.set(curr, true);
+    let curr = x ? x.parentNode : null;
+    while (curr && curr.isEntity) {
+      if (!curr) {
+        break;
+      }
+      if (!this.isExpanded(curr)) {
+        return false;
+      }
       curr = curr.parentNode;
     }
-    this.setState({ expandedElements: this.state.expandedElements });
+    if (curr) {
+      this.state.expandedElements.set(curr, true);
+      curr = curr.parentNode;
+      this.setState({ expandedElements: this.state.expandedElements });
+    }
   };
 
   previousExpandedIndexTo = (i) => {
@@ -290,26 +307,90 @@ export default class SceneGraph extends React.Component {
     if (!draggedOption || !targetOption) return;
     const draggedEntity = draggedOption.entity;
     const targetEntity = targetOption.entity;
+
+    // Remove any existing 'loaded' event listeners to avoid duplicate handling
+    if (draggedEntity._onDropLoadedHandler) {
+      draggedEntity.removeEventListener(
+        'loaded',
+        draggedEntity._onDropLoadedHandler
+      );
+      delete draggedEntity._onDropLoadedHandler;
+    }
+
     // Prevent nesting inside itself or its descendants
     let curr = targetEntity;
     while (curr) {
       if (curr === draggedEntity) return;
       curr = curr.parentNode;
     }
+
     // Remove from old parent
     if (draggedEntity.parentNode) {
       draggedEntity.parentNode.removeChild(draggedEntity);
     }
+
+    // Insert at new position
+    let insertParent, insertBefore;
     if (dragPosition === 'above') {
-      targetEntity.parentNode.insertBefore(draggedEntity, targetEntity);
+      insertParent = targetEntity.parentNode;
+      insertBefore = targetEntity;
     } else if (dragPosition === 'below') {
-      // NEST as child inside hovered element
-      targetEntity.appendChild(draggedEntity);
-      // Ensure the parent is expanded after nesting
+      insertParent = targetEntity;
+      insertBefore = null;
       this.state.expandedElements.set(targetEntity, true);
       this.setState({ expandedElements: this.state.expandedElements });
     } else {
-      // Default: rearrange among siblings (insert after target)
+      if (targetEntity.nextSibling) {
+        insertParent = targetEntity.parentNode;
+        insertBefore = targetEntity.nextSibling;
+      } else {
+        insertParent = targetEntity.parentNode;
+        insertBefore = null;
+      }
+    }
+
+    // Extract configuration from draggedEntity
+    const definition = {
+      element: draggedEntity.tagName.toLowerCase(),
+      id: draggedEntity.id,
+      class: draggedEntity.getAttribute('class'),
+      components: {}
+    };
+    // Copy all attributes except id and class
+    for (let i = 0; i < draggedEntity.attributes.length; i++) {
+      const attr = draggedEntity.attributes[i];
+      if (attr.name !== 'id' && attr.name !== 'class') {
+        definition.components[attr.name] = attr.value;
+      }
+    }
+
+    // Import createEntity
+    const { createEntity } = require('../../lib/entity');
+    // Create new entity and insert
+    createEntity(definition, (newEntity) => {
+      if (insertBefore) {
+        insertParent.insertBefore(newEntity, insertBefore);
+      } else {
+        insertParent.appendChild(newEntity);
+      }
+      // Remove the original entity
+      if (draggedEntity.parentNode) {
+        draggedEntity.parentNode.removeChild(draggedEntity);
+      }
+      // Select and update
+      this.selectEntity(newEntity);
+      newEntity.flushToDOM && newEntity.flushToDOM();
+      this.rebuildEntityOptions();
+    });
+
+    if (dragPosition === 'above') {
+      targetEntity.parentNode.insertBefore(draggedEntity, targetEntity);
+    } else if (dragPosition === 'below') {
+      targetEntity.appendChild(draggedEntity);
+      this.state.expandedElements.set(targetEntity, true);
+      this.setState({ expandedElements: this.state.expandedElements });
+      draggedEntity.setAttribute('position', '0 0 0');
+    } else {
       if (targetEntity.nextSibling) {
         targetEntity.parentNode.insertBefore(
           draggedEntity,
@@ -319,13 +400,28 @@ export default class SceneGraph extends React.Component {
         targetEntity.parentNode.appendChild(draggedEntity);
       }
     }
-    this.rebuildEntityOptions();
-    this.selectEntity(draggedEntity);
-    Events.emit('entityreparented', {
-      dragged: draggedEntity,
-      target: targetEntity,
-      position: dragPosition
-    });
+
+    // Add 'loaded' event listener to handle post-drop logic if not loaded
+    if (!draggedEntity.hasLoaded) {
+      draggedEntity._onDropLoadedHandler = () => {
+        this.selectEntity(draggedEntity);
+        draggedEntity.flushToDOM();
+        this.rebuildEntityOptions();
+        draggedEntity.removeEventListener(
+          'loaded',
+          draggedEntity._onDropLoadedHandler
+        );
+        delete draggedEntity._onDropLoadedHandler;
+      };
+      draggedEntity.addEventListener(
+        'loaded',
+        draggedEntity._onDropLoadedHandler
+      );
+    } else {
+      this.selectEntity(draggedEntity);
+      draggedEntity.flushToDOM();
+      this.rebuildEntityOptions();
+    }
   };
 
   render() {
