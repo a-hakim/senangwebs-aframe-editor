@@ -71,6 +71,8 @@ export default class Entity extends React.Component {
           this.props.entity.id,
           this.state.dragPosition
         );
+        // Add this line to refresh the viewport
+        Events.emit('entityreparented');
       }
     }
   };

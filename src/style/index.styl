@@ -117,7 +117,7 @@ body.aframe-inspector-opened
     background-color $bg
     box-sizing content-box
     color white
-    font-size 16px
+    font-size 13px
     left 0px
     line-height normal
     margin 0
@@ -125,9 +125,9 @@ body.aframe-inspector-opened
     text-align center
     text-decoration none
     bottom 0px
-    width 0
-    height 0
-    opacity 0
+    width 48px
+    height 48px
+    opacity 100
     display flex
     align-items center
     justify-content center
@@ -208,9 +208,8 @@ body.aframe-inspector-opened
 
   #sidebar
     background $bg
-    width 20rem
-    height calc(100vh - 40px)
-    padding-bottom 15px
+    width 24rem
+    height calc(100vh - 88px)
 
   #sidebar *
     vertical-align middle
@@ -279,8 +278,7 @@ body.aframe-inspector-opened
   #rightPanel
     display flex
     flex-direction column
-    justify-content center
-    height 100vh
+    height calc(100vh - 88px)
 
   #inspectorContainer
     display flex
@@ -294,10 +292,19 @@ body.aframe-inspector-opened
     z-index 20
 
   #scenegraph,
+  #actionsBar,
   #viewportBar,
   #leftPanel,
   #rightPanel
     pointer-events all
+
+  #actionsBar
+    background-color $bg
+    bottom 0
+    left 0
+    height 48px
+    width 100vw
+    position absolute
 
   .aframe-inspector-opened a-scene .a-canvas
     background-color #191919

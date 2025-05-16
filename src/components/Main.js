@@ -7,7 +7,7 @@ import {
   faTimes,
   faEye,
   faCube,
-  faCubes,
+  faVrCardboard,
   faFileUpload,
   faFolderOpen
 } from '@fortawesome/free-solid-svg-icons';
@@ -155,8 +155,8 @@ export default class Main extends React.Component {
           className="toggle-edit"
           onClick={this.toggleEdit}
         >
-          {/* <AwesomeIcon icon={faCube} /> */}
-          <p>{buttonText}</p>
+          <AwesomeIcon icon={faVrCardboard} />
+          {/* <p>{buttonText}</p> */}
         </a>
 
         {this.renderSceneGraphToggle()}
@@ -202,6 +202,8 @@ export default class Main extends React.Component {
               visible={this.state.visible.attributes} // This prop might become redundant depending on CSS, but leave for now
             />
           </div>
+
+          <div id="actionsBar"></div>
         </div>
 
         <ModalHelp

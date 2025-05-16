@@ -13,8 +13,8 @@ propertyRowDefined() {
 
 .componentHeader.title
   height 40px
-  width 20rem
-  background-color $bgdark
+  width 24rem
+  background-color rgb(48 48 50)
   display flex
   align-items center
   justify-content space-between
@@ -35,9 +35,28 @@ propertyRowDefined() {
 .components
   background-color $bg
   color #A3A3A3
-  height 100%
   overflow auto
-  width 20rem
+  height calc(100vh - 88px)
+  width 100%
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $bgdark $bg;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: $bg;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $bgdark;
+  border-radius: 20px;
+  border: 3px solid $bg;
+}
 
 div.vec2,
 div.vec3,
