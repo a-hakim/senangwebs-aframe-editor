@@ -193,7 +193,7 @@ export default class Main extends React.Component {
               {/* <a>
                 <AwesomeIcon icon={faBars} />
               </a> */}
-              <h3>COMMON PROPERTIES</h3>
+              <div id="entity-panel-action"></div>
               <a onClick={this.handleClose}>
                 <AwesomeIcon icon={faTimes} />
               </a>
