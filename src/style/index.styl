@@ -206,8 +206,9 @@ body.aframe-inspector-opened
 
   #sidebar
     background $bg
-    width 20rem
-    height calc(100vh - 88px)
+    width 100%
+    flex-grow 1
+    overflow-y auto
 
   #sidebar *
     vertical-align middle
@@ -253,7 +254,7 @@ body.aframe-inspector-opened
 
   a.button
     color #A3A3A3
-    font-size 16px
+    font-size 12px
     margin-left 8px
     display flex
     align-items center
@@ -275,6 +276,7 @@ body.aframe-inspector-opened
 
   #rightPanel
     top 0
+    width 20rem
     display flex
     flex-direction column
     height calc(100vh - 48px)
