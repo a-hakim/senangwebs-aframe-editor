@@ -1,6 +1,6 @@
 {
   "name": "senangwebs-aframe-editor",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.",
   "main": "dist/aframe-inspector.min.js",
   "scripts": {
