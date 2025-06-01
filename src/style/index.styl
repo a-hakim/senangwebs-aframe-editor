@@ -117,26 +117,24 @@ body.aframe-inspector-opened
     background-color $bg
     box-sizing content-box
     color white
-    font-size 16px
+    font-size 12px
     left 0px
+    bottom 0px
     line-height normal
     margin 0
-    position fixed
+    position absolute
     text-align center
     text-decoration none
-    bottom 0px
-    width 0
-    height 0
-    opacity 0
+    width 48px
+    height 48px
     display flex
     align-items center
     justify-content center
     z-index 40
-    font-weight 500
     border-top 1px solid $bgdark
 
   .toggle-edit:hover
-    background-color $bgdark
+    background-color #141417
     color white
 
     svg
@@ -199,7 +197,7 @@ body.aframe-inspector-opened
 
   input.stringfocus,
   input.numberfocus
-    border 1px solid #20b1fb
+    border 1px solid #00FF99
     color #fff
     cursor auto
 
@@ -209,8 +207,7 @@ body.aframe-inspector-opened
   #sidebar
     background $bg
     width 20rem
-    height calc(100vh - 40px)
-    padding-bottom 15px
+    height calc(100vh - 88px)
 
   #sidebar *
     vertical-align middle
@@ -264,7 +261,7 @@ body.aframe-inspector-opened
     text-decoration none
 
   a.buttonhover
-    color #1faaf2
+    color #00FF99
 
   @keyframes animateopacity
     from { opacity: 0 }
@@ -277,10 +274,17 @@ body.aframe-inspector-opened
     cursor grabbing
 
   #rightPanel
+    top 0
     display flex
     flex-direction column
-    justify-content center
-    height 100vh
+    height calc(100vh - 48px)
+
+  #actionBar
+    width 100vw
+    height 48px
+    background $bg
+    bottom 0
+    position absolute
 
   #inspectorContainer
     display flex
@@ -295,6 +299,7 @@ body.aframe-inspector-opened
 
   #scenegraph,
   #viewportBar,
+  #actionBar,
   #leftPanel,
   #rightPanel
     pointer-events all
@@ -317,7 +322,7 @@ body.aframe-inspector-opened
       z-index 40
 
     a.hover
-      background-color #1faaf2
+      background-color #007370
       color #fff
 
   .toggle-sidebar.left
@@ -327,3 +332,25 @@ body.aframe-inspector-opened
   .toggle-sidebar.right
     top 0
     right 0
+
+#rightPanel ::-webkit-scrollbar
+#leftPanel ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#rightPanel ::-webkit-scrollbar-track
+#leftPanel ::-webkit-scrollbar-track {
+    background: #18181B;
+}
+
+#rightPanel ::-webkit-scrollbar-thumb
+#leftPanel ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0;
+}
+
+#rightPanel ::-webkit-scrollbar-thumb:hover
+#leftPanel ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.75);
+}

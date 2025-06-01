@@ -9,7 +9,8 @@ import {
   faCube,
   faCubes,
   faFileUpload,
-  faFolderOpen
+  faFolderOpen,
+  faVrCardboard
 } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from './AwesomeIcon';
 import Events from '../lib/Events';
@@ -155,8 +156,7 @@ export default class Main extends React.Component {
           className="toggle-edit"
           onClick={this.toggleEdit}
         >
-          {/* <AwesomeIcon icon={faCube} /> */}
-          <p>{buttonText}</p>
+          <AwesomeIcon icon={faVrCardboard} />
         </a>
 
         {this.renderSceneGraphToggle()}
@@ -168,7 +168,7 @@ export default class Main extends React.Component {
           <div id="leftPanel">
             <div className="scenegraph-menubar">
               <div id="scenegraph-menu-back"></div>
-              <TransformToolbar />
+              <div id="scenegraph-panel-action"></div>
             </div>
             <SceneGraph
               scene={scene}
@@ -179,6 +179,7 @@ export default class Main extends React.Component {
 
           <div id="viewportBar">
             <CameraToolbar />
+            <TransformToolbar />
             {/* <div className="viewportHud-menubar">
               <ViewportHUD />
             </div> */}
@@ -202,6 +203,8 @@ export default class Main extends React.Component {
               visible={this.state.visible.attributes} // This prop might become redundant depending on CSS, but leave for now
             />
           </div>
+
+          <div id="actionBar"></div>
         </div>
 
         <ModalHelp

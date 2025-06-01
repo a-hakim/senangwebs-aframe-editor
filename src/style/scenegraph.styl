@@ -32,6 +32,7 @@
 #leftPanel
   display flex
   flex-direction column
+  height calc(100vh - 48px)
 
 .scenegraph-menubar
     display flex
@@ -64,7 +65,7 @@
       background-color #09090B
       color #fff
       .component:hover
-        color #1888c1
+        color rgba(0, 0, 0, 0.5)
       .entityActions
         display flex
 
@@ -84,7 +85,7 @@
           color #626262
 
   .component:hover
-    color #1faaf2
+    color rgba(0, 0, 0, 0.5)
 
   .entityIcons
     margin-left 2px
