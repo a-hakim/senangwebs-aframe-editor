@@ -43,21 +43,38 @@
 .primitive-button
   background-color #09090B
   color white
-  padding 10px 15px
+  padding 8px
   border-radius 8px
   cursor pointer
   transition background-color 0.2s ease, transform 0.1s ease
   text-align center
   aspect-ratio 1
   border none
+  display flex
+  flex-direction column
+  gap 8px
+  justify-content center
+  align-items center
+
+  svg
+    width 48px
+    height 48px
+    margin 4px auto
+    color red
+    opacity .4
 
 .primitive-button:hover
-  background-color #00FF99
-  color #18181B
+  border 1px solid #00FF99
+
+  svg
+    opacity 1
+
 
 .primitive-button:active
-  background-color #00FF99
-  color #18181B
+  border 1px solid #00FF99
+
+  svg
+    opacity 1
 
 .modal-close-button
   background-color #777 /* Different color for cancel */
