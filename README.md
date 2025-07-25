@@ -1,7 +1,11 @@
 # SenangWebs A-Frame Editor / Webverse Editor
-A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.
+A powerful visual inspector for A-Frame scenes, forked and adapted for seamless integration with the SenangWebs ecosystem. This tool provides a DOM-like interface to inspect and modify your 3D scenes on the fly, dramatically speeding up development and debugging workflows.
 
 ![SenangWebs Preview](https://github.com/a-hakim/senangwebs-aframe-editor/blob/master/senangwebs-webverse-editor.png)
+
+## Acknowledgement & Credit
+
+This project is a fork of the incredible **[A-Frame Inspector](https://github.com/aframevr/aframe-inspector)** by the A-Frame team. We extend our sincere appreciation to the original authors and contributors for creating such a foundational and robust tool for the WebXR community. Our goal is to build upon their excellent work to tailor it for specific use cases within SenangWebs.
 
 # A-Frame Inspector
 
