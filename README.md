@@ -1,7 +1,17 @@
 # SenangWebs A-Frame Editor / Webverse Editor
+
 A powerful visual inspector for A-Frame scenes, forked and adapted for seamless integration with the SenangWebs ecosystem. This tool provides a DOM-like interface to inspect and modify your 3D scenes on the fly, dramatically speeding up development and debugging workflows.
 
 ![SenangWebs Preview](https://github.com/a-hakim/senangwebs-aframe-editor/blob/master/senangwebs-webverse-editor.png)
+
+## Using the Editor
+
+To use the master branch of the editor:
+
+```html
+<a-scene inspector="url: https://unpkg.com/senangwebs-aframe-editor@latest/dist/aframe-inspector.min.js">
+</a-scene>
+```
 
 ## Acknowledgement & Credit
 
@@ -26,8 +36,7 @@ Also check out:
 ### Keyboard Shortcut
 
 A-Frame comes with a **keyboard shortcut** to inject the inspector. Just open
-up any A-Frame scene (running at least A-Frame v0.3.0) and press **`<ctrl> +
-<alt> + i`** to inject the inspector, just like you would use a DOM inspector:
+up any A-Frame scene (running at least A-Frame v0.3.0) and press **`<ctrl> + <alt> + i`** to inject the inspector, just like you would use a DOM inspector:
 
 ### Specifying Inspector Build
 
