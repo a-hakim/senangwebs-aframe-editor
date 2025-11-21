@@ -2,14 +2,16 @@
 
 A powerful visual inspector for A-Frame scenes, forked and adapted for seamless integration with the SenangWebs ecosystem. This tool provides a DOM-like interface to inspect and modify your 3D scenes on the fly, dramatically speeding up development and debugging workflows.
 
-![SenangWebs Preview](https://github.com/a-hakim/senangwebs-aframe-editor/blob/master/senangwebs-webverse-editor.png)
+![SenangWebs Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-aframe-editor/master/senangwebs-webverse-editor.png)
 
 ## Using the Editor
 
 To use the master branch of the editor:
 
 ```html
-<a-scene inspector="url: https://unpkg.com/senangwebs-aframe-editor@latest/dist/aframe-inspector.min.js">
+<a-scene
+  inspector="url: https://unpkg.com/senangwebs-aframe-editor@latest/dist/aframe-inspector.min.js"
+>
 </a-scene>
 ```
 
@@ -53,7 +55,9 @@ inject by passing a URL. For debugging:
 To use the master branch of the Inspector:
 
 ```html
-<a-scene inspector="url: https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js">
+<a-scene
+  inspector="url: https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js"
+>
 </a-scene>
 ```
 
@@ -66,7 +70,7 @@ npm install
 npm start
 ```
 
-Then navigate to __[http://localhost:3333/examples/](http://localhost:3333/examples/)__
+Then navigate to **[http://localhost:3333/examples/](http://localhost:3333/examples/)**
 
 ## Self-hosting the sample-assets directory
 
@@ -84,5 +88,7 @@ git clone git@github.com:aframevr/sample-assets.git
 edit `index.html` and define before any script tag this global variable:
 
 ```html
-<script>window.AFRAME_SAMPLE_ASSETS_ROOT = "./sample-assets/";</script>
+<script>
+  window.AFRAME_SAMPLE_ASSETS_ROOT = './sample-assets/';
+</script>
 ```

@@ -1,62 +1,53 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PrimitiveBoxIcon from '../icons/primitiveBoxIcon';
-import PrimitiveConeIcon from '../icons/PrimitiveConeIcon';
-import PrimitiveCylinderIcon from '../icons/PrimitiveCylinderIcon';
-import PrimitiveEmptyEntityIcon from '../icons/PrimitiveEmptyEntityIcon';
-import PrimitiveImageIcon from '../icons/PrimitiveImageIcon';
-import PrimitiveLightIcon from '../icons/PrimitiveLightIcon';
-import PrimitivePlaneIcon from '../icons/PrimitivePlaneIcon';
-import PrimitiveSphereIcon from '../icons/PrimitiveSphereIcon';
-import PrimitiveTorusIcon from '../icons/PrimitiveTorusIcon';
-import PrimitiveTextIcon from '../icons/PrimitiveTextIcon';
+import PrimitiveIcon from '../icons/Primitives';
 
 const PRIMITIVES = [
-  { type: 'a-box', label: 'Box', icon: <PrimitiveBoxIcon color="#ffffff" /> },
+  { type: 'a-box', label: 'Box', icon: PrimitiveIcon.BOX },
   {
     type: 'a-sphere',
     label: 'Sphere',
-    icon: <PrimitiveSphereIcon color="#ffffff" />
+    icon: PrimitiveIcon.SPHERE
   },
   {
     type: 'a-cylinder',
     label: 'Cylinder',
-    icon: <PrimitiveCylinderIcon color="#ffffff" />
+    icon: PrimitiveIcon.CYLINDER
   },
   {
     type: 'a-cone',
     label: 'Cone',
-    icon: <PrimitiveConeIcon color="#ffffff" />
+    icon: PrimitiveIcon.CONE
   },
   {
     type: 'a-torus',
     label: 'Torus',
-    icon: <PrimitiveTorusIcon color="#ffffff" />
+    icon: PrimitiveIcon.TORUS
   },
   {
     type: 'a-plane',
     label: 'Plane',
-    icon: <PrimitivePlaneIcon color="#ffffff" />
+    icon: PrimitiveIcon.PLANE
   },
   {
     type: 'a-image',
     label: 'Image',
-    icon: <PrimitiveImageIcon color="#ffffff" />
+    icon: PrimitiveIcon.IMAGE
   },
   {
     type: 'a-text',
     label: 'Text',
-    icon: <PrimitiveTextIcon color="#ffffff" />
+    icon: PrimitiveIcon.TEXT
   },
   {
     type: 'a-light',
     label: 'Light',
-    icon: <PrimitiveLightIcon color="#ffffff" />
+    icon: PrimitiveIcon.LIGHT
   },
   {
     type: 'a-entity',
     label: 'Empty Entity',
-    icon: <PrimitiveEmptyEntityIcon color="#ffffff" />
+    icon: PrimitiveIcon.EMPTY
   }
 ];
 
@@ -96,7 +87,14 @@ export default function ModalPrimitive({ isOpen, onClose, onSelectPrimitive }) {
                 onClick={() => handleSelect(primitive.type)}
                 title={`Add ${primitive.label}`}
               >
-                {primitive.icon}
+                {typeof primitive.icon === 'string' ? (
+                  <div
+                    style={{ width: '50px', height: '50px', margin: '0 auto' }}
+                    dangerouslySetInnerHTML={{ __html: primitive.icon }}
+                  />
+                ) : (
+                  primitive.icon
+                )}
                 {primitive.label}
               </button>
             ))}
