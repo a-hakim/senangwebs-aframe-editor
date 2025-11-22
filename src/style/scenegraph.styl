@@ -60,7 +60,7 @@
     white-space nowrap
 
     &:hover
-      background #1d2f39
+      background $bgdark
 
     &.active
       background-color #09090B
@@ -84,6 +84,16 @@
         .collapsespace,
         .id
           color #626262
+
+    &.drag-before
+      border-top 2px solid $primary
+
+    &.drag-after
+      border-bottom 2px solid $primary
+
+    &.drag-inside
+      background-color $primary
+      color $bgdark
 
   .component:hover
     color rgba(0, 0, 0, 0.5)

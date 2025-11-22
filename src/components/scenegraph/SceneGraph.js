@@ -55,6 +55,18 @@ export default class SceneGraph extends React.Component {
         this.rebuildEntityOptions();
       }
     });
+
+    // Listen for DOM changes to keep Scenegraph in sync
+    if (this.props.scene) {
+      this.props.scene.addEventListener(
+        'child-attached',
+        this.rebuildEntityOptions
+      );
+      this.props.scene.addEventListener(
+        'child-detached',
+        this.rebuildEntityOptions
+      );
+    }
   }
 
   /**
@@ -128,7 +140,8 @@ export default class SceneGraph extends React.Component {
   };
 
   onFilterKeyUp = (event) => {
-    if (event.key === 'Escape') { // Use event.key for consistency
+    if (event.key === 'Escape') {
+      // Use event.key for consistency
       this.clearFilter();
     }
   };
@@ -255,6 +268,142 @@ export default class SceneGraph extends React.Component {
     this.updateFilteredEntities('');
   };
 
+  onDragStart = (event, entity) => {
+    this.draggedEntity = entity;
+    event.dataTransfer.effectAllowed = 'move';
+  };
+
+  onDrop = (event, entity, place) => {
+    console.log('onDrop called', {
+      entity,
+      place,
+      draggedEntity: this.draggedEntity
+    });
+
+    if (!this.draggedEntity) {
+      console.warn('onDrop: No draggedEntity');
+      return;
+    }
+
+    if (this.draggedEntity === entity) {
+      console.warn('onDrop: Dragged entity is target');
+      return;
+    }
+
+    // Check if trying to drop into itself or children
+    let iter = entity;
+    while (iter) {
+      if (iter === this.draggedEntity) {
+        console.warn('onDrop: Dropping into self/child');
+        return;
+      }
+      iter = iter.parentNode;
+    }
+
+    const draggedObject = this.draggedEntity.object3D;
+    if (!draggedObject) {
+      console.error('onDrop: Missing object3D');
+      return;
+    }
+
+    // Calculate the new parent
+    let newParentEl = entity;
+    if (place === 'before' || place === 'after') {
+      newParentEl = entity.parentNode;
+    }
+
+    console.log('onDrop: Proceeding with Clone & Replace', { newParentEl });
+
+    // 1. Get the current world transform of the dragged entity
+    draggedObject.updateMatrixWorld(true);
+    const worldMatrix = draggedObject.matrixWorld.clone();
+
+    // Capture draggedEntity in a local variable
+    const originalEntity = this.draggedEntity;
+
+    // 2. Clone the entity
+    // We clone the node to create a fresh entity
+    const clonedEntity = originalEntity.cloneNode(true);
+    console.log('onDrop: Entity cloned', clonedEntity);
+
+    // 3. Calculate new local transform relative to the NEW parent
+    const newParentObj = newParentEl.object3D;
+    if (newParentObj) {
+      newParentObj.updateMatrixWorld(true);
+      const newParentMatrixWorldInverse = new THREE.Matrix4()
+        .copy(newParentObj.matrixWorld)
+        .invert();
+
+      // New Local Matrix = ParentInverse * WorldMatrix
+      const newLocalMatrix = newParentMatrixWorldInverse.multiply(worldMatrix);
+
+      // Decompose to get position, rotation, scale
+      const pos = new THREE.Vector3();
+      const quat = new THREE.Quaternion();
+      const scale = new THREE.Vector3();
+
+      newLocalMatrix.decompose(pos, quat, scale);
+
+      console.log('Reparenting Debug (Clone & Replace):');
+      console.log('  Calculated Pos:', pos);
+
+      // Apply to the CLONED entity using strings
+      const euler = new THREE.Euler().setFromQuaternion(quat);
+      const radToDeg = 180 / Math.PI;
+
+      clonedEntity.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+      clonedEntity.setAttribute(
+        'rotation',
+        `${euler.x * radToDeg} ${euler.y * radToDeg} ${euler.z * radToDeg}`
+      );
+      clonedEntity.setAttribute('scale', `${scale.x} ${scale.y} ${scale.z}`);
+    } else {
+      console.error('Reparenting Error: New parent missing object3D');
+    }
+
+    // 4. Perform the DOM move (Remove old, Insert new)
+    try {
+      if (originalEntity.parentNode) {
+        console.log('onDrop: Removing original entity');
+        originalEntity.parentNode.removeChild(originalEntity);
+      } else {
+        console.warn('onDrop: Original entity has no parent');
+      }
+
+      console.log('onDrop: Inserting cloned entity', { place });
+      if (place === 'inside') {
+        entity.appendChild(clonedEntity);
+      } else if (place === 'before') {
+        entity.parentNode.insertBefore(clonedEntity, entity);
+      } else if (place === 'after') {
+        entity.parentNode.insertBefore(clonedEntity, entity.nextSibling);
+      }
+    } catch (e) {
+      console.error('onDrop: DOM manipulation error', e);
+    }
+
+    // 5. Force scene update and notify
+    setTimeout(() => {
+      console.log('onDrop: Post-drop update');
+      if (AFRAME.INSPECTOR && AFRAME.INSPECTOR.sceneEl) {
+        AFRAME.INSPECTOR.sceneEl.object3D.updateMatrixWorld(true);
+      }
+
+      // Select the NEW entity
+      Events.emit('entityselect', clonedEntity, true);
+
+      Events.emit('entityupdate', {
+        component: 'scenegraph',
+        entity: clonedEntity
+      });
+    }, 50);
+
+    // Update the scene graph UI immediately
+    this.rebuildEntityOptions();
+
+    this.draggedEntity = null;
+  };
+
   renderEntities = () => {
     return this.state.filteredEntities.map((entityOption, idx) => {
       if (
@@ -272,6 +421,8 @@ export default class SceneGraph extends React.Component {
           isSelected={this.props.selectedEntity === entityOption.entity}
           selectEntity={this.selectEntity}
           toggleExpandedCollapsed={this.toggleExpandedCollapsed}
+          onDragStart={this.onDragStart}
+          onDrop={this.onDrop}
         />
       );
     });

@@ -21,6 +21,7 @@ import SceneGraph from './scenegraph/SceneGraph';
 import CameraToolbar from './viewport/CameraToolbar';
 import TransformToolbar from './viewport/TransformToolbar';
 import ViewportHUD from './viewport/ViewportHUD';
+import pkg from '../../package.json';
 
 THREE.ImageUtils.crossOrigin = '';
 
@@ -204,7 +205,16 @@ export default class Main extends React.Component {
             />
           </div>
 
-          <div id="actionBar"></div>
+          <div id="actionBar">
+            <div id="sw-info">
+              <span>
+                <b>Senangwebs Webverse</b>
+              </span>
+              <span>
+                <small>Ver {pkg.version}</small>
+              </span>
+            </div>
+          </div>
         </div>
 
         <ModalHelp

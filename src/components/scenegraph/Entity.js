@@ -44,6 +44,45 @@ export default class Entity extends React.Component {
     entity.setAttribute('visible', !visible);
   };
 
+  onDragStart = (e) => {
+    if (this.props.entity.tagName.toLowerCase() === 'a-scene') {
+      e.preventDefault();
+      return;
+    }
+    this.props.onDragStart(e, this.props.entity);
+  };
+
+  onDragOver = (e) => {
+    if (this.props.entity.tagName.toLowerCase() === 'a-scene') {
+      return;
+    }
+    e.preventDefault();
+    const rect = e.target.getBoundingClientRect();
+    const y = e.clientY - rect.top;
+    const height = rect.height;
+
+    let dragPosition = 'inside';
+    if (y < height * 0.25) {
+      dragPosition = 'before';
+    } else if (y > height * 0.75) {
+      dragPosition = 'after';
+    }
+
+    if (this.state.dragPosition !== dragPosition) {
+      this.setState({ dragPosition });
+    }
+  };
+
+  onDragLeave = () => {
+    this.setState({ dragPosition: null });
+  };
+
+  onDrop = (e) => {
+    e.preventDefault();
+    this.props.onDrop(e, this.props.entity, this.state.dragPosition);
+    this.setState({ dragPosition: null });
+  };
+
   render() {
     const isFiltering = this.props.isFiltering;
     const isExpanded = this.props.isExpanded;
@@ -115,11 +154,22 @@ export default class Entity extends React.Component {
       active: this.props.isSelected,
       entity: true,
       novisible: !visible,
-      option: true
+      option: true,
+      'drag-before': this.state.dragPosition === 'before',
+      'drag-after': this.state.dragPosition === 'after',
+      'drag-inside': this.state.dragPosition === 'inside'
     });
 
     return (
-      <div className={className} onClick={this.onClick}>
+      <div
+        className={className}
+        onClick={this.onClick}
+        draggable={tagName !== 'a-scene'}
+        onDragStart={this.onDragStart}
+        onDragOver={this.onDragOver}
+        onDragLeave={this.onDragLeave}
+        onDrop={this.onDrop}
+      >
         <span>
           {visibilityButton}
           <span
