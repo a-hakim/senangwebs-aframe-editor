@@ -12,6 +12,7 @@ import {
   faFolderOpen,
   faVrCardboard
 } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { AwesomeIcon } from './AwesomeIcon';
 import Events from '../lib/Events';
 import ComponentsSidebar from './components/Sidebar';
@@ -168,7 +169,17 @@ export default class Main extends React.Component {
         >
           <div id="leftPanel">
             <div className="scenegraph-menubar">
-              <div id="scenegraph-menu-back"></div>
+              <div id="scenegraph-menu-back">
+                <a
+                  href="https://github.com/a-hakim/senangwebs-aframe-editor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  id="githubLink"
+                >
+                  <AwesomeIcon icon={faGithub} />
+                  <span>senangwebs-aframe-editor</span>
+                </a>
+              </div>
               <div id="scenegraph-panel-action"></div>
             </div>
             <SceneGraph

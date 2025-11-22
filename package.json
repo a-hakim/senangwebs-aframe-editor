@@ -1,6 +1,6 @@
 {
   "name": "senangwebs-aframe-editor",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "description": "A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.",
   "main": "dist/aframe-inspector.min.js",
   "scripts": {
@@ -25,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "clipboard-copy": "^4.0.1",
     "clsx": "^2.1.0",
     "lodash.debounce": "^4.0.8",
