@@ -13,9 +13,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: process.env.MINIFY
-      ? 'aframe-inspector.min.js'
-      : 'aframe-inspector.js',
+    filename: process.env.MINIFY ? 'sw-webverse.min.js' : 'sw-webverse.js',
     publicPath: '/dist/'
   },
   externals: {
