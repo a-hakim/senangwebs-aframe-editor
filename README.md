@@ -10,7 +10,7 @@ To use the master branch of the editor:
 
 ```html
 <a-scene
-  inspector="url: https://unpkg.com/senangwebs-aframe-editor@latest/dist/aframe-inspector.min.js"
+  inspector="url: https://unpkg.com/senangwebs-aframe-editor@latest/dist/sw-webverse.min.js"
 >
 </a-scene>
 ```
