@@ -40,7 +40,10 @@ const DEFAULT_PREVIEW = {
 
 // Reusable ImageItem component to prevent repeated JSX
 const ImageItem = React.memo(({ image, onClick, isSelected }) => (
-  <li onClick={onClick} className={isSelected ? 'selected' : ''}>
+  <div
+    onClick={onClick}
+    className={`gallery-item${isSelected ? ' selected' : ''}`}
+  >
     <img width="155px" height="155px" src={image.src} alt={image.name} />
     <div className="detail">
       <span className="title">{image.name}</span>
@@ -49,7 +52,7 @@ const ImageItem = React.memo(({ image, onClick, isSelected }) => (
         {image.width} x {image.height}
       </span>
     </div>
-  </li>
+  </div>
 ));
 
 ImageItem.displayName = 'ImageItem';
@@ -68,6 +71,7 @@ export default class ModalTextures extends React.Component {
     addNewDialogOpened: false,
     newUrl: '',
     isLoading: false,
+    isGalleryLoading: false,
     preview: { ...DEFAULT_PREVIEW }
   };
 
@@ -110,6 +114,13 @@ export default class ModalTextures extends React.Component {
     const newImages = [];
     let loadedCount = 0;
 
+    if (images.length === 0) {
+      this.setState({ registryImages: [], isGalleryLoading: false });
+      return;
+    }
+
+    this.setState({ isGalleryLoading: true });
+
     images.forEach((imageData) => {
       const image = new Image();
       image.onload = () => {
@@ -126,7 +137,7 @@ export default class ModalTextures extends React.Component {
         loadedCount++;
         // Batch update when all images are loaded
         if (loadedCount === images.length) {
-          this.setState({ registryImages: newImages });
+          this.setState({ registryImages: newImages, isGalleryLoading: false });
         }
       };
       image.src = imageData.fullThumbPath;
@@ -172,6 +183,12 @@ export default class ModalTextures extends React.Component {
 
   onNewUrl = (event) => {
     if (event.keyCode !== 13) return;
+    this.loadImageFromUrl();
+  };
+
+  loadImageFromUrl = () => {
+    const url = this.state.newUrl;
+    if (!url) return;
 
     const previewEl = this.previewImg.current;
     const handleLoad = () => {
@@ -193,7 +210,7 @@ export default class ModalTextures extends React.Component {
     };
 
     previewEl.addEventListener('load', handleLoad);
-    previewEl.src = event.target.value;
+    previewEl.src = url;
     this.imageName.current?.focus();
   };
 
@@ -298,52 +315,68 @@ export default class ModalTextures extends React.Component {
         onClose={this.onClose}
         closeOnClickOutside={false}
       >
-        <button onClick={this.toggleNewDialog}>{addNewAssetButton}</button>
+        {/* Toolbar */}
+        <div className="texture-toolbar">
+          <button onClick={this.toggleNewDialog}>{addNewAssetButton}</button>
+          {addNewDialogOpened && (
+            <div className="url-input-group">
+              <input
+                type="text"
+                className="imageUrl"
+                placeholder="Paste image URL"
+                value={newUrl}
+                onChange={this.onUrlChange}
+                onKeyUp={this.onNewUrl}
+              />
+              <button
+                className="load-url-btn"
+                onClick={this.loadImageFromUrl}
+                disabled={!newUrl}
+              >
+                LOAD
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Add New Texture Dialog */}
         <div className={addNewDialogOpened ? '' : 'hide'}>
           <div className="newimage">
             <div className="new_asset_options">
-              <span>Load a new texture from one of these sources:</span>
-              <ul>
-                <li>
-                  <span>From URL (and press Enter):</span>{' '}
+              <div className="registry-section">
+                <span className="section-label">
+                  Select from assets registry:
+                </span>
+                <div className="assets search">
                   <input
-                    type="text"
-                    className="imageUrl"
-                    value={newUrl}
-                    onChange={this.onUrlChange}
-                    onKeyUp={this.onNewUrl}
+                    placeholder="Filter textures..."
+                    value={filterText}
+                    onChange={this.onChangeFilter}
                   />
-                </li>
-                <li>
-                  <span>From assets registry: </span>
-                  <div className="assets search">
-                    <input
-                      placeholder="Filter..."
-                      value={filterText}
-                      onChange={this.onChangeFilter}
+                  <AwesomeIcon icon={faSearch} />
+                </div>
+              </div>
+              <div className="gallery">
+                {this.state.isGalleryLoading ? (
+                  <div className="loading-indicator">Loading textures...</div>
+                ) : (
+                  this.getFilteredRegistryImages().map((image) => (
+                    <ImageItem
+                      key={image.src}
+                      image={image}
+                      onClick={() => this.selectRegistryImage(image)}
                     />
-                    <AwesomeIcon icon={faSearch} />
-                  </div>
-                  <ul className="gallery">
-                    {this.getFilteredRegistryImages().map((image) => (
-                      <ImageItem
-                        key={image.src}
-                        image={image}
-                        onClick={() => this.selectRegistryImage(image)}
-                      />
-                    ))}
-                  </ul>
-                </li>
-              </ul>
+                  ))
+                )}
+              </div>
             </div>
             <div className="preview">
-              Name:{' '}
+              <span className="section-label">Name:</span>
               <input
                 ref={this.imageName}
                 className={preview.name.length > 0 && !validUrl ? 'error' : ''}
                 type="text"
+                placeholder="Enter texture name"
                 value={preview.name}
                 onChange={this.onNameChanged}
                 onKeyUp={this.onNameKeyUp}
@@ -360,13 +393,11 @@ export default class ModalTextures extends React.Component {
                   <span className="title" title={preview.filename}>
                     {preview.filename}
                   </span>
-                  <br />
-                  <span>
+                  <span className="dimensions">
                     {preview.width} x {preview.height}
                   </span>
                 </div>
               )}
-              <br />
               <button
                 disabled={!validAsset || isLoading}
                 onClick={this.addNewAsset}
@@ -379,7 +410,7 @@ export default class ModalTextures extends React.Component {
 
         {/* Asset Gallery */}
         <div className={addNewDialogOpened ? 'hide' : ''}>
-          <ul className="gallery">
+          <div className="gallery">
             {this.getSortedAssetImages().map((image) => (
               <ImageItem
                 key={image.id}
@@ -388,7 +419,7 @@ export default class ModalTextures extends React.Component {
                 isSelected={selectedTexture === '#' + image.id}
               />
             ))}
-          </ul>
+          </div>
         </div>
       </Modal>
     );
