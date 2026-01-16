@@ -25,6 +25,19 @@ export function insertNewAsset(
         onLoadedCallback();
       }
     };
-    document.getElementsByTagName('a-assets')[0].appendChild(element);
+
+    // Get or create the a-assets container
+    let assetsContainer = document.querySelector('a-assets');
+    if (!assetsContainer) {
+      assetsContainer = document.createElement('a-assets');
+      const scene = document.querySelector('a-scene');
+      if (scene) {
+        scene.insertBefore(assetsContainer, scene.firstChild);
+      } else {
+        console.warn('No a-scene found to insert a-assets');
+        return;
+      }
+    }
+    assetsContainer.appendChild(element);
   }
 }
