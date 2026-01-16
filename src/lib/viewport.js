@@ -99,7 +99,7 @@ export function Viewport(inspector) {
     const object = detail.entity.object3D;
     if (
       inspector.selected === object &&
-      inspector.selectedEntity.object3DMap.mesh
+      inspector.selectedEntity?.object3DMap?.mesh
     ) {
       selectionBox.setFromObject(inspector.selected);
     }

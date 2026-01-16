@@ -121,6 +121,14 @@ export default class ModalTextures extends React.Component {
 
     this.setState({ isGalleryLoading: true });
 
+    const checkAllLoaded = () => {
+      loadedCount++;
+      // Update state when all images are processed (loaded or errored)
+      if (loadedCount === images.length) {
+        this.setState({ registryImages: newImages, isGalleryLoading: false });
+      }
+    };
+
     images.forEach((imageData) => {
       const image = new Image();
       image.onload = () => {
@@ -134,11 +142,13 @@ export default class ModalTextures extends React.Component {
           tags: imageData.tags,
           value: `url(${imageData.fullPath})`
         });
-        loadedCount++;
-        // Batch update when all images are loaded
-        if (loadedCount === images.length) {
-          this.setState({ registryImages: newImages, isGalleryLoading: false });
-        }
+        checkAllLoaded();
+      };
+      image.onerror = () => {
+        console.warn(
+          `Failed to load registry image: ${imageData.fullThumbPath}`
+        );
+        checkAllLoaded();
       };
       image.src = imageData.fullThumbPath;
     });

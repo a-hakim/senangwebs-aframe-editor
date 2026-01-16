@@ -77,33 +77,42 @@ export default class Main extends React.Component {
   }
 
   componentDidMount() {
-    Events.on(
-      'opentexturesmodal',
-      function (selectedTexture, textureOnClose) {
-        this.setState({
-          selectedTexture: selectedTexture,
-          isModalTexturesOpen: true,
-          textureOnClose: textureOnClose
-        });
-      }.bind(this)
-    );
-
-    Events.on('entityselect', (entity) => {
-      // Set the selected entity and ensure the attributes sidebar is visible
-      this.setState({
-        entity: entity,
-        visible: { ...this.state.visible, attributes: true }
-      });
-    });
-
-    Events.on('inspectortoggle', (enabled) => {
-      this.setState({ inspectorEnabled: enabled });
-    });
-
-    Events.on('openhelpmodal', () => {
-      this.setState({ isHelpOpen: true });
-    });
+    Events.on('opentexturesmodal', this.handleOpenTexturesModal);
+    Events.on('entityselect', this.handleEntitySelect);
+    Events.on('inspectortoggle', this.handleInspectorToggle);
+    Events.on('openhelpmodal', this.handleOpenHelpModal);
   }
+
+  componentWillUnmount() {
+    Events.off('opentexturesmodal', this.handleOpenTexturesModal);
+    Events.off('entityselect', this.handleEntitySelect);
+    Events.off('inspectortoggle', this.handleInspectorToggle);
+    Events.off('openhelpmodal', this.handleOpenHelpModal);
+  }
+
+  handleOpenTexturesModal = (selectedTexture, textureOnClose) => {
+    this.setState({
+      selectedTexture: selectedTexture,
+      isModalTexturesOpen: true,
+      textureOnClose: textureOnClose
+    });
+  };
+
+  handleEntitySelect = (entity) => {
+    // Set the selected entity and ensure the attributes sidebar is visible
+    this.setState({
+      entity: entity,
+      visible: { ...this.state.visible, attributes: true }
+    });
+  };
+
+  handleInspectorToggle = (enabled) => {
+    this.setState({ inspectorEnabled: enabled });
+  };
+
+  handleOpenHelpModal = () => {
+    this.setState({ isHelpOpen: true });
+  };
 
   handleClose = () => {
     Events.emit('togglesidebar', { which: 'attributes' });

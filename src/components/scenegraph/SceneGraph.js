@@ -50,11 +50,7 @@ export default class SceneGraph extends React.Component {
     Events.on('entityidchange', this.rebuildEntityOptions);
     Events.on('entitycreated', this.rebuildEntityOptions);
     Events.on('entityclone', this.rebuildEntityOptions);
-    Events.on('entityupdate', (detail) => {
-      if (detail.component === 'mixin') {
-        this.rebuildEntityOptions();
-      }
-    });
+    Events.on('entityupdate', this.handleEntityUpdate);
 
     // Listen for DOM changes to keep Scenegraph in sync
     if (this.props.scene) {
@@ -68,6 +64,30 @@ export default class SceneGraph extends React.Component {
       );
     }
   }
+
+  componentWillUnmount() {
+    Events.off('entityidchange', this.rebuildEntityOptions);
+    Events.off('entitycreated', this.rebuildEntityOptions);
+    Events.off('entityclone', this.rebuildEntityOptions);
+    Events.off('entityupdate', this.handleEntityUpdate);
+
+    if (this.props.scene) {
+      this.props.scene.removeEventListener(
+        'child-attached',
+        this.rebuildEntityOptions
+      );
+      this.props.scene.removeEventListener(
+        'child-detached',
+        this.rebuildEntityOptions
+      );
+    }
+  }
+
+  handleEntityUpdate = (detail) => {
+    if (detail.component === 'mixin') {
+      this.rebuildEntityOptions();
+    }
+  };
 
   /**
    * Selected entity updated from somewhere else in the app.
@@ -474,14 +494,22 @@ function filterEntity(entity, filter) {
     return true;
   }
 
-  // Check if the ID, tagName, class, selector includes the filter.
+  // Check if the ID, tagName, class includes the filter.
   if (
     entity.id.toUpperCase().indexOf(filter.toUpperCase()) !== -1 ||
     entity.tagName.toUpperCase().indexOf(filter.toUpperCase()) !== -1 ||
-    entity.classList.contains(filter) ||
-    entity.matches(filter)
+    entity.classList.contains(filter)
   ) {
     return true;
+  }
+
+  // Try CSS selector match - wrapped in try-catch since invalid selectors throw
+  try {
+    if (entity.matches(filter)) {
+      return true;
+    }
+  } catch (e) {
+    // Invalid CSS selector, ignore
   }
 
   return false;

@@ -3,7 +3,8 @@ export function insertNewAsset(
   id,
   src,
   anonymousCrossOrigin,
-  onLoadedCallback
+  onLoadedCallback,
+  onErrorCallback
 ) {
   var element = null;
   switch (type) {
@@ -23,6 +24,13 @@ export function insertNewAsset(
     element.onload = function () {
       if (onLoadedCallback) {
         onLoadedCallback();
+      }
+    };
+
+    element.onerror = function (error) {
+      console.warn(`Failed to load asset: ${src}`, error);
+      if (onErrorCallback) {
+        onErrorCallback(error);
       }
     };
 
