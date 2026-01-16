@@ -67,6 +67,7 @@
   margin 15px auto 0
   overflow auto
   padding 15px 3px 3px
+  border-radius 8px
 
 .newimage .gallery
   padding 8px
@@ -91,15 +92,25 @@
 
 .preview
   padding 10px
-  width 150px
+  width 250px
 
 .preview input
   display block
   margin 8px 0
-  width 144px
+  height 24px
+  width 230px
+  border-radius 8px
+
+.preview img
+  border-radius 8px
+  margin-bottom 4px
 
 .preview button
-  width 155px
+  width 242px
+
+.preview button:hover
+  background-color #00ff99
+  color #000
 
 .preview .detail .title
   color #fff
@@ -151,6 +162,11 @@
   font-weight 500
   padding 8px 16px
   text-transform capitalize
+  transition all 0.2s ease-in-out
+
+.modal button:hover
+  background-color #00ff99
+  color #000
 
 .modal buttonhover,
 .modal button.hover
@@ -193,15 +209,22 @@
 .assets.search
   position relative
   margin-top 10px
-  width 200px
+  width 100%
 
 .assets.search svg
   position absolute
-  right 0px
-  top 5px
+  right 10px
+  top 8px
+
+.assets.search input
+  width calc(100% - 12px)
+  height 20px
+  padding 5px
+  border-radius 8px
 
 .new_asset_options
   margin 10px
+  width 100%
 
 .new_asset_options > ul
   margin-left 10px
@@ -213,6 +236,8 @@
 .new_asset_options .imageUrl
   margin-left 5px
   width 350px
+  height 24px
+  border-radius 8px
 
 .texture canvas
   border 1px solid rgba(255, 255, 255, .15)
