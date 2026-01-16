@@ -28,12 +28,13 @@ export default class Vec2Widget extends React.Component {
     });
   };
 
-  componentDidUpdate() {
-    const props = this.props;
-    if (!areVectorsEqual(props.value, this.state)) {
+  componentDidUpdate(prevProps) {
+    // Only update state if props.value actually changed from parent
+    // Comparing to this.state would cause infinite loops when value objects are recreated
+    if (!areVectorsEqual(this.props.value, prevProps.value)) {
       this.setState({
-        x: props.value.x,
-        y: props.value.y
+        x: this.props.value.x,
+        y: this.props.value.y
       });
     }
   }

@@ -94,11 +94,11 @@ export default class TextureWidget extends React.Component {
       return;
     }
     // component.attrValue may be undefined if component is from a mixin
-    var newValue = component.attrValue && component.attrValue[this.props.name];
+    var newValue = component.attrValue?.[this.props.name];
 
-    // This will be triggered typically when the element is changed directly with element.setAttribute
-    // Compare with prevProps.value instead of this.state.value to avoid infinite loops
-    if (newValue && newValue !== prevProps.value) {
+    // Only update if the new value differs from our current state
+    // This prevents infinite loops when setValue triggers re-renders
+    if (newValue && newValue !== this.state.value) {
       this.setValue(newValue);
     }
   }
@@ -212,11 +212,16 @@ export default class TextureWidget extends React.Component {
         value = '#' + assetId;
       }
 
+      // Only call onChange - it will update the entity which triggers
+      // componentDidUpdate to sync our state. Don't call setValue here
+      // as that would cause duplicate state updates and potential loops.
       if (this.props.onChange) {
         this.props.onChange(this.props.name, value);
       }
 
-      this.setValue(value);
+      // Update local state directly without triggering the full setValue flow
+      // to update the preview immediately
+      this.setState({ value: value });
     });
   };
 

@@ -119,6 +119,17 @@ export function initRaycaster(inspector) {
       inspector.container.removeEventListener('mousedown', onMouseDown);
       inspector.container.removeEventListener('mouseup', onMouseUp);
       inspector.container.removeEventListener('dblclick', onDoubleClick);
+    },
+    destroy: () => {
+      mouseCursor.removeEventListener('click', handleClick);
+      mouseCursor.removeEventListener('mouseenter', onMouseEnter);
+      mouseCursor.removeEventListener('mouseleave', onMouseLeave);
+      inspector.container.removeEventListener('mousedown', onMouseDown);
+      inspector.container.removeEventListener('mouseup', onMouseUp);
+      inspector.container.removeEventListener('dblclick', onDoubleClick);
+      if (mouseCursor.parentNode) {
+        mouseCursor.parentNode.removeChild(mouseCursor);
+      }
     }
   };
 }

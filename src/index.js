@@ -4,6 +4,7 @@ import { Viewport } from './lib/viewport';
 import { AssetsLoader } from './lib/assetsLoader';
 import { Shortcuts } from './lib/shortcuts';
 
+import ErrorBoundary from './components/ErrorBoundary';
 import Main from './components/Main';
 import { initCameras } from './lib/cameras';
 import { createEntity } from './lib/entity';
@@ -71,7 +72,11 @@ Inspector.prototype = {
     div.setAttribute('data-aframe-inspector', 'app');
     document.body.appendChild(div);
     const root = createRoot(div);
-    root.render(<Main />);
+    root.render(
+      <ErrorBoundary>
+        <Main />
+      </ErrorBoundary>
+    );
 
     this.scene = this.sceneEl.object3D;
     this.helpers = {};
