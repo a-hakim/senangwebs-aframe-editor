@@ -23,7 +23,9 @@ export default class Entity extends React.Component {
     isFiltering: PropTypes.bool,
     isSelected: PropTypes.bool,
     selectEntity: PropTypes.func,
-    toggleExpandedCollapsed: PropTypes.func
+    toggleExpandedCollapsed: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDrop: PropTypes.func
   };
 
   constructor(props) {

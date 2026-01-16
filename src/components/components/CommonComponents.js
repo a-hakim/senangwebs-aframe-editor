@@ -1,22 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { faTimes, faBars } from '@fortawesome/free-solid-svg-icons';
-import { AwesomeIcon } from '../AwesomeIcon';
 import { InputWidget } from '../widgets';
 import DEFAULT_COMPONENTS from './DefaultComponents';
 import PropertyRow from './PropertyRow';
 import Collapsible from '../Collapsible';
 import Mixins from './Mixins';
-import {
-  updateEntity,
-  getEntityClipboardRepresentation
-} from '../../lib/entity';
+import { updateEntity } from '../../lib/entity';
 import EntityRepresentation from '../EntityRepresentation';
 import Events from '../../lib/Events';
-import copy from 'clipboard-copy';
 import { saveBlob } from '../../lib/utils';
-import GLTFIcon from '../../../assets/gltf.svg';
 
 // @todo Take this out and use updateEntity?
 function changeId(componentName, value) {
@@ -94,46 +86,11 @@ export default class CommonComponents extends React.Component {
     if (!entity) {
       return <div />;
     }
-    const entityButtons = (
-      <div>
-        <a
-          title="Close components"
-          onClick={(event) => {
-            this.handleClose();
-          }}
-        >
-          <AwesomeIcon icon={faTimes} />
-        </a>
-        {/* <a
-          title="Export entity to GLTF"
-          className="gltfIcon"
-          onClick={(event) => {
-            this.exportToGLTF();
-            event.preventDefault();
-            event.stopPropagation();
-          }}
-        >
-          <img src={GLTFIcon} />
-        </a>
-        <a
-          title="Copy entity HTML to clipboard"
-          className="button"
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            copy(getEntityClipboardRepresentation(this.props.entity));
-          }}
-        >
-          <AwesomeIcon icon={faClipboard} />
-        </a> */}
-      </div>
-    );
 
     return (
       <Collapsible id="componentEntityHeader" className="commonComponents">
         <div className="collapsible-header sidebar-header">
           <EntityRepresentation entity={entity} />
-          {/* {entityButtons} */}
         </div>
         <div className="collapsible-content">
           <div className="propertyRow">

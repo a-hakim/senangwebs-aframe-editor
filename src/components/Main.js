@@ -1,15 +1,7 @@
 import React from 'react';
 import {
   faPlus,
-  faCog,
-  faCode,
-  faBars,
   faTimes,
-  faEye,
-  faCube,
-  faCubes,
-  faFileUpload,
-  faFolderOpen,
   faVrCardboard
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -157,8 +149,6 @@ export default class Main extends React.Component {
 
   render() {
     const scene = this.state.sceneEl;
-    // Simplified toggle button text logic
-    const buttonText = this.state.inspectorEnabled ? 'Show' : 'Edit';
 
     return (
       <div>

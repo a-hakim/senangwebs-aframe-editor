@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  faPlus,
-  faPause,
-  faPlay,
-  // faCube, // Removed as it's not used directly here anymore
-  // faCode, // Removed as it's not used directly here anymore
-  // faFloppyDisk // Removed as it's not used directly here anymore
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import Events from '../../lib/Events';
-import ModalPrimitive from '../modals/ModalPrimitive'; // Import the new modal component
+import { saveBlob } from '../../lib/utils';
+import ModalPrimitive from '../modals/ModalPrimitive';
 
 function filterHelpers(scene, visible) {
   scene.traverse((o) => {
@@ -82,7 +76,6 @@ export default class Toolbar extends React.Component {
     }
     this.setState({ isAddEntityModalOpen: false }); // Close modal after selection or cancellation
   };
-
 
   toggleScenePlaying = () => {
     if (this.state.isPlaying) {

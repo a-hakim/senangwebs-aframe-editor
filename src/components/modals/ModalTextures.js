@@ -56,6 +56,16 @@ const ImageItem = React.memo(({ image, onClick, isSelected }) => (
 ));
 
 ImageItem.displayName = 'ImageItem';
+ImageItem.propTypes = {
+  image: PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    width: PropTypes.number,
+    height: PropTypes.number
+  }).isRequired,
+  onClick: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool
+};
 
 export default class ModalTextures extends React.Component {
   static propTypes = {
