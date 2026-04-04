@@ -430,6 +430,11 @@ export default class ModalTextures extends React.Component {
 
         {/* Asset Gallery */}
         <div className={addNewDialogOpened ? 'hide' : ''}>
+          <div>
+            <span className="section-label">
+              Following are assets loaded in this project:
+            </span>
+          </div>
           <div className="gallery">
             {this.getSortedAssetImages().map((image) => (
               <ImageItem
