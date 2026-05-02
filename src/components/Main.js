@@ -73,6 +73,7 @@ export default class Main extends React.Component {
     Events.on('entityselect', this.handleEntitySelect);
     Events.on('inspectortoggle', this.handleInspectorToggle);
     Events.on('openhelpmodal', this.handleOpenHelpModal);
+    Events.on('scenereload', this.handleSceneReload);
   }
 
   componentWillUnmount() {
@@ -80,6 +81,7 @@ export default class Main extends React.Component {
     Events.off('entityselect', this.handleEntitySelect);
     Events.off('inspectortoggle', this.handleInspectorToggle);
     Events.off('openhelpmodal', this.handleOpenHelpModal);
+    Events.off('scenereload', this.handleSceneReload);
   }
 
   handleOpenTexturesModal = (selectedTexture, textureOnClose) => {
@@ -100,6 +102,10 @@ export default class Main extends React.Component {
 
   handleInspectorToggle = (enabled) => {
     this.setState({ inspectorEnabled: enabled });
+  };
+
+  handleSceneReload = (newSceneEl) => {
+    this.setState({ entity: null, sceneEl: newSceneEl });
   };
 
   handleOpenHelpModal = () => {

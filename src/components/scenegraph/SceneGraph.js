@@ -90,11 +90,40 @@ export default class SceneGraph extends React.Component {
   };
 
   /**
-   * Selected entity updated from somewhere else in the app.
+   * Selected entity or scene updated from somewhere else in the app.
    */
   componentDidUpdate(prevProps) {
     if (prevProps.selectedEntity !== this.props.selectedEntity) {
       this.selectEntity(this.props.selectedEntity);
+    }
+
+    // Scene element was replaced — re-attach DOM listeners.
+    if (prevProps.scene !== this.props.scene) {
+      if (prevProps.scene) {
+        prevProps.scene.removeEventListener(
+          'child-attached',
+          this.rebuildEntityOptions
+        );
+        prevProps.scene.removeEventListener(
+          'child-detached',
+          this.rebuildEntityOptions
+        );
+      }
+      if (this.props.scene) {
+        this.props.scene.addEventListener(
+          'child-attached',
+          this.rebuildEntityOptions
+        );
+        this.props.scene.addEventListener(
+          'child-detached',
+          this.rebuildEntityOptions
+        );
+      }
+      // Reset expanded state with new scene root.
+      this.setState({
+        expandedElements: new WeakMap([[this.props.scene, true]])
+      });
+      this.rebuildEntityOptions();
     }
   }
 
@@ -220,7 +249,7 @@ export default class SceneGraph extends React.Component {
     if (!curr) {
       return false;
     }
-    while (curr !== undefined && curr.isEntity) {
+    while (curr != null && curr.isEntity) {
       if (!this.isExpanded(curr)) {
         return false;
       }
@@ -240,7 +269,7 @@ export default class SceneGraph extends React.Component {
   expandToRoot = (x) => {
     // Expand element all the way to the scene element
     let curr = x.parentNode;
-    while (curr !== undefined && curr.isEntity) {
+    while (curr != null && curr.isEntity) {
       this.state.expandedElements.set(curr, true);
       curr = curr.parentNode;
     }

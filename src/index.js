@@ -280,6 +280,101 @@ Inspector.prototype = {
   },
 
   /**
+   * Reload the inspector UI to reflect current scene HTML.
+   * Call this after programmatically modifying the scene DOM.
+   */
+  reload: function () {
+    // Deselect current entity.
+    this.selectEntity(null);
+
+    // Clear all existing helpers.
+    for (const id in this.helpers) {
+      const helper = this.helpers[id];
+      this.sceneHelpers.remove(helper);
+      if (helper.dispose) {
+        helper.dispose();
+      }
+    }
+    this.helpers = {};
+
+    // Remove old sceneHelpers from old scene.
+    if (this.scene && this.sceneHelpers.parent) {
+      this.scene.remove(this.sceneHelpers);
+    }
+
+    // Poll for new scene to register in AFRAME.scenes.
+    const waitForScene = () => {
+      const newSceneEl = AFRAME.scenes[0];
+      if (!newSceneEl) {
+        setTimeout(waitForScene, 100);
+        return;
+      }
+
+      this.sceneEl = newSceneEl;
+
+      const onReady = () => {
+        // Wait for camera too.
+        if (!this.sceneEl.camera) {
+          this.sceneEl.addEventListener('camera-set-active', () => onReady(), {
+            once: true
+          });
+          return;
+        }
+
+        // Re-acquire container (new scene creates new canvas).
+        this.container = document.querySelector('.a-canvas');
+
+        // Re-init cameras for new scene.
+        initCameras(this);
+
+        // Refresh scene object3D reference.
+        this.scene = this.sceneEl.object3D;
+
+        // Re-create sceneHelpers in new scene.
+        this.sceneHelpers = new THREE.Scene();
+        this.sceneHelpers.userData.source = 'INSPECTOR';
+        this.sceneHelpers.visible = true;
+        this.scene.add(this.sceneHelpers);
+
+        // Re-init viewport (transform controls, editor controls, raycaster).
+        this.viewport = new Viewport(this);
+
+        // Rebuild helpers from new entities.
+        this.sceneEl.object3D.traverse((node) => {
+          this.addHelper(node);
+        });
+
+        // Notify React components to update scene reference.
+        Events.emit('scenereload', this.sceneEl);
+
+        // Notify React components to rebuild scenegraph.
+        Events.emit('entitycreated');
+
+        // Enter inspector edit mode on new scene.
+        this.opened = true;
+        Events.emit('inspectortoggle', true);
+        document.body.classList.add('aframe-inspector-opened');
+        this.sceneEl.resize();
+        this.sceneEl.pause();
+        this.sceneEl.isPlaying = true;
+        this.cursor.play();
+        Shortcuts.enable();
+      };
+
+      if (this.sceneEl.hasLoaded) {
+        onReady();
+      } else {
+        this.sceneEl.addEventListener('loaded', () => onReady(), {
+          once: true
+        });
+      }
+    };
+
+    // Start polling (small delay to let DOM settle after replaceWith).
+    setTimeout(waitForScene, 50);
+  },
+
+  /**
    * Closes the editor and gives the control back to the scene
    * @return {[type]} [description]
    */

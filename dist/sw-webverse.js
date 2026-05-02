@@ -95091,7 +95091,7 @@ object-assign
       /***/ (module) => {
         'use strict';
         module.exports = /*#__PURE__*/ JSON.parse(
-          '{"name":"senangwebs-aframe-editor","version":"1.6.13","description":"A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.","main":"dist/aframe-inspector.min.js","scripts":{"build":"webpack --progress","deploy":"npm run ghpages","dist":"npm run dist:max && npm run dist:min","dist:max":"npm run build","dist:min":"cross-env MINIFY=true npm run build","ghpages":"npm run preghpages && ghpages -p gh-pages","lint":"npm run lintfile src/","lint:css":"stylelint src/css/main.css","lintfile":"eslint","preghpages":"npm run dist && shx rm -rf gh-pages && shx mkdir gh-pages && shx cp -r assets dist examples index.html gh-pages && shx sed -i http://localhost:3333 .. gh-pages/examples/index.html","prepare":"husky install","prepublish":"npm run dist","prettier":"prettier --write \'src/**/*.js\'","start":"webpack serve --progress -d eval-source-map","test":"jest --watch","test:ci":"jest"},"repository":"aframevr/aframe-inspector","license":"MIT","dependencies":{"@fortawesome/free-solid-svg-icons":"^6.5.1","@fortawesome/free-brands-svg-icons":"^6.5.1","clipboard-copy":"^4.0.1","clsx":"^2.1.0","lodash.debounce":"^4.0.8","prop-types":"^15.8.1","react":"^18.2.0","react-dom":"^18.2.0","react-select":"^5.8.0","three":"0.168.0"},"devDependencies":{"@babel/core":"^7.24.0","@babel/eslint-parser":"^7.23.10","@babel/preset-env":"^7.24.0","@babel/preset-react":"^7.23.3","autoprefixer":"^10.4.17","babel-jest":"^29.7.0","babel-loader":"^9.1.3","cross-env":"^7.0.3","css-loader":"^6.10.0","eslint":"^8.57.0","eslint-config-standard":"^17.1.0","eslint-plugin-react":"^7.33.2","ghpages":"0.0.10","husky":"^8.0.1","jest":"^29.7.0","lint-staged":"^13.0.3","postcss-loader":"^8.1.1","prettier":"^3.2.5","react-test-renderer":"^18.2.0","shx":"^0.3.4","style-loader":"^3.3.4","stylelint":"^16.2.1","stylelint-config-standard":"^36.0.0","stylelint-order":"^6.0.4","stylus":"^0.62.0","stylus-loader":"^8.1.0","webpack":"^5.91.0","webpack-cli":"^5.1.4","webpack-dev-server":"^5.0.4"},"keywords":["3d","aframe","editor","inspector","three.js","tool","unity","vr","virtualreality","webvr","wysiwyg"],"lint-staged":{"*.js":"prettier --write"}}'
+          '{"name":"senangwebs-aframe-editor","version":"1.6.14","description":"A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.","main":"dist/aframe-inspector.min.js","scripts":{"build":"webpack --progress","deploy":"npm run ghpages","dist":"npm run dist:max && npm run dist:min","dist:max":"npm run build","dist:min":"cross-env MINIFY=true npm run build","ghpages":"npm run preghpages && ghpages -p gh-pages","lint":"npm run lintfile src/","lint:css":"stylelint src/css/main.css","lintfile":"eslint","preghpages":"npm run dist && shx rm -rf gh-pages && shx mkdir gh-pages && shx cp -r assets dist examples index.html gh-pages && shx sed -i http://localhost:3333 .. gh-pages/examples/index.html","prepare":"husky install","prepublish":"npm run dist","prettier":"prettier --write \'src/**/*.js\'","start":"webpack serve --progress -d eval-source-map","test":"jest --watch","test:ci":"jest"},"repository":"aframevr/aframe-inspector","license":"MIT","dependencies":{"@fortawesome/free-solid-svg-icons":"^6.5.1","@fortawesome/free-brands-svg-icons":"^6.5.1","clipboard-copy":"^4.0.1","clsx":"^2.1.0","lodash.debounce":"^4.0.8","prop-types":"^15.8.1","react":"^18.2.0","react-dom":"^18.2.0","react-select":"^5.8.0","three":"0.168.0"},"devDependencies":{"@babel/core":"^7.24.0","@babel/eslint-parser":"^7.23.10","@babel/preset-env":"^7.24.0","@babel/preset-react":"^7.23.3","autoprefixer":"^10.4.17","babel-jest":"^29.7.0","babel-loader":"^9.1.3","cross-env":"^7.0.3","css-loader":"^6.10.0","eslint":"^8.57.0","eslint-config-standard":"^17.1.0","eslint-plugin-react":"^7.33.2","ghpages":"0.0.10","husky":"^8.0.1","jest":"^29.7.0","lint-staged":"^13.0.3","postcss-loader":"^8.1.1","prettier":"^3.2.5","react-test-renderer":"^18.2.0","shx":"^0.3.4","style-loader":"^3.3.4","stylelint":"^16.2.1","stylelint-config-standard":"^36.0.0","stylelint-order":"^6.0.4","stylus":"^0.62.0","stylus-loader":"^8.1.0","webpack":"^5.91.0","webpack-cli":"^5.1.4","webpack-dev-server":"^5.0.4"},"keywords":["3d","aframe","editor","inspector","three.js","tool","unity","vr","virtualreality","webvr","wysiwyg"],"lint-staged":{"*.js":"prettier --write"}}'
         );
 
         /***/
@@ -96481,6 +96481,12 @@ object-assign
                 inspectorEnabled: enabled
               });
             });
+            _defineProperty(_this, 'handleSceneReload', function (newSceneEl) {
+              _this.setState({
+                entity: null,
+                sceneEl: newSceneEl
+              });
+            });
             _defineProperty(_this, 'handleOpenHelpModal', function () {
               _this.setState({
                 isHelpOpen: true
@@ -96596,6 +96602,10 @@ object-assign
                   'openhelpmodal',
                   this.handleOpenHelpModal
                 );
+                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
+                  'scenereload',
+                  this.handleSceneReload
+                );
               }
             },
             {
@@ -96616,6 +96626,10 @@ object-assign
                 _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
                   'openhelpmodal',
                   this.handleOpenHelpModal
+                );
+                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
+                  'scenereload',
+                  this.handleSceneReload
                 );
               }
             },
@@ -103350,7 +103364,7 @@ object-assign
               if (!curr) {
                 return false;
               }
-              while (curr !== undefined && curr.isEntity) {
+              while (curr != null && curr.isEntity) {
                 if (!_this.isExpanded(curr)) {
                   return false;
                 }
@@ -103372,7 +103386,7 @@ object-assign
             _defineProperty(_this, 'expandToRoot', function (x) {
               // Expand element all the way to the scene element
               var curr = x.parentNode;
-              while (curr !== undefined && curr.isEntity) {
+              while (curr != null && curr.isEntity) {
                 _this.state.expandedElements.set(curr, true);
                 curr = curr.parentNode;
               }
@@ -103684,11 +103698,40 @@ object-assign
               key: 'componentDidUpdate',
               value:
                 /**
-                 * Selected entity updated from somewhere else in the app.
+                 * Selected entity or scene updated from somewhere else in the app.
                  */
                 function componentDidUpdate(prevProps) {
                   if (prevProps.selectedEntity !== this.props.selectedEntity) {
                     this.selectEntity(this.props.selectedEntity);
+                  }
+
+                  // Scene element was replaced — re-attach DOM listeners.
+                  if (prevProps.scene !== this.props.scene) {
+                    if (prevProps.scene) {
+                      prevProps.scene.removeEventListener(
+                        'child-attached',
+                        this.rebuildEntityOptions
+                      );
+                      prevProps.scene.removeEventListener(
+                        'child-detached',
+                        this.rebuildEntityOptions
+                      );
+                    }
+                    if (this.props.scene) {
+                      this.props.scene.addEventListener(
+                        'child-attached',
+                        this.rebuildEntityOptions
+                      );
+                      this.props.scene.addEventListener(
+                        'child-detached',
+                        this.rebuildEntityOptions
+                      );
+                    }
+                    // Reset expanded state with new scene root.
+                    this.setState({
+                      expandedElements: new WeakMap([[this.props.scene, true]])
+                    });
+                    this.rebuildEntityOptions();
                   }
                 }
             },
@@ -112555,6 +112598,119 @@ object-assign
           );
         }
         this.isFirstOpen = false;
+      },
+      /**
+       * Reload the inspector UI to reflect current scene HTML.
+       * Call this after programmatically modifying the scene DOM.
+       */
+      reload: function reload() {
+        var _this7 = this;
+        // Deselect current entity.
+        this.selectEntity(null);
+
+        // Clear all existing helpers.
+        for (var id in this.helpers) {
+          var helper = this.helpers[id];
+          this.sceneHelpers.remove(helper);
+          if (helper.dispose) {
+            helper.dispose();
+          }
+        }
+        this.helpers = {};
+
+        // Remove old sceneHelpers from old scene.
+        if (this.scene && this.sceneHelpers.parent) {
+          this.scene.remove(this.sceneHelpers);
+        }
+
+        // Poll for new scene to register in AFRAME.scenes.
+        var _waitForScene = function waitForScene() {
+          var newSceneEl = AFRAME.scenes[0];
+          if (!newSceneEl) {
+            setTimeout(_waitForScene, 100);
+            return;
+          }
+          _this7.sceneEl = newSceneEl;
+          var _onReady = function onReady() {
+            // Wait for camera too.
+            if (!_this7.sceneEl.camera) {
+              _this7.sceneEl.addEventListener(
+                'camera-set-active',
+                function () {
+                  return _onReady();
+                },
+                {
+                  once: true
+                }
+              );
+              return;
+            }
+
+            // Re-acquire container (new scene creates new canvas).
+            _this7.container = document.querySelector('.a-canvas');
+
+            // Re-init cameras for new scene.
+            (0, _lib_cameras__WEBPACK_IMPORTED_MODULE_7__.initCameras)(_this7);
+
+            // Refresh scene object3D reference.
+            _this7.scene = _this7.sceneEl.object3D;
+
+            // Re-create sceneHelpers in new scene.
+            _this7.sceneHelpers = new THREE.Scene();
+            _this7.sceneHelpers.userData.source = 'INSPECTOR';
+            _this7.sceneHelpers.visible = true;
+            _this7.scene.add(_this7.sceneHelpers);
+
+            // Re-init viewport (transform controls, editor controls, raycaster).
+            _this7.viewport =
+              new _lib_viewport__WEBPACK_IMPORTED_MODULE_2__.Viewport(_this7);
+
+            // Rebuild helpers from new entities.
+            _this7.sceneEl.object3D.traverse(function (node) {
+              _this7.addHelper(node);
+            });
+
+            // Notify React components to update scene reference.
+            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+              'scenereload',
+              _this7.sceneEl
+            );
+
+            // Notify React components to rebuild scenegraph.
+            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+              'entitycreated'
+            );
+
+            // Enter inspector edit mode on new scene.
+            _this7.opened = true;
+            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+              'inspectortoggle',
+              true
+            );
+            document.body.classList.add('aframe-inspector-opened');
+            _this7.sceneEl.resize();
+            _this7.sceneEl.pause();
+            _this7.sceneEl.isPlaying = true;
+            _this7.cursor.play();
+            _lib_shortcuts__WEBPACK_IMPORTED_MODULE_4__.Shortcuts.enable();
+          };
+          if (_this7.sceneEl.hasLoaded) {
+            _onReady();
+          } else {
+            _this7.sceneEl.addEventListener(
+              'loaded',
+              function () {
+                return _onReady();
+              },
+              {
+                once: true
+              }
+            );
+          }
+        };
+
+        // Start polling (small delay to let DOM settle after replaceWith).
+        setTimeout(_waitForScene, 50);
       },
       /**
        * Closes the editor and gives the control back to the scene
