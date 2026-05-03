@@ -5,6 +5,7 @@ import { AwesomeIcon } from '../AwesomeIcon';
 import PropertyRow from './PropertyRow';
 import Collapsible from '../Collapsible';
 import Events from '../../lib/Events';
+import Swal from 'sweetalert2';
 
 const isSingleProperty = AFRAME.schema.isSingleProperty;
 
@@ -51,15 +52,23 @@ export default class Component extends React.Component {
   removeComponent = (event) => {
     var componentName = this.props.name;
     event.stopPropagation();
-    if (
-      confirm('Do you really want to remove component `' + componentName + '`?')
-    ) {
-      this.props.entity.removeAttribute(componentName);
-      Events.emit('componentremove', {
-        entity: this.props.entity,
-        component: componentName
-      });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to remove component `' + componentName + '`?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Remove',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.props.entity.removeAttribute(componentName);
+        Events.emit('componentremove', {
+          entity: this.props.entity,
+          component: componentName
+        });
+      }
+    });
   };
 
   /**

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Events from '../../lib/Events';
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 
 export default class AddComponent extends React.Component {
   static propTypes = {
@@ -14,19 +15,34 @@ export default class AddComponent extends React.Component {
    */
   addComponent = (value) => {
     let componentName = value.value;
-
-    var entity = this.props.entity;
+    const entity = this.props.entity;
 
     if (AFRAME.components[componentName].multiple) {
-      const id = prompt(
-        `Provide an ID for this component (e.g., 'foo' for ${componentName}__foo).`
-      );
-      componentName = id ? `${componentName}__${id}` : componentName;
+      Swal.fire({
+        title: 'Component ID',
+        text: `Provide an ID for this component (e.g., 'foo' for ${componentName}__foo).`,
+        input: 'text',
+        inputPlaceholder: 'ID',
+        showCancelButton: true,
+        inputAttributes: {
+          autocapitalize: 'off'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const id = result.value;
+          componentName = id ? `${componentName}__${id}` : componentName;
+          this.applyComponent(entity, componentName);
+        }
+      });
+    } else {
+      this.applyComponent(entity, componentName);
     }
+  };
 
+  applyComponent(entity, componentName) {
     entity.setAttribute(componentName, '');
     Events.emit('componentadd', { entity: entity, component: componentName });
-  };
+  }
 
   /**
    * Component dropdown options.

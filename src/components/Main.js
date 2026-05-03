@@ -233,10 +233,10 @@ export default class Main extends React.Component {
           </div>
         </div>
 
-        {/* <ModalHelp
+        <ModalHelp
           isOpen={this.state.isHelpOpen}
           onClose={this.onCloseHelpModal}
-        /> */}
+        />
         <ModalTextures
           isOpen={this.state.isModalTexturesOpen}
           selectedTexture={this.state.selectedTexture}

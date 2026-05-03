@@ -419,3 +419,79 @@ body.aframe-inspector-opened
 #leftPanel ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.75);
 }
+
+.swal2-container
+  backdrop-filter blur(4px)
+  background-color rgba(0, 0, 0, 0.7) !important
+
+  .swal2-popup
+    background #18181B !important
+    color #fff !important
+    border-radius 8px !important
+    padding 2.5rem 1.5rem !important
+
+  .swal2-title
+    color #fff !important
+    font-size 28px !important
+    font-weight 700 !important
+    margin 0 !important
+
+  .swal2-html-container
+    color #A3A3A3 !important
+    font-size 16px !important
+    line-height 1.6 !important
+    margin 0 !important
+
+  .swal2-icon
+    margin-top 0 !important
+    border-width 3px !important
+    
+    &.swal2-warning
+      border-color #f8bb86 !important
+      color #f8bb86 !important
+      
+      .swal2-icon-content
+        font-size 60px !important
+
+  .swal2-actions
+    gap 0.75rem !important
+    margin-top 1rem !important
+    width 100% !important
+    justify-content center !important
+
+  .swal2-confirm, .swal2-cancel
+    background #09090B !important
+    color #fff !important
+    border-radius 0.5rem !important
+    padding 14px 28px !important
+    font-weight 700 !important
+    border none !important
+    font-size 16px !important
+    margin 0 !important
+    transition all 0.2s ease
+    
+    &:focus
+      box-shadow none !important
+
+  .swal2-cancel:hover
+    background-color red !important
+    color white !important
+
+  .swal2-confirm:hover
+    background-color $primary !important
+    color #18181B !important
+
+  .swal2-input
+    background #09090B !important
+    color #fff !important
+    border 1px solid #323232 !important
+    border-radius 8px !important
+    box-shadow none !important
+    height 48px !important
+    margin 1rem auto !important
+    
+    &:focus
+      border-color $primary !important
+      box-shadow none !important
+
+

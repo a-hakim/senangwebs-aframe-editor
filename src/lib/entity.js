@@ -1,5 +1,6 @@
 import Events from './Events';
 import { equal } from './utils';
+import Swal from 'sweetalert2';
 
 /**
  * Update a component.
@@ -39,17 +40,31 @@ export function updateEntity(entity, component, property, value) {
  */
 export function removeEntity(entity, force) {
   if (entity) {
-    if (
-      force === true ||
-      confirm(
-        'Do you really want to remove entity `' +
-          (entity.id || entity.tagName) +
-          '`?'
-      )
-    ) {
+    const performRemove = () => {
       var closest = findClosestEntity(entity);
       entity.parentNode.removeChild(entity);
       AFRAME.INSPECTOR.selectEntity(closest);
+    };
+
+    if (force === true) {
+      performRemove();
+    } else {
+      Swal.fire({
+        title: 'Are you sure?',
+        text:
+          'Do you really want to remove entity `' +
+          (entity.id || entity.tagName) +
+          '`?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Remove',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          performRemove();
+        }
+      });
     }
   }
 }
