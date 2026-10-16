@@ -7,7 +7,7 @@ import Collapsible from '../Collapsible';
 import Mixins from './Mixins';
 import { updateEntity } from '../../lib/entity';
 import EntityRepresentation from '../EntityRepresentation';
-import Events from '../../lib/Events';
+import Events, { createEventScope } from '../../lib/Events';
 import { saveBlob } from '../../lib/utils';
 
 // @todo Take this out and use updateEntity?
@@ -20,12 +20,18 @@ function changeId(componentName, value) {
 }
 
 export default class CommonComponents extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   static propTypes = {
     entity: PropTypes.object
   };
 
   componentDidMount() {
-    Events.on('entityupdate', (detail) => {
+    this.events.on('entityupdate', (detail) => {
       if (detail.entity !== this.props.entity) {
         return;
       }
@@ -94,10 +100,12 @@ export default class CommonComponents extends React.Component {
         </div>
         <div className="collapsible-content">
           <div className="propertyRow">
-            <label htmlFor="id" className="text">
+            <label htmlFor="entity-id" className="text">
               ID
             </label>
             <InputWidget
+              id="entity-id"
+              label="Entity ID"
               onChange={changeId}
               entity={entity}
               name="id"

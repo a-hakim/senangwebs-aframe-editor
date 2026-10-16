@@ -35208,6 +35208,13 @@ body.aframe-inspector-opened {
   margin: 0;
   overflow: hidden;
 }
+#aframeInspector {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483001;
+  pointer-events: none;
+/* Note these vendor-prefixed selectors cannot be grouped! */
+}
 #aframeInspector svg:not(:root).svg-inline--fa,
 #aframeInspector svg:not(:host).svg-inline--fa {
   overflow: visible;
@@ -35248,6 +35255,19 @@ body.aframe-inspector-opened {
   color: #666;
   cursor: default;
 }
+#aframeInspector #toolbar .toolbarActions .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0;
+  border-radius: 0;
+  background: #09090b;
+  border: 0;
+}
+#aframeInspector #toolbar .toolbarActions .button span {
+  font-size: 12px;
+}
 #aframeInspector #leftPanel {
   display: flex;
   flex-direction: column;
@@ -35255,6 +35275,7 @@ body.aframe-inspector-opened {
   height: calc(100vh - 48px);
 }
 #aframeInspector .scenegraph-menubar {
+  flex-shrink: 0;
   display: flex;
   height: 40px;
   width: 100%;
@@ -35286,17 +35307,53 @@ body.aframe-inspector-opened {
   border-top: 1px solid #111;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
   width: 100%;
-  height: calc(100vh - 40px);
+  height: 100%;
+  min-height: 0;
+  flex: 1;
 }
 #aframeInspector #scenegraph .entity {
   background: #18181b;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 4px 8px;
   white-space: nowrap;
+  height: 40px;
+  box-sizing: border-box;
+  align-items: center;
+}
+#aframeInspector #scenegraph .entity .entity-label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+}
+#aframeInspector #scenegraph .entity .entityPrint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#aframeInspector #scenegraph .entity button {
+  background: transparent;
+  border: 0;
+  padding: 3px;
+  flex-shrink: 0;
+}
+#aframeInspector #scenegraph .entity .entityActions {
+  flex-shrink: 0;
+}
+#aframeInspector #scenegraph .entity .visibility-button {
+  width: 24px;
+  height: 28px;
+}
+#aframeInspector #scenegraph .entity .collapsespace {
+  margin: 0;
+  padding: 0;
+  width: 16px;
+}
+#aframeInspector #scenegraph .entity:focus-within .entityActions {
+  display: flex;
 }
 #aframeInspector #scenegraph .entity:hover {
   background: #09090b;
@@ -35377,12 +35434,19 @@ body.aframe-inspector-opened {
   color: #fff;
 }
 #aframeInspector #scenegraph .search {
+  display: flex;
+  align-items: center;
+  background: #18181b;
   padding: 0px;
   font-size: 16px;
   position: relative;
   overflow: hidden;
 }
 #aframeInspector #scenegraph .search input {
+  min-width: 0;
+  flex: 1;
+  box-sizing: border-box;
+  padding-right: 40px;
   color: #a3a3a3;
   background: #18181b;
   border-radius: 0px;
@@ -35391,12 +35455,26 @@ body.aframe-inspector-opened {
   text-indent: 10px;
   width: 100%;
 }
+#aframeInspector #scenegraph .search button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
 #aframeInspector #scenegraph .search svg {
   position: absolute;
   right: 12px;
   top: 12px;
 }
 #aframeInspector #scenegraph .outliner {
+  min-height: 0;
+  overflow: auto;
+  overflow-anchor: none;
   background: #18181b;
   color: #a3a3a3;
   cursor: default;
@@ -35435,6 +35513,26 @@ body.aframe-inspector-opened {
   height: 16px;
   font-weight: 600;
   color: #fff;
+}
+#aframeInspector .panel-hint {
+  padding: 12px;
+  line-height: 1.6;
+}
+#aframeInspector #rightPanel .componentHeader.title {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+#aframeInspector #rightPanel .componentHeader.title button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 #aframeInspector .componentHeader.title {
   height: 40px;
@@ -35502,6 +35600,9 @@ body.aframe-inspector-opened {
   display: flex;
 }
 #aframeInspector .collapsible .static {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: #18181b;
   border-bottom: 2px solid #18181b;
   box-sizing: content-box;
@@ -35512,6 +35613,26 @@ body.aframe-inspector-opened {
 }
 #aframeInspector .collapsible .static:hover {
   background: #2e2e33;
+}
+#aframeInspector .collapsible .static .collapse-toggle {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  width: 24px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#aframeInspector .collapsible .static .collapsible-header {
+  flex: 1;
+  min-width: 0;
+}
+#aframeInspector .componentHeaderActions button {
+  padding: 3px;
+  background: transparent;
+  border: 0;
 }
 #aframeInspector .collapsible .menu {
   text-align: right;
@@ -35533,6 +35654,7 @@ body.aframe-inspector-opened {
   margin-right: 10px;
   margin-left: 2px;
   width: 0;
+  margin: 0 !important;
 }
 #aframeInspector .collapsible.collapsed .static .collapse-button {
   border-left-color: #a3a3a3;
@@ -35860,6 +35982,7 @@ body.aframe-inspector-opened {
   background: #18181b;
 }
 #aframeInspector .modal {
+  pointer-events: auto;
   animation: animateopacity 0.2s ease-out;
   display: flex;
   height: 100%;
@@ -35868,10 +35991,33 @@ body.aframe-inspector-opened {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 9999999999;
+  z-index: 100;
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
   background-color: rgba(0,0,0,0.5);
+}
+#aframeInspector .modal .modal-content {
+  max-height: calc(100dvh - 32px);
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+}
+#aframeInspector .modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+#aframeInspector .modal .modal-header .close {
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  padding: 6px;
+}
+#aframeInspector .modal .modal-body {
+  min-height: 0;
+  height: auto;
+  overflow: auto;
 }
 #aframeInspector .modal h3 {
   font-size: 16px;
@@ -35879,8 +36025,10 @@ body.aframe-inspector-opened {
   margin: 0.6em 0;
 }
 #aframeInspector #textureModal .modal-content {
-  height: calc(100% - 96px);
-  max-width: calc(100% - 96px);
+  height: calc(100dvh - 32px);
+  max-height: 800px;
+  max-width: calc(100vw - 32px);
+  width: 1200px;
   border-radius: 8px;
 }
 #aframeInspector .modal-content {
@@ -35956,11 +36104,21 @@ body.aframe-inspector-opened {
   margin-bottom: 12px;
   max-height: 65vh;
 }
+#aframeInspector .texture-toolbar {
+  flex-wrap: wrap;
+  max-height: none;
+}
 #aframeInspector .url-input-group {
+  min-width: 220px;
   flex: 1;
   display: flex;
   gap: 8px;
   align-items: center;
+}
+#aframeInspector .url-input-group input {
+  min-width: 0;
+  flex: 1;
+  padding: 8px;
 }
 #aframeInspector .url-input-group .imageUrl {
   flex: 1;
@@ -36001,6 +36159,25 @@ body.aframe-inspector-opened {
   width: 155px;
   transition: box-shadow 0.15s ease;
 }
+#aframeInspector .modal .gallery-item {
+  padding: 0;
+  text-align: left;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border: 1px solid #323232;
+  font-weight: normal;
+}
+#aframeInspector .modal .gallery-item img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+#aframeInspector .modal .gallery-item .detail {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+}
 #aframeInspector .gallery-item.selected,
 #aframeInspector .gallery-item:hover {
   box-shadow: 0 0 0 2px #0f9;
@@ -36013,6 +36190,7 @@ body.aframe-inspector-opened {
 }
 #aframeInspector .preview {
   width: 250px;
+  flex-shrink: 0;
 }
 #aframeInspector .preview label {
   color: #888;
@@ -36139,8 +36317,8 @@ body.aframe-inspector-opened {
   gap: 24px;
   font-size: 14px;
   justify-content: space-between;
-  overflow: auto;
-  max-height: 74vh;
+  overflow: visible;
+  max-height: none;
 }
 #aframeInspector .newimage input {
   color: #0f9;
@@ -36173,6 +36351,14 @@ body.aframe-inspector-opened {
 }
 #aframeInspector .new_asset_options {
   width: 100%;
+  min-width: 0;
+  flex: 1;
+}
+#aframeInspector .new_asset_options > input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 32px;
+  margin-bottom: 12px;
 }
 #aframeInspector .new_asset_options > ul {
   margin-left: 10px;
@@ -36191,6 +36377,14 @@ body.aframe-inspector-opened {
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 8px;
   cursor: pointer;
+}
+@media (max-width: 620px) {
+  #aframeInspector .newimage {
+    flex-direction: column;
+  }
+  #aframeInspector .preview {
+    width: 100%;
+  }
 }
 @keyframes pulse {
   0%, 100% {
@@ -36212,6 +36406,8 @@ body.aframe-inspector-opened {
   vertical-align: -0.125em;
 }
 #aframeInspector #viewportBar {
+  max-width: calc(100vw - 16px);
+  z-index: 1;
   align-items: center;
   color: #a3a3a3;
   position: absolute;
@@ -36397,6 +36593,23 @@ body.aframe-inspector-opened {
     display: block;
   }
 }
+#aframeInspector #transformToolbar .button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+#aframeInspector #transformToolbar .button svg {
+  width: 18px;
+  height: 18px;
+}
+@media (max-width: 1000px) {
+  #aframeInspector #viewportBar .viewportHud-menubar {
+    display: none;
+  }
+}
 #aframeInspector svg:not(:root).svg-inline--fa,
 #aframeInspector svg:not(:host).svg-inline--fa {
   overflow: visible;
@@ -36477,6 +36690,37 @@ body.aframe-inspector-opened {
   justify-content: space-between;
   align-items: center;
 }
+#aframeInspector .texture {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#aframeInspector .texture input.map_value {
+  flex: 1;
+  min-width: 100px;
+  margin: 0;
+}
+#aframeInspector .texture .texture-picker {
+  padding: 3px;
+  display: flex;
+}
+#aframeInspector .texture canvas {
+  border: 0;
+}
+#aframeInspector .field-error,
+#aframeInspector .form-error {
+  color: #ffb4ad;
+  line-height: 1.5;
+}
+#aframeInspector input[aria-invalid=true] {
+  border: 1px solid #ffb4ad !important;
+}
+#aframeInspector .vec2,
+#aframeInspector .vec3,
+#aframeInspector .vec4 {
+  flex-wrap: wrap;
+}
 #aframeInspector .modal-overlay {
   position: fixed;
   top: 0;
@@ -36503,6 +36747,9 @@ body.aframe-inspector-opened {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+#aframeInspector #primitive-modal .modal-content {
+  width: 600px;
 }
 #aframeInspector .modal-body {
   display: flex;
@@ -36567,6 +36814,11 @@ body.aframe-inspector-opened {
 }
 #aframeInspector .modal-close-button:hover {
   background-color: #888;
+}
+@media (max-width: 620px) {
+  #aframeInspector #primitive-modal .primitive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+  }
 }
 #aframeInspector .error-boundary {
   position: fixed;
@@ -36647,6 +36899,36 @@ body.aframe-inspector-opened {
 }
 #aframeInspector button {
   position: relative;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: #09090b;
+  border: 1px solid #323232;
+  border-radius: 6px;
+  color: #eee;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 10px;
+}
+#aframeInspector button:hover {
+  color: #0f9;
+  border-color: #0f9;
+}
+#aframeInspector button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+#aframeInspector button:focus-visible,
+#aframeInspector a:focus-visible,
+#aframeInspector input:focus-visible,
+#aframeInspector select:focus-visible,
+#aframeInspector textarea:focus-visible,
+#aframeInspector [tabindex]:focus-visible {
+  outline: 2px solid #0f9 !important;
+  outline-offset: -2px;
+}
+#aframeInspector [hidden] {
+  display: none !important;
 }
 #aframeInspector code {
   font-family: Consolas, Andale Mono, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
@@ -36713,6 +36995,9 @@ body.aframe-inspector-opened {
   display: flex;
 }
 #aframeInspector .toggle-edit {
+  pointer-events: auto;
+  border: 0;
+  padding: 0;
   background-color: #18181b;
   box-sizing: content-box;
   color: #fff;
@@ -36805,6 +37090,7 @@ body.aframe-inspector-opened {
   border: 1px solid #a00;
 }
 #aframeInspector #sidebar {
+  min-height: 0;
   background: #18181b;
   width: 100%;
   flex-grow: 1;
@@ -36850,6 +37136,7 @@ body.aframe-inspector-opened {
 }
 #aframeInspector .hidden {
   visibility: hidden;
+  display: none !important;
 }
 #aframeInspector a.button {
   color: #a3a3a3;
@@ -36875,8 +37162,26 @@ body.aframe-inspector-opened {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 48px);
+  margin-left: auto;
+}
+#aframeInspector #leftPanel,
+#aframeInspector #rightPanel {
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  height: calc(100vh - 48px);
+  height: calc(100dvh - 48px);
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: #18181b;
+  position: relative;
+  top: auto;
 }
 #aframeInspector #actionBar {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 48px;
   width: 100vw;
   height: 48px;
   background: #18181b;
@@ -36895,11 +37200,17 @@ body.aframe-inspector-opened {
   margin-left: auto;
   color: #aaa;
 }
+#aframeInspector .save-feedback {
+  padding: 0 12px;
+  color: #aaa;
+  font-size: 11px;
+}
 #aframeInspector #inspectorContainer {
   display: flex;
   justify-content: space-between;
   left: 0;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   position: fixed;
   top: 0;
@@ -36918,11 +37229,19 @@ body.aframe-inspector-opened {
   z-index: 9999;
 }
 #aframeInspector .toggle-sidebar {
+  pointer-events: auto;
   align-items: center;
   display: flex;
   height: 100%;
   position: absolute;
   z-index: 40;
+}
+#aframeInspector .toggle-sidebar button {
+  background: #262626;
+  color: #a3a3a3;
+  padding: 5px;
+  border: 0;
+  border-radius: 0;
 }
 #aframeInspector .toggle-sidebar a {
   background-color: #262626;
@@ -36941,6 +37260,11 @@ body.aframe-inspector-opened {
 #aframeInspector .toggle-sidebar.right {
   top: 0;
   right: 0;
+}
+@media (max-width: 620px) {
+  #aframeInspector #sw-info {
+    display: none;
+  }
 }
 @keyframes animateopacity {
   from {
@@ -36970,6 +37294,7 @@ body.aframe-inspector-opened {
 }
 .swal2-container {
   background-color: rgba(0,0,0,0) !important;
+  z-index: 2147483002 !important;
 }
 .swal2-container .swal2-popup {
   background: #18181b !important;
@@ -37062,19 +37387,19 @@ body.aframe-inspector-opened {
             ],
             names: [],
             mappings:
-              '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',
+              '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CV,YAAU;EACV,aAAQ;EACR,YAAO;EACP,eAAU;EACV,8BAAgB;EAChB,gBAAO;EACP,WAAM;EACN,mBAAW;EACX,kBAAc;APstChB;AOptCE;EACE,aAAQ;EACR,YAAO;EACP,YAAM;EACN,mBAAY;EACZ,yBAAgB;APstCpB;AOptCA;EACE,gBAAQ;EACR,aAAO;EACP,mBAAW;EACX,gBAAW;EACX,kBAAW;EACX,YAAO;EACP,YAAM;EACN,kBAAc;EACd,wBAAQ;EACR,mBAAY;EACZ,oBAAgB;APstClB;AOptCE;EACE,SAAO;EACP,eAAU;APstCd;AOptCA;EACE,aAAQ;EACR,mBAAY;EACZ,YAAO;APstCT;AOptCE;EACE,WAAM;EACN,YAAO;EACP,SAAO;EACP,gBAAW;EACX,eAAU;EACV,eAAO;APstCX;AOptCE;EACE,mBAAW;APstCf;AOptCI;EACE,WAAM;APstCZ;AOptCA;EACE,aAAQ;EACR,mBAAY;EACZ,YAAO;APstCT;AOptCE;EACE,yBAAY;EACZ,sBAAe;EACf,YAAO;EACP,aAAQ;EACR,mBAAY;APstChB;AOntCI;EACE,aAAQ;APqtCd;AOntCI;EACE,yBAAiB;APqtCvB;AOntCE;EACE,oCAAiB;EACjB,WAAM;APqtCV;AOntCE;EACE,sBAAM;APqtCV;AOntCA;EACE,kBAAa;EACb,mBAAc;APqtChB;AOntCA;EACE,WAAM;EACN,iBAAa;EACb,eAAU;APqtCZ;AOntCA;EACE,cAAY;APqtCd;AOntCA;EACE,eAAO;EACP,YAAM;APqtCR;AOptCE;EACE,iBAAa;EACb,kBAAc;APstClB;AOptCA;EACE,mBAAY;EACZ,YAAO;EACP,cAAQ;EACR,aAAQ;APstCV;AOptCE;EACE,YAAM;APstCV;AOrtCI;EACE,yBAAiB;EACjB,YAAO;EACP,gBAAW;EACX,YAAO;EACP,gBAAW;APutCjB;AOttCM;EACE,mBAAa;APwtCrB;AOvtCI;EACE,cAAQ;APytCd;AOxtCI;EACE,cAAM;EACN,aAAQ;EACR,mBAAY;AP0tClB;AOztCM;EACE,iBAAa;EACb,WAAM;EACN,YAAO;AP2tCf;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',
             sourcesContent: [
               '$primary=#00FF99\n$primaryhover=lighten(#00FF99, 35%)\n\n$bg=#18181B\n$bgdark=#09090B\n$bglight=#18181B\n$bglighter=lighten(#18181B, 10%)\n\n$red=#00FF99\n$green=#22D3EE\n$orange=#d66853\n\n$black=#222\n$gray=#262626\n$grayalt=#323232\n$grayhover=#444\n\n$lightgray=#AAA\n$white=#A3A3A3\n\n$normalfont=system-ui, BlinkMacSystemFont, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif\n$monospace=system-ui, BlinkMacSystemFont, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif\n\nmedia--1024() {\n  @media (min-width: 1024px) {\n    {block}\n  }\n}\n\n/* CSS rules from the original FontAwesomeIcon component */\nsvg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {\n  overflow: visible;\n  box-sizing: content-box;\n}\n\n.svg-inline--fa {\n  display: inline-block;\n  height: 1em;\n  overflow: visible;\n  vertical-align: -0.125em;\n}\n',
-              "@import './lib';\r\n\r\nbody.aframe-inspector-opened,\r\n.toggle-edit\r\n  font-family BlinkMacSystemFont, -apple-system, \"Segoe UI\", Helvetica, Arial, sans-serif\r\n\r\n.wf-roboto-n4-active body.aframe-inspector-opened,\r\n.wf-roboto-n4-active .toggle-edit\r\n  font-family BlinkMacSystemFont, -apple-system, \"Segoe UI\", Helvetica, Arial, sans-serif\r\n\r\nbody.aframe-inspector-opened\r\n  background $bgdark\r\n  color #fff\r\n  font-size 12px\r\n  margin 0\r\n  overflow hidden\r\n\r\n#aframeInspector\r\n  @import './scenegraph';\r\n  @import './components';\r\n  @import './entity';\r\n  @import './help';\r\n  @import './select';\r\n  @import './textureModal';\r\n  @import './viewport';\r\n  @import './widgets';\r\n  @import './primitiveModal';\r\n\r\n  .error-boundary\r\n    position fixed\r\n    top 0\r\n    left 0\r\n    width 100%\r\n    height 100%\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    background rgba(0, 0, 0, 0.9)\r\n    z-index 9999\r\n    pointer-events all\r\n\r\n    .error-content\r\n      background #1e1e1e\r\n      border 1px solid #ff4444\r\n      border-radius 8px\r\n      padding 24px 32px\r\n      max-width 500px\r\n      text-align center\r\n\r\n      h2\r\n        color #ff4444\r\n        margin 0 0 16px 0\r\n        font-size 18px\r\n\r\n      p\r\n        color #a3a3a3\r\n        margin 0 0 16px 0\r\n\r\n      pre\r\n        background #0d0d0d\r\n        color #ff6b6b\r\n        padding 12px\r\n        border-radius 4px\r\n        font-size 12px\r\n        overflow-x auto\r\n        text-align left\r\n        margin 0 0 16px 0\r\n\r\n      button\r\n        background #00ff99\r\n        color #000\r\n        border none\r\n        padding 10px 24px\r\n        border-radius 4px\r\n        cursor pointer\r\n        font-weight 500\r\n        font-size 14px\r\n\r\n        &:hover\r\n          background #00cc7a\r\n\r\n  .Select,\r\n  code,\r\n  pre,\r\n  input,\r\n  textarea,\r\n  select\r\n    font-family $monospace\r\n    font-size 14px\r\n\r\n  .wf-robotomono-n4-active .Select,\r\n  .wf-robotomono-n4-active code,\r\n  .wf-robotomono-n4-active pre,\r\n  .wf-robotomono-n4-active input,\r\n  .wf-robotomono-n4-active textarea,\r\n  .wf-robotomono-n4-active select\r\n    font-family Roboto Mono, Consolas, Andale Mono, Monaco, Courier New, monospace\r\n\r\n  hr\r\n    border 0\r\n    border-top 1px solid #ccc\r\n\r\n  a\r\n    cursor pointer\r\n\r\n  button\r\n    position relative\r\n\r\n  code\r\n    font-family Consolas, Andale Mono, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace\r\n\r\n  textarea\r\n    tab-size 4\r\n    white-space pre\r\n    word-wrap normal\r\n\r\n  textarea.success\r\n    border-color #8b8 !important\r\n\r\n  textarea.fail\r\n    background-color rgba(255, 0, 0, 0.05)\r\n    border-color #f00 !important\r\n\r\n  textarea,\r\n  input\r\n    outline none /* osx */\r\n\r\n  .gltfIcon img\r\n    box-sizing content-box\r\n    display inline\r\n    height 20px\r\n    left 5px\r\n    padding 0 5px\r\n    position relative\r\n    top 4px\r\n    vertical-align baseline\r\n    width 20px\r\n\r\n  #sidebar,\r\n  #scenegraph,\r\n    .panel\r\n      cursor default\r\n      user-select none\r\n\r\n  #sceneActions\r\n    display flex\r\n    flex-direction row\r\n    position absolute\r\n    bottom 0\r\n    z-index 40\r\n    width calc(20rem - 48px)\r\n    height 48px\r\n    background $bg\r\n    padding-left 48px\r\n\r\n  #sceneActions .sceneActionsTitle\r\n    letter-spacing 0.1em\r\n    line-height 1rem\r\n    font-size 0.75rem\r\n    padding 0.25rem\r\n    text-align center\r\n    background #303032\r\n    color #989899\r\n    font-weight 500\r\n\r\n  #sceneActions .sceneActionsButton\r\n    display flex\r\n\r\n  .toggle-edit\r\n    background-color $bg\r\n    box-sizing content-box\r\n    color white\r\n    font-size 12px\r\n    left 0px\r\n    bottom 0px\r\n    line-height normal\r\n    margin 0\r\n    position absolute\r\n    text-align center\r\n    text-decoration none\r\n    width 48px\r\n    height 48px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    z-index 40\r\n\r\n  .toggle-edit:hover\r\n    background-color #141417\r\n    color white\r\n\r\n    svg\r\n      color $red\r\n\r\n  .toggle-save,\r\n  .toggle-live\r\n    background-color $bg\r\n    color white\r\n    height 40px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    border 0\r\n    font-size 16px\r\n    font-weight 500\r\n    cursor pointer\r\n\r\n  .toggle-save:hover,\r\n  .toggle-live:hover\r\n    background-color $bgdark\r\n\r\n  #saveSceneBtn\r\n    width 10rem\r\n\r\n  #liveSceneBtn\r\n    width 10rem\r\n\r\n  input\r\n    border 1px solid #555\r\n    color #fff\r\n\r\n  input,\r\n  .texture canvas\r\n    transition 0.1s background-color ease-in-out, 0.1s border-color ease-in-out, 0.1s color ease-in-out\r\n\r\n  input[type=text],\r\n  input[type=number],\r\n  input.string,\r\n  input.number\r\n    min-height 14px\r\n    outline none\r\n\r\n  input[type=\"checkbox\"]\r\n    appearance auto\r\n    cursor pointer\r\n    margin 0\r\n    height 18px\r\n    width 18px\r\n\r\n  input[type=\"checkbox\"]:focus\r\n    box-shadow none\r\n\r\n  input.number\r\n    border 0\r\n    color white !important\r\n    cursor col-resize\r\n    font-size 14px\r\n    padding 2px\r\n\r\n  input.stringfocus,\r\n  input.numberfocus\r\n    border 1px solid #00FF99\r\n    color #fff\r\n    cursor auto\r\n\r\n  input.error\r\n    border 1px solid #a00\r\n\r\n  #sidebar\r\n    background $bg\r\n    width 100%\r\n    flex-grow 1\r\n    overflow-y auto\r\n\r\n  #sidebar *\r\n    vertical-align middle\r\n\r\n  input,\r\n  textarea,\r\n  select\r\n    background $black\r\n    border 1px solid transparent\r\n    color #888\r\n\r\n  select\r\n    background $bglighter\r\n\r\n  input[type=color]\r\n    background-color #333\r\n    border 1px solid #111\r\n    height 28px\r\n    cursor pointer\r\n\r\n  input[type=color]\r\n    cursor pointer\r\n    height 25px\r\n    padding 0\r\n    width 50px\r\n\r\n  /* Note these vendor-prefixed selectors cannot be grouped! */\r\n  input[type=color]-webkit-color-swatch\r\n    border 0  /* To remove the gray border. */\r\n\r\n  input[type=color]-webkit-color-swatch-wrapper\r\n    padding 0  /* To remove the inner padding. */\r\n\r\n  input[type=color]-moz-color-swatch\r\n    border 0\r\n\r\n  input[type=color]-moz-focus-inner\r\n    border 0  /* To remove the inner border (specific to Firefox). */\r\n    padding 0\r\n\r\n  .hidden\r\n    visibility hidden\r\n\r\n  a.button\r\n    color #A3A3A3\r\n    font-size 16px\r\n    margin-left 8px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    text-decoration none\r\n\r\n  a.buttonhover\r\n    color #00FF99\r\n\r\n  @keyframes animateopacity\r\n    from { opacity: 0 }\r\n    to { opacity: 1 }\r\n\r\n  .hide\r\n    display none\r\n\r\n  .a-canvas.state-dragging\r\n    cursor grabbing\r\n\r\n  #rightPanel\r\n    top 0\r\n    width 20rem\r\n    display flex\r\n    flex-direction column\r\n    height calc(100vh - 48px)\r\n\r\n  #actionBar\r\n    width 100vw\r\n    height 48px\r\n    background $bg\r\n    bottom 0\r\n    position absolute\r\n\r\n    #sw-info\r\n      display flex\r\n      flex-direction column\r\n      justify-content center\r\n      align-items end\r\n      width max-content\r\n      height 100%\r\n      padding 0 10px\r\n      margin-left auto\r\n      color $lightgray\r\n\r\n  #inspectorContainer\r\n    display flex\r\n    justify-content space-between\r\n    left 0\r\n    height 100%\r\n    pointer-events none\r\n    position fixed\r\n    top 0\r\n    width 100%\r\n    z-index 20\r\n\r\n  #scenegraph,\r\n  #viewportBar,\r\n  #actionBar,\r\n  #leftPanel,\r\n  #rightPanel\r\n    pointer-events all\r\n\r\n  .aframe-inspector-opened a-scene .a-canvas\r\n    background-color #191919\r\n    z-index 9999\r\n\r\n  .toggle-sidebar\r\n    align-items center\r\n    display flex\r\n    height 100%\r\n    position absolute\r\n    z-index 40\r\n\r\n    a\r\n      background-color #262626\r\n      color #A3A3A3\r\n      padding 5px\r\n      z-index 40\r\n\r\n    a.hover\r\n      background-color #007370\r\n      color #fff\r\n\r\n  .toggle-sidebar.left\r\n    top 0\r\n    left 0\r\n\r\n  .toggle-sidebar.right\r\n    top 0\r\n    right 0\r\n\r\n#rightPanel ::-webkit-scrollbar\r\n#leftPanel ::-webkit-scrollbar {\r\n    width: 8px;\r\n    height: 8px;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-track\r\n#leftPanel ::-webkit-scrollbar-track {\r\n    background: #18181B;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-thumb\r\n#leftPanel ::-webkit-scrollbar-thumb {\r\n    background: rgba(0, 0, 0, 0.5);\r\n    border-radius: 0;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-thumb:hover\r\n#leftPanel ::-webkit-scrollbar-thumb:hover {\r\n    background: rgba(0, 0, 0, 0.75);\r\n}\r\n\r\n.swal2-container\r\n  background-color rgba(0, 0, 0, 0) !important\r\n\r\n  .swal2-popup\r\n    background #18181B !important\r\n    color #fff !important\r\n    border-radius 8px !important\r\n    padding 2.5rem 1.5rem !important\r\n\r\n  .swal2-title\r\n    color #fff !important\r\n    font-size 28px !important\r\n    font-weight 700 !important\r\n    margin 0 !important\r\n\r\n  .swal2-html-container\r\n    color #A3A3A3 !important\r\n    font-size 16px !important\r\n    line-height 1.6 !important\r\n    margin 0 !important\r\n\r\n  .swal2-icon\r\n    margin-top 0 !important\r\n    border-width 3px !important\r\n    \r\n    &.swal2-warning\r\n      border-color #f8bb86 !important\r\n      color #f8bb86 !important\r\n      \r\n      .swal2-icon-content\r\n        font-size 60px !important\r\n\r\n  .swal2-actions\r\n    gap 0.75rem !important\r\n    margin-top 1rem !important\r\n    width 100% !important\r\n    justify-content center !important\r\n\r\n  .swal2-confirm, .swal2-cancel\r\n    background #09090B !important\r\n    color #fff !important\r\n    border-radius 0.5rem !important\r\n    padding 14px 28px !important\r\n    font-weight 700 !important\r\n    border none !important\r\n    font-size 16px !important\r\n    margin 0 !important\r\n    transition all 0.2s ease\r\n    \r\n    &:focus\r\n      box-shadow none !important\r\n\r\n  .swal2-cancel:hover\r\n    background-color red !important\r\n    color white !important\r\n\r\n  .swal2-confirm:hover\r\n    background-color $primary !important\r\n    color #18181B !important\r\n\r\n  .swal2-input\r\n    background #09090B !important\r\n    color #fff !important\r\n    border 1px solid #323232 !important\r\n    border-radius 8px !important\r\n    box-shadow none !important\r\n    height 48px !important\r\n    margin 1rem auto !important\r\n    \r\n    &:focus\r\n      border-color $primary !important\r\n      box-shadow none !important\r\n\r\n\r\n",
-              "@import './lib';\r\n\r\n#toolbar\r\n  background-color $bgdark\r\n\r\n  .toolbarActions\r\n    padding 0\r\n    height 48px\r\n    display grid\r\n    grid-template-columns repeat(2, minmax(0, 1fr))\r\n\r\n    a.button\r\n      display flex\r\n      justify-content center\r\n      align-items center\r\n      flex-direction column\r\n      margin 0\r\n\r\n      svg\r\n        color inherit\r\n\r\n      span\r\n        font-size 12px\r\n\r\n    a.button:hover\r\n      color $primary\r\n\r\n    a.disabled\r\n      color #666\r\n      cursor default\r\n\r\n#leftPanel\r\n  display flex\r\n  flex-direction column\r\n  width 20rem\r\n  height calc(100vh - 48px)\r\n\r\n.scenegraph-menubar\r\n    display flex\r\n    height 40px\r\n    width 100%\r\n    justify-content space-between\r\n    background-color $bg\r\n    \r\n#githubLink\r\n    display flex\r\n    align-items center\r\n    gap 8px\r\n    font-size 14px\r\n    height 100%\r\n    width 320px\r\n    color $lightgray\r\n    padding 0 10px\r\n    text-decoration none\r\n\r\n    svg\r\n        height 18px\r\n\r\n#githubLink:hover\r\n    color $primary\r\n\r\n    svg\r\n        color $primary\r\n    \r\n#scenegraph\r\n  background $bg\r\n  border-top 1px solid #111\r\n  display flex\r\n  flex-direction column\r\n  overflow auto\r\n  width 100%\r\n  height calc(100vh - 40px)\r\n\r\n  .entity\r\n    background $bg\r\n    cursor pointer\r\n    display flex\r\n    justify-content space-between\r\n    padding 10px\r\n    white-space nowrap\r\n\r\n    &:hover\r\n      background $bgdark\r\n\r\n    &.active\r\n      background-color #09090B\r\n      color #fff\r\n      .component:hover\r\n        color rgba(0, 0, 0, 0.5)\r\n      .entityActions\r\n        display flex\r\n\r\n    &.novisible\r\n      &.active\r\n        span,\r\n        svg,\r\n        .collapsespace,\r\n        .id\r\n          color #999\r\n\r\n      &:not(.active)\r\n        span,\r\n        svg,\r\n        .collapsespace,\r\n        .id\r\n          color #626262\r\n\r\n    &.drag-before\r\n      border-top 2px solid $primary\r\n\r\n    &.drag-after\r\n      border-bottom 2px solid $primary\r\n\r\n    &.drag-inside\r\n      background-color $primary\r\n      color $bgdark\r\n\r\n  .component:hover\r\n    color rgba(0, 0, 0, 0.5)\r\n\r\n  .entityIcons\r\n    margin-left 2px\r\n\r\n  .entityActions\r\n    display none\r\n    margin 0 4px\r\n\r\n    .button\r\n      color #fff\r\n      font-size 12px\r\n      margin-left 6px\r\n\r\n  svg\r\n    color #CCC\r\n\r\n  .entityActions svg:hover\r\n    color $primary\r\n\r\n  .active svg\r\n    color #FAFAFA\r\n\r\n  .id\r\n    color #ccc\r\n\r\n  .option.active .id\r\n    color #fff\r\n\r\n  .collapsespace\r\n    color #eee\r\n    display inline-block\r\n    text-align center\r\n    width 14px\r\n    margin-left 8px\r\n\r\n  .fa-eye\r\n    color #bbb\r\n\r\n  .icons a.button\r\n    color #fff\r\n\r\n  .search\r\n    padding 0px\r\n    font-size 16px\r\n    position relative\r\n    overflow hidden\r\n\r\n    input\r\n      color $white\r\n      background $bg\r\n      border-radius 0px\r\n      border-bottom 1px solid $bgdark\r\n      height 40px\r\n      text-indent 10px\r\n      width 100%\r\n\r\n    svg\r\n      position absolute\r\n      right 12px\r\n      top 12px\r\n\r\n  .outliner\r\n    background $bg\r\n    color $white\r\n    cursor default\r\n    flex 1 1 auto\r\n    font-size 14px\r\n    line-height normal\r\n    outline none\r\n    overflow-y auto\r\n    padding 0px\r\n    width 100%\r\n\r\n.scenegraph-bottom\r\n  background-color #323232\r\n  border-top 1px solid #111\r\n  bottom 10\r\n  height 40px\r\n  left 0\r\n  z-index 100\r\n\r\n  a\r\n    float right\r\n    margin 10px\r\n",
-              '@import \'./lib\';\n\npropertyRowDefined() {\n  .propertyRowDefined {\n    {block}\n  }\n}\n\n.sidebar-header\n  height 16px\n  font-weight 600\n  color white\n\n.componentHeader.title\n  height 40px\n  width 100%\n  display flex\n  align-items center\n  justify-content space-between\n  background-color $bg\n\n  h3\n    margin 0px auto 0px 15px\n    font-size 14px\n    font-family ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n\n  a\n    width 40px\n    height 40px\n    display flex\n    align-items center\n    justify-content center\n    font-size 16px\n    cursor pointer\n\n.components\n  background-color $bg\n  color #A3A3A3\n  width 100%\n\ndiv.vec2,\ndiv.vec3,\ndiv.vec4\n  display flex\n  gap 4px\n\n.vec2 input.number,\n.vec3 input.number\n  width 50px\n\n.vec4 input.number\n  width 34px\n\n.collapsible-header\n  align-items center\n  display flex\n  justify-content space-between\n  .entityPrint\n    color #fff\n\n.collapsible-content\n  padding 5px 0\n  display flex\n  flex-direction column\n  gap 8px\n\n.componentTitle span\n  max-width 200px\n  overflow hidden\n  text-overflow ellipsis\n  text-transform uppercase\n  white-space nowrap\n  color #fff\n  font-weight 600\n  vertical-align bottom !important\n  display flex\n\n.collapsible .static\n  background $bglight\n  border-bottom 2px solid $bg\n  box-sizing content-box\n  cursor pointer\n  padding 12px 10px\n  vertical-align bottom\n  font-size 12px\n  &:hover\n    background $bglighter\n/*\n.collapsible\n  &.collapsed\n    background-color $grayalt\n    .static,\n    .componentHeaderActions\n      color #dedede\n    &:hover\n      background-color $grayhover\n*/\n.collapsible .menu\n  text-align right\n\n.collapsible .menuafter\n  color #bbb\n  content \'\\2807\'\n  font-size 12px\n  padding 5px\n  text-align right\n\n.collapsible .static\n  margin 0\n\n.collapsible .static .collapse-button\n  border 6px solid transparent\n  float left\n  height 0\n  margin-right 10px\n  margin-left 2px\n  width 0\n\n.collapsible.collapsed .static .collapse-button\n  border-left-color $white\n  margin-top 4px\n\n.collapsible:not(.collapsed) .static .collapse-button\n  border-top-color $white\n  margin-top 7px\n\n.propertyRow\n  display flex\n  flex-direction column\n  font-size 12px\n  min-height 30px\n  padding 2px 15px\n\n  .text\n    cursor default\n    display inline-block\n    overflow hidden\n    padding-bottom 4px\n    text-overflow ellipsis\n    vertical-align middle\n    width 180px\n    text-transform capitalize\n\n  .map_value\n    margin 0 0 0 5px\n    width 68px\n\n  .Select-control\n    font-size 11px\n    height 24px\n\n  .Select-placeholder,\n  .Select--single > .Select-control .Select-value\n    line-height 19px\n\n  .Select-input\n    height 22px\n\n  input[type=text],\n  input[type=number],\n  input.string,\n  input.number\n    background $bgdark\n    border-radius 8px\n    color white\n    min-height 32px\n    padding-bottom 1px\n    padding-left 8px\n    padding-right 8px\n    padding-top 1px\n    &:last-child\n      padding-right 0\n\n  input.string\n    padding-left 8px\n    box-sizing border-box\n    width 100%\n\n  input[type=text]:focus,\n  input.string:focus\n    box-shadow none\n\n  .color_value\n    margin 0 0 0 5px\n    width 68px\n    letter-spacing 1px\n\n.propertyRowDefined .text\n  color $red\n  font-weight 500\n\n.components *\n  vertical-align middle\n\nspan.subcomponent\n  color #999\n  float none !important\n  margin-left 10px\n  vertical-align top !important\n\na.help-link\n  opacity 0.4\n\na.help-linkhover\n  opacity 1\n\n#addComponentContainer\n  align-items center\n  display flex\n  flex-direction column\n  justify-content center\n  padding 20px 10px\n  background $bgdark\n\n  #addComponent\n    text-align left\n    width 200px\n    .select__control\n      background #161616\n      height 35px\n      color $primary\n    .option\n      display flex\n      justify-content space-between\n      span\n        color $primary\n\n  #addComponentHeader\n    font-size 15px\n    margin 5px 0 10px 0\n\n  input[type=text]:focus\n    box-shadow none\n\n.Select-menu-outer .is-focused span\n  color #fff\n\n.component-title\n  align-items center\n  display flex\n\n#componentEntityHeader\n  .collapsible-header\n    position relative\n  .collapse-button\n    display none\n  .static\n    height 14px\n    background $bgdark\n  .entityPrint\n    font-size 14px\n    padding-left 5px\n  .entityName\n    max-width 160px\n    top 0\n  .entityIcons\n    color #FAFAFA\n\n#mixinSelect\n  width 100%\n\n.propertyRow .texture\n  display flex\n  gap 4px\n  input\n    margin-left 0\n\n#componentEntityHeader .gltfIcon img\n  top 0\n\nsvg\n  color $white\n  &:hover\n    color $primary\n',
+              "@import './lib';\r\n\r\nbody.aframe-inspector-opened,\r\n.toggle-edit\r\n  font-family BlinkMacSystemFont, -apple-system, \"Segoe UI\", Helvetica, Arial, sans-serif\r\n\r\n.wf-roboto-n4-active body.aframe-inspector-opened,\r\n.wf-roboto-n4-active .toggle-edit\r\n  font-family BlinkMacSystemFont, -apple-system, \"Segoe UI\", Helvetica, Arial, sans-serif\r\n\r\nbody.aframe-inspector-opened\r\n  background $bgdark\r\n  color #fff\r\n  font-size 12px\r\n  margin 0\r\n  overflow hidden\r\n\r\n#aframeInspector\r\n  // Keep editor controls separate from host-page styling and layout.\r\n  position fixed\r\n  inset 0\r\n  z-index 2147483001\r\n  pointer-events none\r\n\r\n  @import './scenegraph';\r\n  @import './components';\r\n  @import './entity';\r\n  @import './help';\r\n  @import './select';\r\n  @import './textureModal';\r\n  @import './viewport';\r\n  @import './widgets';\r\n  @import './primitiveModal';\r\n\r\n  .error-boundary\r\n    position fixed\r\n    top 0\r\n    left 0\r\n    width 100%\r\n    height 100%\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    background rgba(0, 0, 0, 0.9)\r\n    z-index 9999\r\n    pointer-events all\r\n\r\n    .error-content\r\n      background #1e1e1e\r\n      border 1px solid #ff4444\r\n      border-radius 8px\r\n      padding 24px 32px\r\n      max-width 500px\r\n      text-align center\r\n\r\n      h2\r\n        color #ff4444\r\n        margin 0 0 16px 0\r\n        font-size 18px\r\n\r\n      p\r\n        color #a3a3a3\r\n        margin 0 0 16px 0\r\n\r\n      pre\r\n        background #0d0d0d\r\n        color #ff6b6b\r\n        padding 12px\r\n        border-radius 4px\r\n        font-size 12px\r\n        overflow-x auto\r\n        text-align left\r\n        margin 0 0 16px 0\r\n\r\n      button\r\n        background #00ff99\r\n        color #000\r\n        border none\r\n        padding 10px 24px\r\n        border-radius 4px\r\n        cursor pointer\r\n        font-weight 500\r\n        font-size 14px\r\n\r\n        &:hover\r\n          background #00cc7a\r\n\r\n  .Select,\r\n  code,\r\n  pre,\r\n  input,\r\n  textarea,\r\n  select\r\n    font-family $monospace\r\n    font-size 14px\r\n\r\n  .wf-robotomono-n4-active .Select,\r\n  .wf-robotomono-n4-active code,\r\n  .wf-robotomono-n4-active pre,\r\n  .wf-robotomono-n4-active input,\r\n  .wf-robotomono-n4-active textarea,\r\n  .wf-robotomono-n4-active select\r\n    font-family Roboto Mono, Consolas, Andale Mono, Monaco, Courier New, monospace\r\n\r\n  hr\r\n    border 0\r\n    border-top 1px solid #ccc\r\n\r\n  a\r\n    cursor pointer\r\n\r\n  button\r\n    position relative\r\n    appearance none\r\n    background $bgdark\r\n    border 1px solid $grayalt\r\n    border-radius 6px\r\n    color #eee\r\n    cursor pointer\r\n    font inherit\r\n    padding 6px 10px\r\n\r\n    &:hover\r\n      color $primary\r\n      border-color $primary\r\n\r\n    &:disabled\r\n      opacity .55\r\n      cursor not-allowed\r\n\r\n  button:focus-visible,\r\n  a:focus-visible,\r\n  input:focus-visible,\r\n  select:focus-visible,\r\n  textarea:focus-visible,\r\n  [tabindex]:focus-visible\r\n    outline 2px solid $primary !important\r\n    outline-offset -2px\r\n\r\n  [hidden]\r\n    display none !important\r\n\r\n  code\r\n    font-family Consolas, Andale Mono, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace\r\n\r\n  textarea\r\n    tab-size 4\r\n    white-space pre\r\n    word-wrap normal\r\n\r\n  textarea.success\r\n    border-color #8b8 !important\r\n\r\n  textarea.fail\r\n    background-color rgba(255, 0, 0, 0.05)\r\n    border-color #f00 !important\r\n\r\n  textarea,\r\n  input\r\n    outline none /* osx */\r\n\r\n  .gltfIcon img\r\n    box-sizing content-box\r\n    display inline\r\n    height 20px\r\n    left 5px\r\n    padding 0 5px\r\n    position relative\r\n    top 4px\r\n    vertical-align baseline\r\n    width 20px\r\n\r\n  #sidebar,\r\n  #scenegraph,\r\n    .panel\r\n      cursor default\r\n      user-select none\r\n\r\n  #sceneActions\r\n    display flex\r\n    flex-direction row\r\n    position absolute\r\n    bottom 0\r\n    z-index 40\r\n    width calc(20rem - 48px)\r\n    height 48px\r\n    background $bg\r\n    padding-left 48px\r\n\r\n  #sceneActions .sceneActionsTitle\r\n    letter-spacing 0.1em\r\n    line-height 1rem\r\n    font-size 0.75rem\r\n    padding 0.25rem\r\n    text-align center\r\n    background #303032\r\n    color #989899\r\n    font-weight 500\r\n\r\n  #sceneActions .sceneActionsButton\r\n    display flex\r\n\r\n  .toggle-edit\r\n    pointer-events auto\r\n    border 0\r\n    padding 0\r\n    background-color $bg\r\n    box-sizing content-box\r\n    color white\r\n    font-size 12px\r\n    left 0px\r\n    bottom 0px\r\n    line-height normal\r\n    margin 0\r\n    position absolute\r\n    text-align center\r\n    text-decoration none\r\n    width 48px\r\n    height 48px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    z-index 40\r\n\r\n  .toggle-edit:hover\r\n    background-color #141417\r\n    color white\r\n\r\n    svg\r\n      color $red\r\n\r\n  .toggle-save,\r\n  .toggle-live\r\n    background-color $bg\r\n    color white\r\n    height 40px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    border 0\r\n    font-size 16px\r\n    font-weight 500\r\n    cursor pointer\r\n\r\n  .toggle-save:hover,\r\n  .toggle-live:hover\r\n    background-color $bgdark\r\n\r\n  #saveSceneBtn\r\n    width 10rem\r\n\r\n  #liveSceneBtn\r\n    width 10rem\r\n\r\n  input\r\n    border 1px solid #555\r\n    color #fff\r\n\r\n  input,\r\n  .texture canvas\r\n    transition 0.1s background-color ease-in-out, 0.1s border-color ease-in-out, 0.1s color ease-in-out\r\n\r\n  input[type=text],\r\n  input[type=number],\r\n  input.string,\r\n  input.number\r\n    min-height 14px\r\n    outline none\r\n\r\n  input[type=\"checkbox\"]\r\n    appearance auto\r\n    cursor pointer\r\n    margin 0\r\n    height 18px\r\n    width 18px\r\n\r\n  input[type=\"checkbox\"]:focus\r\n    box-shadow none\r\n\r\n  input.number\r\n    border 0\r\n    color white !important\r\n    cursor col-resize\r\n    font-size 14px\r\n    padding 2px\r\n\r\n  input.stringfocus,\r\n  input.numberfocus\r\n    border 1px solid #00FF99\r\n    color #fff\r\n    cursor auto\r\n\r\n  input.error\r\n    border 1px solid #a00\r\n\r\n  #sidebar\r\n    min-height 0\r\n    background $bg\r\n    width 100%\r\n    flex-grow 1\r\n    overflow-y auto\r\n\r\n  #sidebar *\r\n    vertical-align middle\r\n\r\n  input,\r\n  textarea,\r\n  select\r\n    background $black\r\n    border 1px solid transparent\r\n    color #888\r\n\r\n  select\r\n    background $bglighter\r\n\r\n  input[type=color]\r\n    background-color #333\r\n    border 1px solid #111\r\n    height 28px\r\n    cursor pointer\r\n\r\n  input[type=color]\r\n    cursor pointer\r\n    height 25px\r\n    padding 0\r\n    width 50px\r\n\r\n  /* Note these vendor-prefixed selectors cannot be grouped! */\r\n  input[type=color]-webkit-color-swatch\r\n    border 0  /* To remove the gray border. */\r\n\r\n  input[type=color]-webkit-color-swatch-wrapper\r\n    padding 0  /* To remove the inner padding. */\r\n\r\n  input[type=color]-moz-color-swatch\r\n    border 0\r\n\r\n  input[type=color]-moz-focus-inner\r\n    border 0  /* To remove the inner border (specific to Firefox). */\r\n    padding 0\r\n\r\n  .hidden\r\n    visibility hidden\r\n    display none !important\r\n\r\n  a.button\r\n    color #A3A3A3\r\n    font-size 16px\r\n    margin-left 8px\r\n    display flex\r\n    align-items center\r\n    justify-content center\r\n    text-decoration none\r\n\r\n  a.buttonhover\r\n    color #00FF99\r\n\r\n  @keyframes animateopacity\r\n    from { opacity: 0 }\r\n    to { opacity: 1 }\r\n\r\n  .hide\r\n    display none\r\n\r\n  .a-canvas.state-dragging\r\n    cursor grabbing\r\n\r\n  #rightPanel\r\n    top 0\r\n    width 20rem\r\n    display flex\r\n    flex-direction column\r\n    height calc(100vh - 48px)\r\n    margin-left auto\r\n\r\n  #leftPanel,\r\n  #rightPanel\r\n    width 320px\r\n    max-width calc(100vw - 24px)\r\n    height calc(100vh - 48px)\r\n    height calc(100dvh - 48px)\r\n    min-height 0\r\n    min-width 0\r\n    overflow hidden\r\n    background $bg\r\n    position relative\r\n    top auto\r\n\r\n  #actionBar\r\n    display flex\r\n    align-items center\r\n    box-sizing border-box\r\n    padding-left 48px\r\n    width 100vw\r\n    height 48px\r\n    background $bg\r\n    bottom 0\r\n    position absolute\r\n\r\n    #sw-info\r\n      display flex\r\n      flex-direction column\r\n      justify-content center\r\n      align-items end\r\n      width max-content\r\n      height 100%\r\n      padding 0 10px\r\n      margin-left auto\r\n      color $lightgray\r\n\r\n  .save-feedback\r\n    padding 0 12px\r\n    color $lightgray\r\n    font-size 11px\r\n\r\n  #inspectorContainer\r\n    display flex\r\n    justify-content space-between\r\n    left 0\r\n    height 100vh\r\n    height 100dvh\r\n    pointer-events none\r\n    position fixed\r\n    top 0\r\n    width 100%\r\n    z-index 20\r\n\r\n  #scenegraph,\r\n  #viewportBar,\r\n  #actionBar,\r\n  #leftPanel,\r\n  #rightPanel\r\n    pointer-events all\r\n\r\n  .aframe-inspector-opened a-scene .a-canvas\r\n    background-color #191919\r\n    z-index 9999\r\n\r\n  .toggle-sidebar\r\n    pointer-events auto\r\n    align-items center\r\n    display flex\r\n    height 100%\r\n    position absolute\r\n    z-index 40\r\n\r\n    button\r\n      background #262626\r\n      color #a3a3a3\r\n      padding 5px\r\n      border 0\r\n      border-radius 0\r\n\r\n    a\r\n      background-color #262626\r\n      color #A3A3A3\r\n      padding 5px\r\n      z-index 40\r\n\r\n    a.hover\r\n      background-color #007370\r\n      color #fff\r\n\r\n  .toggle-sidebar.left\r\n    top 0\r\n    left 0\r\n\r\n  .toggle-sidebar.right\r\n    top 0\r\n    right 0\r\n\r\n  @media (max-width: 620px)\r\n    #sw-info\r\n      display none\r\n\r\n#rightPanel ::-webkit-scrollbar\r\n#leftPanel ::-webkit-scrollbar {\r\n    width: 8px;\r\n    height: 8px;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-track\r\n#leftPanel ::-webkit-scrollbar-track {\r\n    background: #18181B;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-thumb\r\n#leftPanel ::-webkit-scrollbar-thumb {\r\n    background: rgba(0, 0, 0, 0.5);\r\n    border-radius: 0;\r\n}\r\n\r\n#rightPanel ::-webkit-scrollbar-thumb:hover\r\n#leftPanel ::-webkit-scrollbar-thumb:hover {\r\n    background: rgba(0, 0, 0, 0.75);\r\n}\r\n\r\n.swal2-container\r\n  background-color rgba(0, 0, 0, 0) !important\r\n  z-index 2147483002 !important\r\n\r\n  .swal2-popup\r\n    background #18181B !important\r\n    color #fff !important\r\n    border-radius 8px !important\r\n    padding 2.5rem 1.5rem !important\r\n\r\n  .swal2-title\r\n    color #fff !important\r\n    font-size 28px !important\r\n    font-weight 700 !important\r\n    margin 0 !important\r\n\r\n  .swal2-html-container\r\n    color #A3A3A3 !important\r\n    font-size 16px !important\r\n    line-height 1.6 !important\r\n    margin 0 !important\r\n\r\n  .swal2-icon\r\n    margin-top 0 !important\r\n    border-width 3px !important\r\n    \r\n    &.swal2-warning\r\n      border-color #f8bb86 !important\r\n      color #f8bb86 !important\r\n      \r\n      .swal2-icon-content\r\n        font-size 60px !important\r\n\r\n  .swal2-actions\r\n    gap 0.75rem !important\r\n    margin-top 1rem !important\r\n    width 100% !important\r\n    justify-content center !important\r\n\r\n  .swal2-confirm, .swal2-cancel\r\n    background #09090B !important\r\n    color #fff !important\r\n    border-radius 0.5rem !important\r\n    padding 14px 28px !important\r\n    font-weight 700 !important\r\n    border none !important\r\n    font-size 16px !important\r\n    margin 0 !important\r\n    transition all 0.2s ease\r\n    \r\n    &:focus\r\n      box-shadow none !important\r\n\r\n  .swal2-cancel:hover\r\n    background-color red !important\r\n    color white !important\r\n\r\n  .swal2-confirm:hover\r\n    background-color $primary !important\r\n    color #18181B !important\r\n\r\n  .swal2-input\r\n    background #09090B !important\r\n    color #fff !important\r\n    border 1px solid #323232 !important\r\n    border-radius 8px !important\r\n    box-shadow none !important\r\n    height 48px !important\r\n    margin 1rem auto !important\r\n    \r\n    &:focus\r\n      border-color $primary !important\r\n      box-shadow none !important\r\n",
+              "@import './lib';\r\n\r\n#toolbar\r\n  background-color $bgdark\r\n\r\n  .toolbarActions\r\n    padding 0\r\n    height 48px\r\n    display grid\r\n    grid-template-columns repeat(2, minmax(0, 1fr))\r\n\r\n    a.button\r\n      display flex\r\n      justify-content center\r\n      align-items center\r\n      flex-direction column\r\n      margin 0\r\n\r\n      svg\r\n        color inherit\r\n\r\n      span\r\n        font-size 12px\r\n\r\n    a.button:hover\r\n      color $primary\r\n\r\n    a.disabled\r\n      color #666\r\n      cursor default\r\n\r\n    .button\r\n      display flex\r\n      align-items center\r\n      justify-content center\r\n      flex-direction column\r\n      margin 0\r\n      border-radius 0\r\n      background $bgdark\r\n      border 0\r\n\r\n      span\r\n        font-size 12px\r\n\r\n#leftPanel\r\n  display flex\r\n  flex-direction column\r\n  width 20rem\r\n  height calc(100vh - 48px)\r\n\r\n.scenegraph-menubar\r\n    flex-shrink 0\r\n    display flex\r\n    height 40px\r\n    width 100%\r\n    justify-content space-between\r\n    background-color $bg\r\n    \r\n#githubLink\r\n    display flex\r\n    align-items center\r\n    gap 8px\r\n    font-size 14px\r\n    height 100%\r\n    width 320px\r\n    color $lightgray\r\n    padding 0 10px\r\n    text-decoration none\r\n\r\n    svg\r\n        height 18px\r\n\r\n#githubLink:hover\r\n    color $primary\r\n\r\n    svg\r\n        color $primary\r\n    \r\n#scenegraph\r\n  background $bg\r\n  border-top 1px solid #111\r\n  display flex\r\n  flex-direction column\r\n  overflow hidden\r\n  width 100%\r\n  height 100%\r\n  min-height 0\r\n  flex 1\r\n\r\n  .entity\r\n    background $bg\r\n    cursor pointer\r\n    display flex\r\n    justify-content space-between\r\n    padding 4px 8px\r\n    white-space nowrap\r\n    height 40px\r\n    box-sizing border-box\r\n    align-items center\r\n\r\n    .entity-label\r\n      display flex\r\n      align-items center\r\n      min-width 0\r\n      overflow hidden\r\n\r\n    .entityPrint\r\n      overflow hidden\r\n      text-overflow ellipsis\r\n\r\n    button\r\n      background transparent\r\n      border 0\r\n      padding 3px\r\n      flex-shrink 0\r\n\r\n    .entityActions\r\n      flex-shrink 0\r\n\r\n    .visibility-button\r\n      width 24px\r\n      height 28px\r\n\r\n    .collapsespace\r\n      margin 0\r\n      padding 0\r\n      width 16px\r\n\r\n    &:focus-within .entityActions\r\n      display flex\r\n\r\n    &:hover\r\n      background $bgdark\r\n\r\n    &.active\r\n      background-color #09090B\r\n      color #fff\r\n      .component:hover\r\n        color rgba(0, 0, 0, 0.5)\r\n      .entityActions\r\n        display flex\r\n\r\n    &.novisible\r\n      &.active\r\n        span,\r\n        svg,\r\n        .collapsespace,\r\n        .id\r\n          color #999\r\n\r\n      &:not(.active)\r\n        span,\r\n        svg,\r\n        .collapsespace,\r\n        .id\r\n          color #626262\r\n\r\n    &.drag-before\r\n      border-top 2px solid $primary\r\n\r\n    &.drag-after\r\n      border-bottom 2px solid $primary\r\n\r\n    &.drag-inside\r\n      background-color $primary\r\n      color $bgdark\r\n\r\n  .component:hover\r\n    color rgba(0, 0, 0, 0.5)\r\n\r\n  .entityIcons\r\n    margin-left 2px\r\n\r\n  .entityActions\r\n    display none\r\n    margin 0 4px\r\n\r\n    .button\r\n      color #fff\r\n      font-size 12px\r\n      margin-left 6px\r\n\r\n  svg\r\n    color #CCC\r\n\r\n  .entityActions svg:hover\r\n    color $primary\r\n\r\n  .active svg\r\n    color #FAFAFA\r\n\r\n  .id\r\n    color #ccc\r\n\r\n  .option.active .id\r\n    color #fff\r\n\r\n  .collapsespace\r\n    color #eee\r\n    display inline-block\r\n    text-align center\r\n    width 14px\r\n    margin-left 8px\r\n\r\n  .fa-eye\r\n    color #bbb\r\n\r\n  .icons a.button\r\n    color #fff\r\n\r\n  .search\r\n    display flex\r\n    align-items center\r\n    background $bg\r\n    padding 0px\r\n    font-size 16px\r\n    position relative\r\n    overflow hidden\r\n\r\n    input\r\n      min-width 0\r\n      flex 1\r\n      box-sizing border-box\r\n      padding-right 40px\r\n      color $white\r\n      background $bg\r\n      border-radius 0px\r\n      border-bottom 1px solid $bgdark\r\n      height 40px\r\n      text-indent 10px\r\n      width 100%\r\n\r\n    button\r\n      position absolute\r\n      right 0\r\n      top 0\r\n      width 40px\r\n      height 40px\r\n      margin 0\r\n      padding 0\r\n      border 0\r\n      background transparent\r\n\r\n    svg\r\n      position absolute\r\n      right 12px\r\n      top 12px\r\n\r\n  .outliner\r\n    min-height 0\r\n    overflow auto\r\n    overflow-anchor none\r\n    background $bg\r\n    color $white\r\n    cursor default\r\n    flex 1 1 auto\r\n    font-size 14px\r\n    line-height normal\r\n    outline none\r\n    overflow-y auto\r\n    padding 0px\r\n    width 100%\r\n\r\n.scenegraph-bottom\r\n  background-color #323232\r\n  border-top 1px solid #111\r\n  bottom 10\r\n  height 40px\r\n  left 0\r\n  z-index 100\r\n\r\n  a\r\n    float right\r\n    margin 10px\r\n",
+              '@import \'./lib\';\n\npropertyRowDefined() {\n  .propertyRowDefined {\n    {block}\n  }\n}\n\n.sidebar-header\n  height 16px\n  font-weight 600\n  color white\n\n.panel-hint\n  padding 12px\n  line-height 1.6\n\n#rightPanel .componentHeader.title\n  box-sizing border-box\n  flex-shrink 0\n\n  button\n    width 40px\n    height 40px\n    padding 0\n    border 0\n    border-radius 0\n    background transparent\n    display flex\n    align-items center\n    justify-content center\n    font-size 16px\n\n.componentHeader.title\n  height 40px\n  width 100%\n  display flex\n  align-items center\n  justify-content space-between\n  background-color $bg\n\n  h3\n    margin 0px auto 0px 15px\n    font-size 14px\n    font-family ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n\n  a\n    width 40px\n    height 40px\n    display flex\n    align-items center\n    justify-content center\n    font-size 16px\n    cursor pointer\n\n.components\n  background-color $bg\n  color #A3A3A3\n  width 100%\n\ndiv.vec2,\ndiv.vec3,\ndiv.vec4\n  display flex\n  gap 4px\n\n.vec2 input.number,\n.vec3 input.number\n  width 50px\n\n.vec4 input.number\n  width 34px\n\n.collapsible-header\n  align-items center\n  display flex\n  justify-content space-between\n  .entityPrint\n    color #fff\n\n.collapsible-content\n  padding 5px 0\n  display flex\n  flex-direction column\n  gap 8px\n\n.componentTitle span\n  max-width 200px\n  overflow hidden\n  text-overflow ellipsis\n  text-transform uppercase\n  white-space nowrap\n  color #fff\n  font-weight 600\n  vertical-align bottom !important\n  display flex\n\n.collapsible .static\n  display flex\n  align-items center\n  gap 8px\n  background $bglight\n  border-bottom 2px solid $bg\n  box-sizing content-box\n  cursor pointer\n  padding 12px 10px\n  vertical-align bottom\n  font-size 12px\n  &:hover\n    background $bglighter\n\n  .collapse-toggle\n    background transparent\n    border 0\n    padding 0\n    width 24px\n    height 28px\n    flex-shrink 0\n    display flex\n    align-items center\n    justify-content center\n\n  .collapsible-header\n    flex 1\n    min-width 0\n\n.componentHeaderActions\n  button\n    padding 3px\n    background transparent\n    border 0\n/*\n.collapsible\n  &.collapsed\n    background-color $grayalt\n    .static,\n    .componentHeaderActions\n      color #dedede\n    &:hover\n      background-color $grayhover\n*/\n.collapsible .menu\n  text-align right\n\n.collapsible .menuafter\n  color #bbb\n  content \'\\2807\'\n  font-size 12px\n  padding 5px\n  text-align right\n\n.collapsible .static\n  margin 0\n\n.collapsible .static .collapse-button\n  border 6px solid transparent\n  float left\n  height 0\n  margin-right 10px\n  margin-left 2px\n  width 0\n  margin 0 !important\n\n.collapsible.collapsed .static .collapse-button\n  border-left-color $white\n  margin-top 4px\n\n.collapsible:not(.collapsed) .static .collapse-button\n  border-top-color $white\n  margin-top 7px\n\n.propertyRow\n  display flex\n  flex-direction column\n  font-size 12px\n  min-height 30px\n  padding 2px 15px\n\n  .text\n    cursor default\n    display inline-block\n    overflow hidden\n    padding-bottom 4px\n    text-overflow ellipsis\n    vertical-align middle\n    width 180px\n    text-transform capitalize\n\n  .map_value\n    margin 0 0 0 5px\n    width 68px\n\n  .Select-control\n    font-size 11px\n    height 24px\n\n  .Select-placeholder,\n  .Select--single > .Select-control .Select-value\n    line-height 19px\n\n  .Select-input\n    height 22px\n\n  input[type=text],\n  input[type=number],\n  input.string,\n  input.number\n    background $bgdark\n    border-radius 8px\n    color white\n    min-height 32px\n    padding-bottom 1px\n    padding-left 8px\n    padding-right 8px\n    padding-top 1px\n    &:last-child\n      padding-right 0\n\n  input.string\n    padding-left 8px\n    box-sizing border-box\n    width 100%\n\n  input[type=text]:focus,\n  input.string:focus\n    box-shadow none\n\n  .color_value\n    margin 0 0 0 5px\n    width 68px\n    letter-spacing 1px\n\n.propertyRowDefined .text\n  color $red\n  font-weight 500\n\n.components *\n  vertical-align middle\n\nspan.subcomponent\n  color #999\n  float none !important\n  margin-left 10px\n  vertical-align top !important\n\na.help-link\n  opacity 0.4\n\na.help-linkhover\n  opacity 1\n\n#addComponentContainer\n  align-items center\n  display flex\n  flex-direction column\n  justify-content center\n  padding 20px 10px\n  background $bgdark\n\n  #addComponent\n    text-align left\n    width 200px\n    .select__control\n      background #161616\n      height 35px\n      color $primary\n    .option\n      display flex\n      justify-content space-between\n      span\n        color $primary\n\n  #addComponentHeader\n    font-size 15px\n    margin 5px 0 10px 0\n\n  input[type=text]:focus\n    box-shadow none\n\n.Select-menu-outer .is-focused span\n  color #fff\n\n.component-title\n  align-items center\n  display flex\n\n#componentEntityHeader\n  .collapsible-header\n    position relative\n  .collapse-button\n    display none\n  .static\n    height 14px\n    background $bgdark\n  .entityPrint\n    font-size 14px\n    padding-left 5px\n  .entityName\n    max-width 160px\n    top 0\n  .entityIcons\n    color #FAFAFA\n\n#mixinSelect\n  width 100%\n\n.propertyRow .texture\n  display flex\n  gap 4px\n  input\n    margin-left 0\n\n#componentEntityHeader .gltfIcon img\n  top 0\n\nsvg\n  color $white\n  &:hover\n    color $primary\n',
               '@import \'./lib\';\n\n.entityPrint\n  font-family $normalfont\n  line-height 1.15em\n\n.entityName\n  display inline-block\n  overflow hidden\n  position relative\n  text-overflow ellipsis\n  top 3px\n  white-space nowrap\n\n[data-entity-name-type="id"]\n  color $red\n\n[data-entity-name-type="class"]\n  color $green\n\n[data-entity-name-type="mixin"]\n  color $orange\n',
               '.help-lists\r\n  display flex\r\n  justify-content space-around\r\n\r\n.help-list\r\n  list-style none\r\n  margin 0\r\n  padding 0 0 10px\r\n  width 350px\r\n\r\n.help-list li\r\n  margin-right 40px\r\n\r\n.help-key-unit\r\n  line-height 1.8\r\n  margin-right 2em\r\n  padding 5px 0\r\n\r\n.help-key\r\n  bottom 2px\r\n  margin-right 4px\r\n  min-width 60px\r\n  position relative\r\n\r\n.help-key span\r\n  background-color #2e2e2e\r\n  background-repeat repeat-x\r\n  border 1px solid #666\r\n  border-radius 3px\r\n  box-shadow 0 0 5px #000\r\n  color #999\r\n  display inline-block\r\n  font-size 12px\r\n  padding 0 8px\r\n  text-align center\r\n\r\n.help-key-def\r\n  color #bbb\r\n  display inline-block\r\n  margin-left 1em\r\n',
               "@import './lib';\n\n.select__control\n  border 0\n  border-radius 8px\n  cursor pointer\n  min-height 32px\n  font-family $monospace\n  font-size 14px\n\n.select__indicator\n  height 26px\n\n.select__indicator-separator\n  display none\n\n.select__input\n  min-height auto !important\n\n.select__control,\n.select__menu\n  background $bgdark\n\n.select__option\n  padding 5px 10px\n\n.select__placeholder,\n.select__menu\n  color $white\n\n.select__single-value\n  color white\n\n.select__control--is-focused\n  box-shadow none !important\n\n.select__option\n  cursor pointer\n\n.select__clear-indicator\n  display none\n\n.select__label\n  font-size 14px\n\n.select__option--is-focused\n  background $bg\n\n.select__value-container\n  height 32px\n  position static\n  &.select__value-container--is-multi\n    height auto\n    padding 6px\n\n.select__dropdown-indicator\n  padding 3px 8px\n\n.select__multi-value\n  background $bg\n  color $primary\n\n.select__multi-value__label\n  color $primary\n\n.select__value-container--is-multi > :last-child\n  display none\n\n.select__multi-value__remove:hover\n  color #fff\n  background $bg\n",
-              '.modal\r\n  animation animateopacity 0.2s ease-out\r\n  display flex\r\n  height 100%\r\n  left 0\r\n  overflow auto\r\n  position fixed\r\n  top 0\r\n  width 100%\r\n  z-index 9999999999\r\n  backdrop-filter blur(4px)\r\n  background-color rgba(0, 0, 0, .5)\r\n\r\n.modal h3\r\n  font-size 16px\r\n  font-weight 500\r\n  margin 0.6em 0\r\n\r\n#textureModal .modal-content\r\n  height calc(100% - 96px)\r\n  max-width calc(100% - 96px)\r\n  border-radius 8px\r\n\r\n.modal-content\r\n  animation animatetop 0.2s ease-out\r\n  animation-duration 0.2s\r\n  animation-name animatetop\r\n  background-color #18181B\r\n  margin auto\r\n  overflow hidden\r\n  padding 0\r\n\r\n.close\r\n  color #ffffff80\r\n  float right\r\n  font-size 24px\r\n  font-weight bold\r\n\r\n  &:hover\r\n    cursor pointer\r\n    color #ffffff\r\n\r\n.closehover,\r\n.closefocus\r\n  color #08f\r\n  cursor pointer\r\n  text-decoration none\r\n\r\n.modal-header\r\n  color white\r\n  padding 2px 16px\r\n\r\n.modal-body\r\n  overflow auto\r\n  padding 16px\r\n  height inherit\r\n\r\n  &::-webkit-scrollbar\r\n    width 8px\r\n    height 8px\r\n\r\n  &::-webkit-scrollbar-track\r\n    background #18181B\r\n    border-radius 4px\r\n\r\n  &::-webkit-scrollbar-thumb\r\n    background #3f3f46\r\n    border-radius 4px\r\n    transition background 0.2s ease\r\n\r\n  &::-webkit-scrollbar-thumb:hover\r\n    background #52525b\r\n\r\n  &::-webkit-scrollbar-corner\r\n    background #18181B\r\n\r\n.modal-footer\r\n  color white\r\n  padding 2px 16px\r\n\r\n/* Gallery */\r\n.gallery\r\n  display flex\r\n  flex-wrap wrap\r\n  overflow auto\r\n  gap 12px\r\n  padding 2px\r\n\r\n.newimage .gallery\r\n\r\n/* Toolbar */\r\n.texture-toolbar\r\n  display flex\r\n  align-items center\r\n  gap 12px\r\n  margin-bottom 12px\r\n  max-height 65vh\r\n\r\n.url-input-group\r\n  flex 1\r\n  display flex\r\n  gap 8px\r\n  align-items center\r\n\r\n.url-input-group .imageUrl\r\n  flex 1\r\n  height 32px\r\n  padding 0 12px\r\n  border-radius 8px\r\n  border none\r\n  background #232323\r\n  color #00ff99\r\n  font-size 13px\r\n\r\n.url-input-group .imageUrl::placeholder\r\n  color #666\r\n\r\n.url-input-group .load-url-btn\r\n  height 32px\r\n  padding 0 16px\r\n  white-space nowrap\r\n  font-size 12px\r\n\r\n.registry-section\r\n  margin-bottom 12px\r\n\r\n.section-label\r\n  display block\r\n  margin-bottom 8px\r\n  color #888\r\n  font-size 13px\r\n\r\n.gallery-item\r\n  border-radius 8px\r\n  box-shadow 0 0 6px rgba(0, 0, 0, 0.6)\r\n  cursor pointer\r\n  overflow hidden\r\n  width 155px\r\n  transition box-shadow 0.15s ease\r\n\r\n.gallery-item.selected,\r\n.gallery-item:hover\r\n  box-shadow 0 0 0 2px #00ff99\r\n\r\n.gallery-item .detail\r\n  background-color #323232\r\n  margin 0\r\n  min-height 60px\r\n  padding 4px 8px 8px 8px\r\n\r\n.preview\r\n  width 250px\r\n\r\n.preview label\r\n  color #888\r\n  font-size 12px\r\n  display block\r\n  margin-bottom 4px\r\n\r\n.preview input\r\n  display block\r\n  margin 0 0 12px 0\r\n  height 24px\r\n  width 230px\r\n  border-radius 8px\r\n\r\n.preview img\r\n  border-radius 8px\r\n  margin-bottom 8px\r\n\r\n.preview button\r\n  width 242px\r\n  margin-top 8px\r\n\r\n.preview button:hover\r\n  background-color #00ff99\r\n  color #000\r\n\r\n.preview .detail\r\n  margin-bottom 8px\r\n\r\n.preview .detail .title\r\n  color #fff\r\n  display block\r\n  max-width 230px\r\n  overflow hidden\r\n  text-overflow ellipsis\r\n  white-space nowrap\r\n  font-size 13px\r\n\r\n.preview .detail .dimensions\r\n  color #888\r\n  font-size 12px\r\n  display block\r\n  margin-top 4px\r\n\r\n.gallery-item.selected .detail,\r\n.gallery-item:hover .detail\r\n  background-color #444\r\n\r\n.gallery-item .detail span\r\n  color #777\r\n  display block\r\n  margin-top 4px\r\n  overflow hidden\r\n  text-overflow ellipsis\r\n  white-space nowrap\r\n  width 140px\r\n\r\n.gallery-item.selected .detail span,\r\n.gallery-item:hover .detail span\r\n  color #888\r\n\r\n.gallery-item .detail span.title\r\n  color #fff !important\r\n\r\n.gallery .loading-indicator\r\n  background transparent\r\n  box-shadow none\r\n  color #888\r\n  display flex\r\n  align-items center\r\n  justify-content center\r\n  width 100%\r\n  padding 40px 20px\r\n  font-size 14px\r\n  animation pulse 1.5s ease-in-out infinite\r\n\r\n@keyframes pulse\r\n  0%, 100%\r\n    opacity 0.5\r\n  50%\r\n    opacity 1\r\n\r\n.modal button\r\n  appearance none\r\n  border-radius 0\r\n  box-shadow none\r\n  cursor pointer\r\n  display inline-block\r\n  font-size 12px\r\n  line-height 1.8\r\n  margin 0 0 0 0\r\n  padding 5px 10px\r\n\r\n.modal buttonfocus\r\n  outline none\r\n\r\n.modal button\r\n  background-color #09090b\r\n  border none\r\n  color #fff\r\n  border-radius 8px\r\n  font-weight 500\r\n  padding 8px 16px\r\n  text-transform capitalize\r\n  transition all 0.2s ease-in-out\r\n\r\n.modal button:hover\r\n  background-color #00ff99\r\n  color #000\r\n\r\n.modal buttonhover,\r\n.modal button.hover\r\n  background-color #346392\r\n  text-shadow -1px 1px #27496d\r\n\r\n.modal buttonactive,\r\n.modal button.active\r\n  background-color #27496d\r\n  text-shadow -1px 1px #193047\r\n\r\n.modal buttondisabled\r\n  background-color #888\r\n  cursor none\r\n\r\n.newimage\r\n  color #A3A3A3\r\n  display flex\r\n  gap 24px\r\n  font-size 14px\r\n  justify-content space-between\r\n  overflow auto\r\n  max-height 74vh\r\n\r\n.newimage input\r\n  color #00ff99\r\n  padding 3px 5px\r\n\r\n.texture canvas + input\r\n  margin-left 5px\r\n\r\n.texture svg\r\n  padding-right 5px\r\n\r\n.uploader-normal-button .hidden\r\n  display none\r\n\r\n.assets.search\r\n  position relative\r\n  margin-top 8px\r\n  width 100%\r\n\r\n.assets.search svg\r\n  position absolute\r\n  right 10px\r\n  top 8px\r\n\r\n.assets.search input\r\n  width calc(100% - 12px)\r\n  height 20px\r\n  padding 5px\r\n  border-radius 8px\r\n\r\n.new_asset_options\r\n  width 100%\r\n\r\n.new_asset_options > ul\r\n  margin-left 10px\r\n  padding 5px\r\n\r\n.new_asset_options > ul > li\r\n  padding 10px 0\r\n\r\n.new_asset_options .imageUrl\r\n  margin-left 5px\r\n  width 350px\r\n  height 24px\r\n  border-radius 8px\r\n\r\n.texture canvas\r\n  border 1px solid rgba(255, 255, 255, .15)\r\n  border-radius 8px\r\n  cursor pointer\r\n',
-              "@import './lib';\n\n#viewportBar\n  align-items center\n  color $white\n  position absolute\n  top 0\n  left 50%\n  transform translateX(-50%)\n  flex-grow 2\n  display flex\n  height 40px\n  font-size 14px\n  justify-content space-between\n  margin 8px auto\n  width auto\n  background $bg\n  border-radius 8px\n\n  .viewportHud-menubar\n    display flex\n    height 40px\n    width 240px\n    align-items center\n    justify-content flex-end\n\n#viewportHud\n  padding 0px 4px\n  margin 0 4px\n  background $bgdark\n  overflow-x auto\n  overflow-y hidden\n  height 30px\n  width 230px\n  border-radius 8px\n  display flex!important\n  align-items center\n  justify-content end\n\n  p\n    margin 0\n    font-size 14px\n\n#pageToolbar\n  display flex\n  align-items center\n  height 48px\n\n  .button\n    width 48px\n    height 48px\n    border 0\n    background none\n    font-size 16px\n    cursor pointer\n\n  .button:hover\n    background #141417\n\n    svg\n      color $primary\n\n.toolbarButtons\n  display flex\n  align-items center\n  height 40px\n\n  *\n    margin-left 0 !important\n    vertical-align middle\n    height 48px\n    display flex\n    align-items center\n\n  a.button\n    & svg\n      padding 12px\n\n    &:not(.active) svg:hover\n      background-color #141417\n\n  .active svg\n    background-color #141417!important\n    color $primary\n\n  .active:hover svg\n    color #fff !important\n\n.local-transform\n  padding-left 10px\n  padding-right 20px\n\n.local-transform label\n  color $lightgray\n  padding-left 8px\n  font-size 14px\n\n.local-transform a.button\n  padding-top 0\n\n#cameraSelect\n  cursor pointer\n  width 120px\n  .select__dropdown-indicator\n    padding-left 3px\n    padding-right 3px\n\n#cameraToolbar\n  align-items center\n  height 40px\n  padding 0 5px\n  display flex\n\n  #cameraSelect\n    width 160px // Adjust width to accommodate icon + text\n    .select__control\n      background-color $bgdark\n      border none\n      min-height 30px // Adjust height\n      height 30px\n      box-shadow none\n      &:hover\n        border-color $grey\n    .select__value-container\n      padding 0 4px\n    .select__single-value\n      color $white\n      display flex\n      align-items center\n      svg\n        margin-right 8px\n        width 16px\n        height 16px\n    .select__indicator-separator\n      display none\n    .select__dropdown-indicator\n      padding 4px\n      color $grey\n      &:hover\n        color $white\n    .select__menu\n      background-color $bgdark\n    .select__option\n      background-color $bgdark\n      color $white\n      display flex\n      align-items center\n      svg\n        margin-right 8px\n        width 24px\n        height 24px\n      &:hover\n        background-color #141417\n        color $primary\n        svg\n          fill $primary\n      &--is-focused\n        background-color #141417 // Keep focus style consistent with hover\n      &--is-selected\n        background-color $bgdark // Keep selected background subtle if needed\n        color $primary\n        svg\n          fill $primary\n\n#viewportHud\n  display none\n  +media--1024()\n    display block\n",
-              "@import './lib';\n\n.Select-control\n  background-color #222 !important\n  border none\n  border-radius 0\n  color $primary\n  font-family $monosapce\n\n.Select-menu-outer\n  border none\n\n.Select-menu-outer .is-focused\n  background-color $primary !important\n  color $white\n\n.Select-option\n  background-color #222 !important\n\n.select-widget\n  display inline-block\n  width 100%\n  border-radius 8px\n\n.Select-placeholder,\n.Select--single > .Select-control .Select-value\n  color $primary !important\n\n.Select-value-label\n  color $primary !important\n\n/* Dropdown menu */\n.dropbtn\n  border none\n  color $white\n  cursor pointer\n\n.dropdown\n  display inline-block\n  position relative\n\n.dropdown-content\n  background-color #f9f9f9\n  box-shadow 0 8px 16px 0 rgba(0, 0, 0, 0.2)\n  display none\n  left 8px\n  min-width 38px\n  position absolute\n  z-index 999\n\n.dropdown-content a\n  background-color #232323\n  color #7d7d7d\n  display block\n  padding 10px 14px\n  text-decoration none\n\n.dropdown-content a:hover\n  background-color #007370\n  color $white\n\n.dropdownhover .dropdown-content\n  display block\n\n.dropdownhover .dropbtn\n  color $primary\n\n.color-widget\n  display flex\n  justify-content space-between\n  align-items center\n",
-              '.modal-overlay\n  position fixed\n  top 0\n  left 0\n  right 0\n  bottom 0\n  backdrop-filter blur(4px)\n  background-color rgba(0, 0, 0, .5)\n  display flex\n  justify-content center\n  align-items center\n  z-index 1000 /* Ensure modal is on top */\n\n.modal-content\n  color #eee /* Light text */\n  border-radius 8px\n  min-width 300px\n  max-width 600px\n  width 100%\n  box-shadow 0 4px 15px rgba(0, 0, 0, 0.2)\n\n#primitive-modal .modal-header\n  display flex\n  justify-content space-between\n  align-items center\n\n.modal-body\n  display flex\n  flex-direction column\n\n#primitive-modal h3\n  text-align center\n  color #fff\n  font-size 16px\n  font-weight 500\n  margin 0.6em 0\n\n.primitive-grid\n  display grid\n  grid-template-columns repeat(auto-fit, minmax(100px, 1fr)) /* Responsive grid */\n  gap 16px\n\n.primitive-button\n  background-color #09090B\n  color white\n  padding 8px\n  border-radius 8px\n  cursor pointer\n  transition background-color 0.2s ease, transform 0.1s ease\n  text-align center\n  aspect-ratio 1\n  border none\n  display flex\n  flex-direction column\n  gap 8px\n  justify-content center\n  align-items center\n\n  svg\n    width 48px\n    height 48px\n    margin 4px auto\n    color red\n    opacity .4\n\n.primitive-button:hover\n  border 1px solid #00FF99\n\n  svg\n    opacity 1\n\n\n.primitive-button:active\n  border 1px solid #00FF99\n\n  svg\n    opacity 1\n\n.modal-close-button\n  background-color #777 /* Different color for cancel */\n  color #eee\n  border 1px solid #999\n  padding 8px 15px\n  border-radius 4px\n  cursor pointer\n  transition background-color 0.2s ease\n  align-self flex-end /* Position cancel button to the right */\n\n.modal-close-button:hover\n  background-color #888\n'
+              '.modal\r\n  pointer-events auto\r\n  animation animateopacity 0.2s ease-out\r\n  display flex\r\n  height 100%\r\n  left 0\r\n  overflow auto\r\n  position fixed\r\n  top 0\r\n  width 100%\r\n  z-index 100\r\n  backdrop-filter blur(4px)\r\n  background-color rgba(0, 0, 0, .5)\r\n\r\n  .modal-content\r\n    max-height calc(100dvh - 32px)\r\n    max-width calc(100vw - 32px)\r\n    display flex\r\n    flex-direction column\r\n\r\n  .modal-header\r\n    display flex\r\n    justify-content space-between\r\n    align-items center\r\n    flex-shrink 0\r\n\r\n    .close\r\n      background transparent\r\n      font-size 24px\r\n      line-height 1\r\n      padding 6px\r\n\r\n  .modal-body\r\n    min-height 0\r\n    height auto\r\n    overflow auto\r\n\r\n.modal h3\r\n  font-size 16px\r\n  font-weight 500\r\n  margin 0.6em 0\r\n\r\n#textureModal .modal-content\r\n  height calc(100dvh - 32px)\r\n  max-height 800px\r\n  max-width calc(100vw - 32px)\r\n  width 1200px\r\n  border-radius 8px\r\n\r\n.modal-content\r\n  animation animatetop 0.2s ease-out\r\n  animation-duration 0.2s\r\n  animation-name animatetop\r\n  background-color #18181B\r\n  margin auto\r\n  overflow hidden\r\n  padding 0\r\n\r\n.close\r\n  color #ffffff80\r\n  float right\r\n  font-size 24px\r\n  font-weight bold\r\n\r\n  &:hover\r\n    cursor pointer\r\n    color #ffffff\r\n\r\n.closehover,\r\n.closefocus\r\n  color #08f\r\n  cursor pointer\r\n  text-decoration none\r\n\r\n.modal-header\r\n  color white\r\n  padding 2px 16px\r\n\r\n.modal-body\r\n  overflow auto\r\n  padding 16px\r\n  height inherit\r\n\r\n  &::-webkit-scrollbar\r\n    width 8px\r\n    height 8px\r\n\r\n  &::-webkit-scrollbar-track\r\n    background #18181B\r\n    border-radius 4px\r\n\r\n  &::-webkit-scrollbar-thumb\r\n    background #3f3f46\r\n    border-radius 4px\r\n    transition background 0.2s ease\r\n\r\n  &::-webkit-scrollbar-thumb:hover\r\n    background #52525b\r\n\r\n  &::-webkit-scrollbar-corner\r\n    background #18181B\r\n\r\n.modal-footer\r\n  color white\r\n  padding 2px 16px\r\n\r\n/* Gallery */\r\n.gallery\r\n  display flex\r\n  flex-wrap wrap\r\n  overflow auto\r\n  gap 12px\r\n  padding 2px\r\n\r\n/* Toolbar */\r\n.newimage .gallery,\r\n.texture-toolbar\r\n  display flex\r\n  align-items center\r\n  gap 12px\r\n  margin-bottom 12px\r\n  max-height 65vh\r\n\r\n.texture-toolbar\r\n  flex-wrap wrap\r\n  max-height none\r\n\r\n.url-input-group\r\n  min-width 220px\r\n  flex 1\r\n  display flex\r\n  gap 8px\r\n  align-items center\r\n\r\n  input\r\n    min-width 0\r\n    flex 1\r\n    padding 8px\r\n\r\n.url-input-group .imageUrl\r\n  flex 1\r\n  height 32px\r\n  padding 0 12px\r\n  border-radius 8px\r\n  border none\r\n  background #232323\r\n  color #00ff99\r\n  font-size 13px\r\n\r\n.url-input-group .imageUrl::placeholder\r\n  color #666\r\n\r\n.url-input-group .load-url-btn\r\n  height 32px\r\n  padding 0 16px\r\n  white-space nowrap\r\n  font-size 12px\r\n\r\n.registry-section\r\n  margin-bottom 12px\r\n\r\n.section-label\r\n  display block\r\n  margin-bottom 8px\r\n  color #888\r\n  font-size 13px\r\n\r\n.gallery-item\r\n  border-radius 8px\r\n  box-shadow 0 0 6px rgba(0, 0, 0, 0.6)\r\n  cursor pointer\r\n  overflow hidden\r\n  width 155px\r\n  transition box-shadow 0.15s ease\r\n\r\n.modal .gallery-item\r\n  padding 0\r\n  text-align left\r\n  line-height 1.4\r\n  display flex\r\n  flex-direction column\r\n  flex-shrink 0\r\n  border 1px solid $grayalt\r\n  font-weight normal\r\n\r\n  img\r\n    object-fit cover\r\n\r\n  .detail\r\n    display block\r\n    box-sizing border-box\r\n    width 100%\r\n\r\n.gallery-item.selected,\r\n.gallery-item:hover\r\n  box-shadow 0 0 0 2px #00ff99\r\n\r\n.gallery-item .detail\r\n  background-color #323232\r\n  margin 0\r\n  min-height 60px\r\n  padding 4px 8px 8px 8px\r\n\r\n.preview\r\n  width 250px\r\n  flex-shrink 0\r\n\r\n.preview label\r\n  color #888\r\n  font-size 12px\r\n  display block\r\n  margin-bottom 4px\r\n\r\n.preview input\r\n  display block\r\n  margin 0 0 12px 0\r\n  height 24px\r\n  width 230px\r\n  border-radius 8px\r\n\r\n.preview img\r\n  border-radius 8px\r\n  margin-bottom 8px\r\n\r\n.preview button\r\n  width 242px\r\n  margin-top 8px\r\n\r\n.preview button:hover\r\n  background-color #00ff99\r\n  color #000\r\n\r\n.preview .detail\r\n  margin-bottom 8px\r\n\r\n.preview .detail .title\r\n  color #fff\r\n  display block\r\n  max-width 230px\r\n  overflow hidden\r\n  text-overflow ellipsis\r\n  white-space nowrap\r\n  font-size 13px\r\n\r\n.preview .detail .dimensions\r\n  color #888\r\n  font-size 12px\r\n  display block\r\n  margin-top 4px\r\n\r\n.gallery-item.selected .detail,\r\n.gallery-item:hover .detail\r\n  background-color #444\r\n\r\n.gallery-item .detail span\r\n  color #777\r\n  display block\r\n  margin-top 4px\r\n  overflow hidden\r\n  text-overflow ellipsis\r\n  white-space nowrap\r\n  width 140px\r\n\r\n.gallery-item.selected .detail span,\r\n.gallery-item:hover .detail span\r\n  color #888\r\n\r\n.gallery-item .detail span.title\r\n  color #fff !important\r\n\r\n.gallery .loading-indicator\r\n  background transparent\r\n  box-shadow none\r\n  color #888\r\n  display flex\r\n  align-items center\r\n  justify-content center\r\n  width 100%\r\n  padding 40px 20px\r\n  font-size 14px\r\n  animation pulse 1.5s ease-in-out infinite\r\n\r\n@keyframes pulse\r\n  0%, 100%\r\n    opacity 0.5\r\n  50%\r\n    opacity 1\r\n\r\n.modal button\r\n  appearance none\r\n  border-radius 0\r\n  box-shadow none\r\n  cursor pointer\r\n  display inline-block\r\n  font-size 12px\r\n  line-height 1.8\r\n  margin 0 0 0 0\r\n  padding 5px 10px\r\n\r\n.modal buttonfocus\r\n  outline none\r\n\r\n.modal button\r\n  background-color #09090b\r\n  border none\r\n  color #fff\r\n  border-radius 8px\r\n  font-weight 500\r\n  padding 8px 16px\r\n  text-transform capitalize\r\n  transition all 0.2s ease-in-out\r\n\r\n.modal button:hover\r\n  background-color #00ff99\r\n  color #000\r\n\r\n.modal buttonhover,\r\n.modal button.hover\r\n  background-color #346392\r\n  text-shadow -1px 1px #27496d\r\n\r\n.modal buttonactive,\r\n.modal button.active\r\n  background-color #27496d\r\n  text-shadow -1px 1px #193047\r\n\r\n.modal buttondisabled\r\n  background-color #888\r\n  cursor none\r\n\r\n.newimage\r\n  color #A3A3A3\r\n  display flex\r\n  gap 24px\r\n  font-size 14px\r\n  justify-content space-between\r\n  overflow visible\r\n  max-height none\r\n\r\n.newimage input\r\n  color #00ff99\r\n  padding 3px 5px\r\n\r\n.texture canvas + input\r\n  margin-left 5px\r\n\r\n.texture svg\r\n  padding-right 5px\r\n\r\n.uploader-normal-button .hidden\r\n  display none\r\n\r\n.assets.search\r\n  position relative\r\n  margin-top 8px\r\n  width 100%\r\n\r\n.assets.search svg\r\n  position absolute\r\n  right 10px\r\n  top 8px\r\n\r\n.assets.search input\r\n  width calc(100% - 12px)\r\n  height 20px\r\n  padding 5px\r\n  border-radius 8px\r\n\r\n.new_asset_options\r\n  width 100%\r\n  min-width 0\r\n  flex 1\r\n\r\n  > input\r\n    width 100%\r\n    box-sizing border-box\r\n    min-height 32px\r\n    margin-bottom 12px\r\n\r\n.new_asset_options > ul\r\n  margin-left 10px\r\n  padding 5px\r\n\r\n.new_asset_options > ul > li\r\n  padding 10px 0\r\n\r\n.new_asset_options .imageUrl\r\n  margin-left 5px\r\n  width 350px\r\n  height 24px\r\n  border-radius 8px\r\n\r\n.texture canvas\r\n  border 1px solid rgba(255, 255, 255, .15)\r\n  border-radius 8px\r\n  cursor pointer\r\n\r\n@media (max-width: 620px)\r\n  .newimage\r\n    flex-direction column\r\n\r\n  .preview\r\n    width 100%\r\n',
+              "@import './lib';\n\n#viewportBar\n  max-width calc(100vw - 16px)\n  z-index 1\n  align-items center\n  color $white\n  position absolute\n  top 0\n  left 50%\n  transform translateX(-50%)\n  flex-grow 2\n  display flex\n  height 40px\n  font-size 14px\n  justify-content space-between\n  margin 8px auto\n  width auto\n  background $bg\n  border-radius 8px\n\n  .viewportHud-menubar\n    display flex\n    height 40px\n    width 240px\n    align-items center\n    justify-content flex-end\n\n#viewportHud\n  padding 0px 4px\n  margin 0 4px\n  background $bgdark\n  overflow-x auto\n  overflow-y hidden\n  height 30px\n  width 230px\n  border-radius 8px\n  display flex!important\n  align-items center\n  justify-content end\n\n  p\n    margin 0\n    font-size 14px\n\n#pageToolbar\n  display flex\n  align-items center\n  height 48px\n\n  .button\n    width 48px\n    height 48px\n    border 0\n    background none\n    font-size 16px\n    cursor pointer\n\n  .button:hover\n    background #141417\n\n    svg\n      color $primary\n\n.toolbarButtons\n  display flex\n  align-items center\n  height 40px\n\n  *\n    margin-left 0 !important\n    vertical-align middle\n    height 48px\n    display flex\n    align-items center\n\n  a.button\n    & svg\n      padding 12px\n\n    &:not(.active) svg:hover\n      background-color #141417\n\n  .active svg\n    background-color #141417!important\n    color $primary\n\n  .active:hover svg\n    color #fff !important\n\n.local-transform\n  padding-left 10px\n  padding-right 20px\n\n.local-transform label\n  color $lightgray\n  padding-left 8px\n  font-size 14px\n\n.local-transform a.button\n  padding-top 0\n\n#cameraSelect\n  cursor pointer\n  width 120px\n  .select__dropdown-indicator\n    padding-left 3px\n    padding-right 3px\n\n#cameraToolbar\n  align-items center\n  height 40px\n  padding 0 5px\n  display flex\n\n  #cameraSelect\n    width 160px // Adjust width to accommodate icon + text\n    .select__control\n      background-color $bgdark\n      border none\n      min-height 30px // Adjust height\n      height 30px\n      box-shadow none\n      &:hover\n        border-color $grey\n    .select__value-container\n      padding 0 4px\n    .select__single-value\n      color $white\n      display flex\n      align-items center\n      svg\n        margin-right 8px\n        width 16px\n        height 16px\n    .select__indicator-separator\n      display none\n    .select__dropdown-indicator\n      padding 4px\n      color $grey\n      &:hover\n        color $white\n    .select__menu\n      background-color $bgdark\n    .select__option\n      background-color $bgdark\n      color $white\n      display flex\n      align-items center\n      svg\n        margin-right 8px\n        width 24px\n        height 24px\n      &:hover\n        background-color #141417\n        color $primary\n        svg\n          fill $primary\n      &--is-focused\n        background-color #141417 // Keep focus style consistent with hover\n      &--is-selected\n        background-color $bgdark // Keep selected background subtle if needed\n        color $primary\n        svg\n          fill $primary\n\n#viewportHud\n  display none\n  +media--1024()\n    display block\n\n#transformToolbar\n  .button\n    width 40px\n    height 40px\n    padding 0\n    background transparent\n    border 0\n    border-radius 0\n\n    svg\n      width 18px\n      height 18px\n\n@media (max-width: 1000px)\n  #viewportBar .viewportHud-menubar\n    display none\n",
+              "@import './lib';\n\n.Select-control\n  background-color #222 !important\n  border none\n  border-radius 0\n  color $primary\n  font-family $monosapce\n\n.Select-menu-outer\n  border none\n\n.Select-menu-outer .is-focused\n  background-color $primary !important\n  color $white\n\n.Select-option\n  background-color #222 !important\n\n.select-widget\n  display inline-block\n  width 100%\n  border-radius 8px\n\n.Select-placeholder,\n.Select--single > .Select-control .Select-value\n  color $primary !important\n\n.Select-value-label\n  color $primary !important\n\n/* Dropdown menu */\n.dropbtn\n  border none\n  color $white\n  cursor pointer\n\n.dropdown\n  display inline-block\n  position relative\n\n.dropdown-content\n  background-color #f9f9f9\n  box-shadow 0 8px 16px 0 rgba(0, 0, 0, 0.2)\n  display none\n  left 8px\n  min-width 38px\n  position absolute\n  z-index 999\n\n.dropdown-content a\n  background-color #232323\n  color #7d7d7d\n  display block\n  padding 10px 14px\n  text-decoration none\n\n.dropdown-content a:hover\n  background-color #007370\n  color $white\n\n.dropdownhover .dropdown-content\n  display block\n\n.dropdownhover .dropbtn\n  color $primary\n\n.color-widget\n  display flex\n  justify-content space-between\n  align-items center\n\n.texture\n  display flex\n  align-items center\n  flex-wrap wrap\n  gap 6px\n\n  input.map_value\n    flex 1\n    min-width 100px\n    margin 0\n\n  .texture-picker\n    padding 3px\n    display flex\n\n  canvas\n    border 0\n\n.field-error,\n.form-error\n  color #ffb4ad\n  line-height 1.5\n\ninput[aria-invalid=true]\n  border 1px solid #ffb4ad !important\n\n.vec2,\n.vec3,\n.vec4\n  flex-wrap wrap\n",
+              '.modal-overlay\n  position fixed\n  top 0\n  left 0\n  right 0\n  bottom 0\n  backdrop-filter blur(4px)\n  background-color rgba(0, 0, 0, .5)\n  display flex\n  justify-content center\n  align-items center\n  z-index 1000 /* Ensure modal is on top */\n\n.modal-content\n  color #eee /* Light text */\n  border-radius 8px\n  min-width 300px\n  max-width 600px\n  width 100%\n  box-shadow 0 4px 15px rgba(0, 0, 0, 0.2)\n\n#primitive-modal .modal-header\n  display flex\n  justify-content space-between\n  align-items center\n\n#primitive-modal .modal-content\n  width 600px\n\n.modal-body\n  display flex\n  flex-direction column\n\n#primitive-modal h3\n  text-align center\n  color #fff\n  font-size 16px\n  font-weight 500\n  margin 0.6em 0\n\n.primitive-grid\n  display grid\n  grid-template-columns repeat(auto-fit, minmax(100px, 1fr)) /* Responsive grid */\n  gap 16px\n\n.primitive-button\n  background-color #09090B\n  color white\n  padding 8px\n  border-radius 8px\n  cursor pointer\n  transition background-color 0.2s ease, transform 0.1s ease\n  text-align center\n  aspect-ratio 1\n  border none\n  display flex\n  flex-direction column\n  gap 8px\n  justify-content center\n  align-items center\n\n  svg\n    width 48px\n    height 48px\n    margin 4px auto\n    color red\n    opacity .4\n\n.primitive-button:hover\n  border 1px solid #00FF99\n\n  svg\n    opacity 1\n\n\n.primitive-button:active\n  border 1px solid #00FF99\n\n  svg\n    opacity 1\n\n.modal-close-button\n  background-color #777 /* Different color for cancel */\n  color #eee\n  border 1px solid #999\n  padding 8px 15px\n  border-radius 4px\n  cursor pointer\n  transition background-color 0.2s ease\n  align-self flex-end /* Position cancel button to the right */\n\n.modal-close-button:hover\n  background-color #888\n\n@media (max-width: 620px)\n  #primitive-modal .primitive-grid\n    grid-template-columns repeat(auto-fit, minmax(85px, 1fr))\n'
             ],
             sourceRoot: ''
           }
@@ -97567,3269 +97892,6 @@ object-assign
         /***/
       },
 
-    /***/ './node_modules/three/examples/jsm/exporters/GLTFExporter.js':
-      /*!*******************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/exporters/GLTFExporter.js ***!
-  \*******************************************************************/
-      /***/ (
-        __unused_webpack___webpack_module__,
-        __webpack_exports__,
-        __webpack_require__
-      ) => {
-        'use strict';
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-          /* harmony export */ GLTFExporter: () => /* binding */ GLTFExporter
-          /* harmony export */
-        });
-        /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ =
-          __webpack_require__(/*! three */ 'three');
-        /* harmony import */ var _utils_TextureUtils_js__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(
-            /*! ./../utils/TextureUtils.js */ './node_modules/three/examples/jsm/utils/TextureUtils.js'
-          );
-
-        /**
-         * The KHR_mesh_quantization extension allows these extra attribute component types
-         *
-         * @see https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_mesh_quantization/README.md#extending-mesh-attributes
-         */
-        const KHR_mesh_quantization_ExtraAttrTypes = {
-          POSITION: [
-            'byte',
-            'byte normalized',
-            'unsigned byte',
-            'unsigned byte normalized',
-            'short',
-            'short normalized',
-            'unsigned short',
-            'unsigned short normalized'
-          ],
-          NORMAL: ['byte normalized', 'short normalized'],
-          TANGENT: ['byte normalized', 'short normalized'],
-          TEXCOORD: [
-            'byte',
-            'byte normalized',
-            'unsigned byte',
-            'short',
-            'short normalized',
-            'unsigned short'
-          ]
-        };
-
-        class GLTFExporter {
-          constructor() {
-            this.pluginCallbacks = [];
-
-            this.register(function (writer) {
-              return new GLTFLightExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsUnlitExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsTransmissionExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsVolumeExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsIorExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsSpecularExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsClearcoatExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsDispersionExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsIridescenceExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsSheenExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsAnisotropyExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsEmissiveStrengthExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMaterialsBumpExtension(writer);
-            });
-
-            this.register(function (writer) {
-              return new GLTFMeshGpuInstancing(writer);
-            });
-          }
-
-          register(callback) {
-            if (this.pluginCallbacks.indexOf(callback) === -1) {
-              this.pluginCallbacks.push(callback);
-            }
-
-            return this;
-          }
-
-          unregister(callback) {
-            if (this.pluginCallbacks.indexOf(callback) !== -1) {
-              this.pluginCallbacks.splice(
-                this.pluginCallbacks.indexOf(callback),
-                1
-              );
-            }
-
-            return this;
-          }
-
-          /**
-           * Parse scenes and generate GLTF output
-           * @param  {Scene or [THREE.Scenes]} input   Scene or Array of THREE.Scenes
-           * @param  {Function} onDone  Callback on completed
-           * @param  {Function} onError  Callback on errors
-           * @param  {Object} options options
-           */
-          parse(input, onDone, onError, options) {
-            const writer = new GLTFWriter();
-            const plugins = [];
-
-            for (let i = 0, il = this.pluginCallbacks.length; i < il; i++) {
-              plugins.push(this.pluginCallbacks[i](writer));
-            }
-
-            writer.setPlugins(plugins);
-            writer.write(input, onDone, options).catch(onError);
-          }
-
-          parseAsync(input, options) {
-            const scope = this;
-
-            return new Promise(function (resolve, reject) {
-              scope.parse(input, resolve, reject, options);
-            });
-          }
-        }
-
-        //------------------------------------------------------------------------------
-        // Constants
-        //------------------------------------------------------------------------------
-
-        const WEBGL_CONSTANTS = {
-          POINTS: 0x0000,
-          LINES: 0x0001,
-          LINE_LOOP: 0x0002,
-          LINE_STRIP: 0x0003,
-          TRIANGLES: 0x0004,
-          TRIANGLE_STRIP: 0x0005,
-          TRIANGLE_FAN: 0x0006,
-
-          BYTE: 0x1400,
-          UNSIGNED_BYTE: 0x1401,
-          SHORT: 0x1402,
-          UNSIGNED_SHORT: 0x1403,
-          INT: 0x1404,
-          UNSIGNED_INT: 0x1405,
-          FLOAT: 0x1406,
-
-          ARRAY_BUFFER: 0x8892,
-          ELEMENT_ARRAY_BUFFER: 0x8893,
-
-          NEAREST: 0x2600,
-          LINEAR: 0x2601,
-          NEAREST_MIPMAP_NEAREST: 0x2700,
-          LINEAR_MIPMAP_NEAREST: 0x2701,
-          NEAREST_MIPMAP_LINEAR: 0x2702,
-          LINEAR_MIPMAP_LINEAR: 0x2703,
-
-          CLAMP_TO_EDGE: 33071,
-          MIRRORED_REPEAT: 33648,
-          REPEAT: 10497
-        };
-
-        const KHR_MESH_QUANTIZATION = 'KHR_mesh_quantization';
-
-        const THREE_TO_WEBGL = {};
-
-        THREE_TO_WEBGL[three__WEBPACK_IMPORTED_MODULE_0__.NearestFilter] =
-          WEBGL_CONSTANTS.NEAREST;
-        THREE_TO_WEBGL[
-          three__WEBPACK_IMPORTED_MODULE_0__.NearestMipmapNearestFilter
-        ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_NEAREST;
-        THREE_TO_WEBGL[
-          three__WEBPACK_IMPORTED_MODULE_0__.NearestMipmapLinearFilter
-        ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_LINEAR;
-        THREE_TO_WEBGL[three__WEBPACK_IMPORTED_MODULE_0__.LinearFilter] =
-          WEBGL_CONSTANTS.LINEAR;
-        THREE_TO_WEBGL[
-          three__WEBPACK_IMPORTED_MODULE_0__.LinearMipmapNearestFilter
-        ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_NEAREST;
-        THREE_TO_WEBGL[
-          three__WEBPACK_IMPORTED_MODULE_0__.LinearMipmapLinearFilter
-        ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_LINEAR;
-
-        THREE_TO_WEBGL[three__WEBPACK_IMPORTED_MODULE_0__.ClampToEdgeWrapping] =
-          WEBGL_CONSTANTS.CLAMP_TO_EDGE;
-        THREE_TO_WEBGL[three__WEBPACK_IMPORTED_MODULE_0__.RepeatWrapping] =
-          WEBGL_CONSTANTS.REPEAT;
-        THREE_TO_WEBGL[
-          three__WEBPACK_IMPORTED_MODULE_0__.MirroredRepeatWrapping
-        ] = WEBGL_CONSTANTS.MIRRORED_REPEAT;
-
-        const PATH_PROPERTIES = {
-          scale: 'scale',
-          position: 'translation',
-          quaternion: 'rotation',
-          morphTargetInfluences: 'weights'
-        };
-
-        const DEFAULT_SPECULAR_COLOR =
-          new three__WEBPACK_IMPORTED_MODULE_0__.Color();
-
-        // GLB constants
-        // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#glb-file-format-specification
-
-        const GLB_HEADER_BYTES = 12;
-        const GLB_HEADER_MAGIC = 0x46546c67;
-        const GLB_VERSION = 2;
-
-        const GLB_CHUNK_PREFIX_BYTES = 8;
-        const GLB_CHUNK_TYPE_JSON = 0x4e4f534a;
-        const GLB_CHUNK_TYPE_BIN = 0x004e4942;
-
-        //------------------------------------------------------------------------------
-        // Utility functions
-        //------------------------------------------------------------------------------
-
-        /**
-         * Compare two arrays
-         * @param  {Array} array1 Array 1 to compare
-         * @param  {Array} array2 Array 2 to compare
-         * @return {Boolean}        Returns true if both arrays are equal
-         */
-        function equalArray(array1, array2) {
-          return (
-            array1.length === array2.length &&
-            array1.every(function (element, index) {
-              return element === array2[index];
-            })
-          );
-        }
-
-        /**
-         * Converts a string to an ArrayBuffer.
-         * @param  {string} text
-         * @return {ArrayBuffer}
-         */
-        function stringToArrayBuffer(text) {
-          return new TextEncoder().encode(text).buffer;
-        }
-
-        /**
-         * Is identity matrix
-         *
-         * @param {Matrix4} matrix
-         * @returns {Boolean} Returns true, if parameter is identity matrix
-         */
-        function isIdentityMatrix(matrix) {
-          return equalArray(
-            matrix.elements,
-            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
-          );
-        }
-
-        /**
-         * Get the min and max vectors from the given attribute
-         * @param  {BufferAttribute} attribute Attribute to find the min/max in range from start to start + count
-         * @param  {Integer} start
-         * @param  {Integer} count
-         * @return {Object} Object containing the `min` and `max` values (As an array of attribute.itemSize components)
-         */
-        function getMinMax(attribute, start, count) {
-          const output = {
-            min: new Array(attribute.itemSize).fill(Number.POSITIVE_INFINITY),
-            max: new Array(attribute.itemSize).fill(Number.NEGATIVE_INFINITY)
-          };
-
-          for (let i = start; i < start + count; i++) {
-            for (let a = 0; a < attribute.itemSize; a++) {
-              let value;
-
-              if (attribute.itemSize > 4) {
-                // no support for interleaved data for itemSize > 4
-
-                value = attribute.array[i * attribute.itemSize + a];
-              } else {
-                if (a === 0) value = attribute.getX(i);
-                else if (a === 1) value = attribute.getY(i);
-                else if (a === 2) value = attribute.getZ(i);
-                else if (a === 3) value = attribute.getW(i);
-
-                if (attribute.normalized === true) {
-                  value =
-                    three__WEBPACK_IMPORTED_MODULE_0__.MathUtils.normalize(
-                      value,
-                      attribute.array
-                    );
-                }
-              }
-
-              output.min[a] = Math.min(output.min[a], value);
-              output.max[a] = Math.max(output.max[a], value);
-            }
-          }
-
-          return output;
-        }
-
-        /**
-         * Get the required size + padding for a buffer, rounded to the next 4-byte boundary.
-         * https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#data-alignment
-         *
-         * @param {Integer} bufferSize The size the original buffer.
-         * @returns {Integer} new buffer size with required padding.
-         *
-         */
-        function getPaddedBufferSize(bufferSize) {
-          return Math.ceil(bufferSize / 4) * 4;
-        }
-
-        /**
-         * Returns a buffer aligned to 4-byte boundary.
-         *
-         * @param {ArrayBuffer} arrayBuffer Buffer to pad
-         * @param {Integer} paddingByte (Optional)
-         * @returns {ArrayBuffer} The same buffer if it's already aligned to 4-byte boundary or a new buffer
-         */
-        function getPaddedArrayBuffer(arrayBuffer, paddingByte = 0) {
-          const paddedLength = getPaddedBufferSize(arrayBuffer.byteLength);
-
-          if (paddedLength !== arrayBuffer.byteLength) {
-            const array = new Uint8Array(paddedLength);
-            array.set(new Uint8Array(arrayBuffer));
-
-            if (paddingByte !== 0) {
-              for (let i = arrayBuffer.byteLength; i < paddedLength; i++) {
-                array[i] = paddingByte;
-              }
-            }
-
-            return array.buffer;
-          }
-
-          return arrayBuffer;
-        }
-
-        function getCanvas() {
-          if (
-            typeof document === 'undefined' &&
-            typeof OffscreenCanvas !== 'undefined'
-          ) {
-            return new OffscreenCanvas(1, 1);
-          }
-
-          return document.createElement('canvas');
-        }
-
-        function getToBlobPromise(canvas, mimeType) {
-          if (canvas.toBlob !== undefined) {
-            return new Promise((resolve) => canvas.toBlob(resolve, mimeType));
-          }
-
-          let quality;
-
-          // Blink's implementation of convertToBlob seems to default to a quality level of 100%
-          // Use the Blink default quality levels of toBlob instead so that file sizes are comparable.
-          if (mimeType === 'image/jpeg') {
-            quality = 0.92;
-          } else if (mimeType === 'image/webp') {
-            quality = 0.8;
-          }
-
-          return canvas.convertToBlob({
-            type: mimeType,
-            quality: quality
-          });
-        }
-
-        /**
-         * Writer
-         */
-        class GLTFWriter {
-          constructor() {
-            this.plugins = [];
-
-            this.options = {};
-            this.pending = [];
-            this.buffers = [];
-
-            this.byteOffset = 0;
-            this.buffers = [];
-            this.nodeMap = new Map();
-            this.skins = [];
-
-            this.extensionsUsed = {};
-            this.extensionsRequired = {};
-
-            this.uids = new Map();
-            this.uid = 0;
-
-            this.json = {
-              asset: {
-                version: '2.0',
-                generator:
-                  'THREE.GLTFExporter r' +
-                  three__WEBPACK_IMPORTED_MODULE_0__.REVISION
-              }
-            };
-
-            this.cache = {
-              meshes: new Map(),
-              attributes: new Map(),
-              attributesNormalized: new Map(),
-              materials: new Map(),
-              textures: new Map(),
-              images: new Map()
-            };
-          }
-
-          setPlugins(plugins) {
-            this.plugins = plugins;
-          }
-
-          /**
-           * Parse scenes and generate GLTF output
-           * @param  {Scene or [THREE.Scenes]} input   Scene or Array of THREE.Scenes
-           * @param  {Function} onDone  Callback on completed
-           * @param  {Object} options options
-           */
-          async write(input, onDone, options = {}) {
-            this.options = Object.assign(
-              {
-                // default options
-                binary: false,
-                trs: false,
-                onlyVisible: true,
-                maxTextureSize: Infinity,
-                animations: [],
-                includeCustomExtensions: false
-              },
-              options
-            );
-
-            if (this.options.animations.length > 0) {
-              // Only TRS properties, and not matrices, may be targeted by animation.
-              this.options.trs = true;
-            }
-
-            this.processInput(input);
-
-            await Promise.all(this.pending);
-
-            const writer = this;
-            const buffers = writer.buffers;
-            const json = writer.json;
-            options = writer.options;
-
-            const extensionsUsed = writer.extensionsUsed;
-            const extensionsRequired = writer.extensionsRequired;
-
-            // Merge buffers.
-            const blob = new Blob(buffers, {
-              type: 'application/octet-stream'
-            });
-
-            // Declare extensions.
-            const extensionsUsedList = Object.keys(extensionsUsed);
-            const extensionsRequiredList = Object.keys(extensionsRequired);
-
-            if (extensionsUsedList.length > 0)
-              json.extensionsUsed = extensionsUsedList;
-            if (extensionsRequiredList.length > 0)
-              json.extensionsRequired = extensionsRequiredList;
-
-            // Update bytelength of the single buffer.
-            if (json.buffers && json.buffers.length > 0)
-              json.buffers[0].byteLength = blob.size;
-
-            if (options.binary === true) {
-              // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#glb-file-format-specification
-
-              const reader = new FileReader();
-              reader.readAsArrayBuffer(blob);
-              reader.onloadend = function () {
-                // Binary chunk.
-                const binaryChunk = getPaddedArrayBuffer(reader.result);
-                const binaryChunkPrefix = new DataView(
-                  new ArrayBuffer(GLB_CHUNK_PREFIX_BYTES)
-                );
-                binaryChunkPrefix.setUint32(0, binaryChunk.byteLength, true);
-                binaryChunkPrefix.setUint32(4, GLB_CHUNK_TYPE_BIN, true);
-
-                // JSON chunk.
-                const jsonChunk = getPaddedArrayBuffer(
-                  stringToArrayBuffer(JSON.stringify(json)),
-                  0x20
-                );
-                const jsonChunkPrefix = new DataView(
-                  new ArrayBuffer(GLB_CHUNK_PREFIX_BYTES)
-                );
-                jsonChunkPrefix.setUint32(0, jsonChunk.byteLength, true);
-                jsonChunkPrefix.setUint32(4, GLB_CHUNK_TYPE_JSON, true);
-
-                // GLB header.
-                const header = new ArrayBuffer(GLB_HEADER_BYTES);
-                const headerView = new DataView(header);
-                headerView.setUint32(0, GLB_HEADER_MAGIC, true);
-                headerView.setUint32(4, GLB_VERSION, true);
-                const totalByteLength =
-                  GLB_HEADER_BYTES +
-                  jsonChunkPrefix.byteLength +
-                  jsonChunk.byteLength +
-                  binaryChunkPrefix.byteLength +
-                  binaryChunk.byteLength;
-                headerView.setUint32(8, totalByteLength, true);
-
-                const glbBlob = new Blob(
-                  [
-                    header,
-                    jsonChunkPrefix,
-                    jsonChunk,
-                    binaryChunkPrefix,
-                    binaryChunk
-                  ],
-                  { type: 'application/octet-stream' }
-                );
-
-                const glbReader = new FileReader();
-                glbReader.readAsArrayBuffer(glbBlob);
-                glbReader.onloadend = function () {
-                  onDone(glbReader.result);
-                };
-              };
-            } else {
-              if (json.buffers && json.buffers.length > 0) {
-                const reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = function () {
-                  const base64data = reader.result;
-                  json.buffers[0].uri = base64data;
-                  onDone(json);
-                };
-              } else {
-                onDone(json);
-              }
-            }
-          }
-
-          /**
-           * Serializes a userData.
-           *
-           * @param {THREE.Object3D|THREE.Material} object
-           * @param {Object} objectDef
-           */
-          serializeUserData(object, objectDef) {
-            if (Object.keys(object.userData).length === 0) return;
-
-            const options = this.options;
-            const extensionsUsed = this.extensionsUsed;
-
-            try {
-              const json = JSON.parse(JSON.stringify(object.userData));
-
-              if (options.includeCustomExtensions && json.gltfExtensions) {
-                if (objectDef.extensions === undefined)
-                  objectDef.extensions = {};
-
-                for (const extensionName in json.gltfExtensions) {
-                  objectDef.extensions[extensionName] =
-                    json.gltfExtensions[extensionName];
-                  extensionsUsed[extensionName] = true;
-                }
-
-                delete json.gltfExtensions;
-              }
-
-              if (Object.keys(json).length > 0) objectDef.extras = json;
-            } catch (error) {
-              console.warn(
-                "THREE.GLTFExporter: userData of '" +
-                  object.name +
-                  "' " +
-                  "won't be serialized because of JSON.stringify error - " +
-                  error.message
-              );
-            }
-          }
-
-          /**
-           * Returns ids for buffer attributes.
-           * @param  {Object} object
-           * @return {Integer}
-           */
-          getUID(attribute, isRelativeCopy = false) {
-            if (this.uids.has(attribute) === false) {
-              const uids = new Map();
-
-              uids.set(true, this.uid++);
-              uids.set(false, this.uid++);
-
-              this.uids.set(attribute, uids);
-            }
-
-            const uids = this.uids.get(attribute);
-
-            return uids.get(isRelativeCopy);
-          }
-
-          /**
-           * Checks if normal attribute values are normalized.
-           *
-           * @param {BufferAttribute} normal
-           * @returns {Boolean}
-           */
-          isNormalizedNormalAttribute(normal) {
-            const cache = this.cache;
-
-            if (cache.attributesNormalized.has(normal)) return false;
-
-            const v = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
-
-            for (let i = 0, il = normal.count; i < il; i++) {
-              // 0.0005 is from glTF-validator
-              if (
-                Math.abs(v.fromBufferAttribute(normal, i).length() - 1.0) >
-                0.0005
-              )
-                return false;
-            }
-
-            return true;
-          }
-
-          /**
-           * Creates normalized normal buffer attribute.
-           *
-           * @param {BufferAttribute} normal
-           * @returns {BufferAttribute}
-           *
-           */
-          createNormalizedNormalAttribute(normal) {
-            const cache = this.cache;
-
-            if (cache.attributesNormalized.has(normal))
-              return cache.attributesNormalized.get(normal);
-
-            const attribute = normal.clone();
-            const v = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
-
-            for (let i = 0, il = attribute.count; i < il; i++) {
-              v.fromBufferAttribute(attribute, i);
-
-              if (v.x === 0 && v.y === 0 && v.z === 0) {
-                // if values can't be normalized set (1, 0, 0)
-                v.setX(1.0);
-              } else {
-                v.normalize();
-              }
-
-              attribute.setXYZ(i, v.x, v.y, v.z);
-            }
-
-            cache.attributesNormalized.set(normal, attribute);
-
-            return attribute;
-          }
-
-          /**
-           * Applies a texture transform, if present, to the map definition. Requires
-           * the KHR_texture_transform extension.
-           *
-           * @param {Object} mapDef
-           * @param {THREE.Texture} texture
-           */
-          applyTextureTransform(mapDef, texture) {
-            let didTransform = false;
-            const transformDef = {};
-
-            if (texture.offset.x !== 0 || texture.offset.y !== 0) {
-              transformDef.offset = texture.offset.toArray();
-              didTransform = true;
-            }
-
-            if (texture.rotation !== 0) {
-              transformDef.rotation = texture.rotation;
-              didTransform = true;
-            }
-
-            if (texture.repeat.x !== 1 || texture.repeat.y !== 1) {
-              transformDef.scale = texture.repeat.toArray();
-              didTransform = true;
-            }
-
-            if (didTransform) {
-              mapDef.extensions = mapDef.extensions || {};
-              mapDef.extensions['KHR_texture_transform'] = transformDef;
-              this.extensionsUsed['KHR_texture_transform'] = true;
-            }
-          }
-
-          buildMetalRoughTexture(metalnessMap, roughnessMap) {
-            if (metalnessMap === roughnessMap) return metalnessMap;
-
-            function getEncodingConversion(map) {
-              if (
-                map.colorSpace ===
-                three__WEBPACK_IMPORTED_MODULE_0__.SRGBColorSpace
-              ) {
-                return function SRGBToLinear(c) {
-                  return c < 0.04045
-                    ? c * 0.0773993808
-                    : Math.pow(c * 0.9478672986 + 0.0521327014, 2.4);
-                };
-              }
-
-              return function LinearToLinear(c) {
-                return c;
-              };
-            }
-
-            console.warn(
-              'THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.'
-            );
-
-            if (
-              metalnessMap instanceof
-              three__WEBPACK_IMPORTED_MODULE_0__.CompressedTexture
-            ) {
-              metalnessMap = (0,
-              _utils_TextureUtils_js__WEBPACK_IMPORTED_MODULE_1__.decompress)(
-                metalnessMap
-              );
-            }
-
-            if (
-              roughnessMap instanceof
-              three__WEBPACK_IMPORTED_MODULE_0__.CompressedTexture
-            ) {
-              roughnessMap = (0,
-              _utils_TextureUtils_js__WEBPACK_IMPORTED_MODULE_1__.decompress)(
-                roughnessMap
-              );
-            }
-
-            const metalness = metalnessMap ? metalnessMap.image : null;
-            const roughness = roughnessMap ? roughnessMap.image : null;
-
-            const width = Math.max(
-              metalness ? metalness.width : 0,
-              roughness ? roughness.width : 0
-            );
-            const height = Math.max(
-              metalness ? metalness.height : 0,
-              roughness ? roughness.height : 0
-            );
-
-            const canvas = getCanvas();
-            canvas.width = width;
-            canvas.height = height;
-
-            const context = canvas.getContext('2d', {
-              willReadFrequently: true
-            });
-            context.fillStyle = '#00ffff';
-            context.fillRect(0, 0, width, height);
-
-            const composite = context.getImageData(0, 0, width, height);
-
-            if (metalness) {
-              context.drawImage(metalness, 0, 0, width, height);
-
-              const convert = getEncodingConversion(metalnessMap);
-              const data = context.getImageData(0, 0, width, height).data;
-
-              for (let i = 2; i < data.length; i += 4) {
-                composite.data[i] = convert(data[i] / 256) * 256;
-              }
-            }
-
-            if (roughness) {
-              context.drawImage(roughness, 0, 0, width, height);
-
-              const convert = getEncodingConversion(roughnessMap);
-              const data = context.getImageData(0, 0, width, height).data;
-
-              for (let i = 1; i < data.length; i += 4) {
-                composite.data[i] = convert(data[i] / 256) * 256;
-              }
-            }
-
-            context.putImageData(composite, 0, 0);
-
-            //
-
-            const reference = metalnessMap || roughnessMap;
-
-            const texture = reference.clone();
-
-            texture.source = new three__WEBPACK_IMPORTED_MODULE_0__.Source(
-              canvas
-            );
-            texture.colorSpace =
-              three__WEBPACK_IMPORTED_MODULE_0__.NoColorSpace;
-            texture.channel = (metalnessMap || roughnessMap).channel;
-
-            if (
-              metalnessMap &&
-              roughnessMap &&
-              metalnessMap.channel !== roughnessMap.channel
-            ) {
-              console.warn(
-                'THREE.GLTFExporter: UV channels for metalnessMap and roughnessMap textures must match.'
-              );
-            }
-
-            return texture;
-          }
-
-          /**
-           * Process a buffer to append to the default one.
-           * @param  {ArrayBuffer} buffer
-           * @return {Integer}
-           */
-          processBuffer(buffer) {
-            const json = this.json;
-            const buffers = this.buffers;
-
-            if (!json.buffers) json.buffers = [{ byteLength: 0 }];
-
-            // All buffers are merged before export.
-            buffers.push(buffer);
-
-            return 0;
-          }
-
-          /**
-           * Process and generate a BufferView
-           * @param  {BufferAttribute} attribute
-           * @param  {number} componentType
-           * @param  {number} start
-           * @param  {number} count
-           * @param  {number} target (Optional) Target usage of the BufferView
-           * @return {Object}
-           */
-          processBufferView(attribute, componentType, start, count, target) {
-            const json = this.json;
-
-            if (!json.bufferViews) json.bufferViews = [];
-
-            // Create a new dataview and dump the attribute's array into it
-
-            let componentSize;
-
-            switch (componentType) {
-              case WEBGL_CONSTANTS.BYTE:
-              case WEBGL_CONSTANTS.UNSIGNED_BYTE:
-                componentSize = 1;
-
-                break;
-
-              case WEBGL_CONSTANTS.SHORT:
-              case WEBGL_CONSTANTS.UNSIGNED_SHORT:
-                componentSize = 2;
-
-                break;
-
-              default:
-                componentSize = 4;
-            }
-
-            let byteStride = attribute.itemSize * componentSize;
-
-            if (target === WEBGL_CONSTANTS.ARRAY_BUFFER) {
-              // Each element of a vertex attribute MUST be aligned to 4-byte boundaries
-              // inside a bufferView
-              byteStride = Math.ceil(byteStride / 4) * 4;
-            }
-
-            const byteLength = getPaddedBufferSize(count * byteStride);
-            const dataView = new DataView(new ArrayBuffer(byteLength));
-            let offset = 0;
-
-            for (let i = start; i < start + count; i++) {
-              for (let a = 0; a < attribute.itemSize; a++) {
-                let value;
-
-                if (attribute.itemSize > 4) {
-                  // no support for interleaved data for itemSize > 4
-
-                  value = attribute.array[i * attribute.itemSize + a];
-                } else {
-                  if (a === 0) value = attribute.getX(i);
-                  else if (a === 1) value = attribute.getY(i);
-                  else if (a === 2) value = attribute.getZ(i);
-                  else if (a === 3) value = attribute.getW(i);
-
-                  if (attribute.normalized === true) {
-                    value =
-                      three__WEBPACK_IMPORTED_MODULE_0__.MathUtils.normalize(
-                        value,
-                        attribute.array
-                      );
-                  }
-                }
-
-                if (componentType === WEBGL_CONSTANTS.FLOAT) {
-                  dataView.setFloat32(offset, value, true);
-                } else if (componentType === WEBGL_CONSTANTS.INT) {
-                  dataView.setInt32(offset, value, true);
-                } else if (componentType === WEBGL_CONSTANTS.UNSIGNED_INT) {
-                  dataView.setUint32(offset, value, true);
-                } else if (componentType === WEBGL_CONSTANTS.SHORT) {
-                  dataView.setInt16(offset, value, true);
-                } else if (componentType === WEBGL_CONSTANTS.UNSIGNED_SHORT) {
-                  dataView.setUint16(offset, value, true);
-                } else if (componentType === WEBGL_CONSTANTS.BYTE) {
-                  dataView.setInt8(offset, value);
-                } else if (componentType === WEBGL_CONSTANTS.UNSIGNED_BYTE) {
-                  dataView.setUint8(offset, value);
-                }
-
-                offset += componentSize;
-              }
-
-              if (offset % byteStride !== 0) {
-                offset += byteStride - (offset % byteStride);
-              }
-            }
-
-            const bufferViewDef = {
-              buffer: this.processBuffer(dataView.buffer),
-              byteOffset: this.byteOffset,
-              byteLength: byteLength
-            };
-
-            if (target !== undefined) bufferViewDef.target = target;
-
-            if (target === WEBGL_CONSTANTS.ARRAY_BUFFER) {
-              // Only define byteStride for vertex attributes.
-              bufferViewDef.byteStride = byteStride;
-            }
-
-            this.byteOffset += byteLength;
-
-            json.bufferViews.push(bufferViewDef);
-
-            // @TODO Merge bufferViews where possible.
-            const output = {
-              id: json.bufferViews.length - 1,
-              byteLength: 0
-            };
-
-            return output;
-          }
-
-          /**
-           * Process and generate a BufferView from an image Blob.
-           * @param {Blob} blob
-           * @return {Promise<Integer>}
-           */
-          processBufferViewImage(blob) {
-            const writer = this;
-            const json = writer.json;
-
-            if (!json.bufferViews) json.bufferViews = [];
-
-            return new Promise(function (resolve) {
-              const reader = new FileReader();
-              reader.readAsArrayBuffer(blob);
-              reader.onloadend = function () {
-                const buffer = getPaddedArrayBuffer(reader.result);
-
-                const bufferViewDef = {
-                  buffer: writer.processBuffer(buffer),
-                  byteOffset: writer.byteOffset,
-                  byteLength: buffer.byteLength
-                };
-
-                writer.byteOffset += buffer.byteLength;
-                resolve(json.bufferViews.push(bufferViewDef) - 1);
-              };
-            });
-          }
-
-          /**
-           * Process attribute to generate an accessor
-           * @param  {BufferAttribute} attribute Attribute to process
-           * @param  {THREE.BufferGeometry} geometry (Optional) Geometry used for truncated draw range
-           * @param  {Integer} start (Optional)
-           * @param  {Integer} count (Optional)
-           * @return {Integer|null} Index of the processed accessor on the "accessors" array
-           */
-          processAccessor(attribute, geometry, start, count) {
-            const json = this.json;
-
-            const types = {
-              1: 'SCALAR',
-              2: 'VEC2',
-              3: 'VEC3',
-              4: 'VEC4',
-              9: 'MAT3',
-              16: 'MAT4'
-            };
-
-            let componentType;
-
-            // Detect the component type of the attribute array
-            if (attribute.array.constructor === Float32Array) {
-              componentType = WEBGL_CONSTANTS.FLOAT;
-            } else if (attribute.array.constructor === Int32Array) {
-              componentType = WEBGL_CONSTANTS.INT;
-            } else if (attribute.array.constructor === Uint32Array) {
-              componentType = WEBGL_CONSTANTS.UNSIGNED_INT;
-            } else if (attribute.array.constructor === Int16Array) {
-              componentType = WEBGL_CONSTANTS.SHORT;
-            } else if (attribute.array.constructor === Uint16Array) {
-              componentType = WEBGL_CONSTANTS.UNSIGNED_SHORT;
-            } else if (attribute.array.constructor === Int8Array) {
-              componentType = WEBGL_CONSTANTS.BYTE;
-            } else if (attribute.array.constructor === Uint8Array) {
-              componentType = WEBGL_CONSTANTS.UNSIGNED_BYTE;
-            } else {
-              throw new Error(
-                'THREE.GLTFExporter: Unsupported bufferAttribute component type: ' +
-                  attribute.array.constructor.name
-              );
-            }
-
-            if (start === undefined) start = 0;
-            if (count === undefined || count === Infinity)
-              count = attribute.count;
-
-            // Skip creating an accessor if the attribute doesn't have data to export
-            if (count === 0) return null;
-
-            const minMax = getMinMax(attribute, start, count);
-            let bufferViewTarget;
-
-            // If geometry isn't provided, don't infer the target usage of the bufferView. For
-            // animation samplers, target must not be set.
-            if (geometry !== undefined) {
-              bufferViewTarget =
-                attribute === geometry.index
-                  ? WEBGL_CONSTANTS.ELEMENT_ARRAY_BUFFER
-                  : WEBGL_CONSTANTS.ARRAY_BUFFER;
-            }
-
-            const bufferView = this.processBufferView(
-              attribute,
-              componentType,
-              start,
-              count,
-              bufferViewTarget
-            );
-
-            const accessorDef = {
-              bufferView: bufferView.id,
-              byteOffset: bufferView.byteOffset,
-              componentType: componentType,
-              count: count,
-              max: minMax.max,
-              min: minMax.min,
-              type: types[attribute.itemSize]
-            };
-
-            if (attribute.normalized === true) accessorDef.normalized = true;
-            if (!json.accessors) json.accessors = [];
-
-            return json.accessors.push(accessorDef) - 1;
-          }
-
-          /**
-           * Process image
-           * @param  {Image} image to process
-           * @param  {Integer} format of the image (RGBAFormat)
-           * @param  {Boolean} flipY before writing out the image
-           * @param  {String} mimeType export format
-           * @return {Integer}     Index of the processed texture in the "images" array
-           */
-          processImage(image, format, flipY, mimeType = 'image/png') {
-            if (image !== null) {
-              const writer = this;
-              const cache = writer.cache;
-              const json = writer.json;
-              const options = writer.options;
-              const pending = writer.pending;
-
-              if (!cache.images.has(image)) cache.images.set(image, {});
-
-              const cachedImages = cache.images.get(image);
-
-              const key = mimeType + ':flipY/' + flipY.toString();
-
-              if (cachedImages[key] !== undefined) return cachedImages[key];
-
-              if (!json.images) json.images = [];
-
-              const imageDef = { mimeType: mimeType };
-
-              const canvas = getCanvas();
-
-              canvas.width = Math.min(image.width, options.maxTextureSize);
-              canvas.height = Math.min(image.height, options.maxTextureSize);
-
-              const ctx = canvas.getContext('2d', {
-                willReadFrequently: true
-              });
-
-              if (flipY === true) {
-                ctx.translate(0, canvas.height);
-                ctx.scale(1, -1);
-              }
-
-              if (image.data !== undefined) {
-                // THREE.DataTexture
-
-                if (format !== three__WEBPACK_IMPORTED_MODULE_0__.RGBAFormat) {
-                  console.error(
-                    'GLTFExporter: Only RGBAFormat is supported.',
-                    format
-                  );
-                }
-
-                if (
-                  image.width > options.maxTextureSize ||
-                  image.height > options.maxTextureSize
-                ) {
-                  console.warn(
-                    'GLTFExporter: Image size is bigger than maxTextureSize',
-                    image
-                  );
-                }
-
-                const data = new Uint8ClampedArray(
-                  image.height * image.width * 4
-                );
-
-                for (let i = 0; i < data.length; i += 4) {
-                  data[i + 0] = image.data[i + 0];
-                  data[i + 1] = image.data[i + 1];
-                  data[i + 2] = image.data[i + 2];
-                  data[i + 3] = image.data[i + 3];
-                }
-
-                ctx.putImageData(
-                  new ImageData(data, image.width, image.height),
-                  0,
-                  0
-                );
-              } else {
-                if (
-                  (typeof HTMLImageElement !== 'undefined' &&
-                    image instanceof HTMLImageElement) ||
-                  (typeof HTMLCanvasElement !== 'undefined' &&
-                    image instanceof HTMLCanvasElement) ||
-                  (typeof ImageBitmap !== 'undefined' &&
-                    image instanceof ImageBitmap) ||
-                  (typeof OffscreenCanvas !== 'undefined' &&
-                    image instanceof OffscreenCanvas)
-                ) {
-                  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-                } else {
-                  throw new Error(
-                    'THREE.GLTFExporter: Invalid image type. Use HTMLImageElement, HTMLCanvasElement, ImageBitmap or OffscreenCanvas.'
-                  );
-                }
-              }
-
-              if (options.binary === true) {
-                pending.push(
-                  getToBlobPromise(canvas, mimeType)
-                    .then((blob) => writer.processBufferViewImage(blob))
-                    .then((bufferViewIndex) => {
-                      imageDef.bufferView = bufferViewIndex;
-                    })
-                );
-              } else {
-                if (canvas.toDataURL !== undefined) {
-                  imageDef.uri = canvas.toDataURL(mimeType);
-                } else {
-                  pending.push(
-                    getToBlobPromise(canvas, mimeType)
-                      .then((blob) => new FileReader().readAsDataURL(blob))
-                      .then((dataURL) => {
-                        imageDef.uri = dataURL;
-                      })
-                  );
-                }
-              }
-
-              const index = json.images.push(imageDef) - 1;
-              cachedImages[key] = index;
-              return index;
-            } else {
-              throw new Error(
-                'THREE.GLTFExporter: No valid image data found. Unable to process texture.'
-              );
-            }
-          }
-
-          /**
-           * Process sampler
-           * @param  {Texture} map Texture to process
-           * @return {Integer}     Index of the processed texture in the "samplers" array
-           */
-          processSampler(map) {
-            const json = this.json;
-
-            if (!json.samplers) json.samplers = [];
-
-            const samplerDef = {
-              magFilter: THREE_TO_WEBGL[map.magFilter],
-              minFilter: THREE_TO_WEBGL[map.minFilter],
-              wrapS: THREE_TO_WEBGL[map.wrapS],
-              wrapT: THREE_TO_WEBGL[map.wrapT]
-            };
-
-            return json.samplers.push(samplerDef) - 1;
-          }
-
-          /**
-           * Process texture
-           * @param  {Texture} map Map to process
-           * @return {Integer} Index of the processed texture in the "textures" array
-           */
-          processTexture(map) {
-            const writer = this;
-            const options = writer.options;
-            const cache = this.cache;
-            const json = this.json;
-
-            if (cache.textures.has(map)) return cache.textures.get(map);
-
-            if (!json.textures) json.textures = [];
-
-            // make non-readable textures (e.g. CompressedTexture) readable by blitting them into a new texture
-            if (
-              map instanceof
-              three__WEBPACK_IMPORTED_MODULE_0__.CompressedTexture
-            ) {
-              map = (0,
-              _utils_TextureUtils_js__WEBPACK_IMPORTED_MODULE_1__.decompress)(
-                map,
-                options.maxTextureSize
-              );
-            }
-
-            let mimeType = map.userData.mimeType;
-
-            if (mimeType === 'image/webp') mimeType = 'image/png';
-
-            const textureDef = {
-              sampler: this.processSampler(map),
-              source: this.processImage(
-                map.image,
-                map.format,
-                map.flipY,
-                mimeType
-              )
-            };
-
-            if (map.name) textureDef.name = map.name;
-
-            this._invokeAll(function (ext) {
-              ext.writeTexture && ext.writeTexture(map, textureDef);
-            });
-
-            const index = json.textures.push(textureDef) - 1;
-            cache.textures.set(map, index);
-            return index;
-          }
-
-          /**
-           * Process material
-           * @param  {THREE.Material} material Material to process
-           * @return {Integer|null} Index of the processed material in the "materials" array
-           */
-          processMaterial(material) {
-            const cache = this.cache;
-            const json = this.json;
-
-            if (cache.materials.has(material))
-              return cache.materials.get(material);
-
-            if (material.isShaderMaterial) {
-              console.warn('GLTFExporter: THREE.ShaderMaterial not supported.');
-              return null;
-            }
-
-            if (!json.materials) json.materials = [];
-
-            // @QUESTION Should we avoid including any attribute that has the default value?
-            const materialDef = { pbrMetallicRoughness: {} };
-
-            if (
-              material.isMeshStandardMaterial !== true &&
-              material.isMeshBasicMaterial !== true
-            ) {
-              console.warn(
-                'GLTFExporter: Use MeshStandardMaterial or MeshBasicMaterial for best results.'
-              );
-            }
-
-            // pbrMetallicRoughness.baseColorFactor
-            const color = material.color.toArray().concat([material.opacity]);
-
-            if (!equalArray(color, [1, 1, 1, 1])) {
-              materialDef.pbrMetallicRoughness.baseColorFactor = color;
-            }
-
-            if (material.isMeshStandardMaterial) {
-              materialDef.pbrMetallicRoughness.metallicFactor =
-                material.metalness;
-              materialDef.pbrMetallicRoughness.roughnessFactor =
-                material.roughness;
-            } else {
-              materialDef.pbrMetallicRoughness.metallicFactor = 0.5;
-              materialDef.pbrMetallicRoughness.roughnessFactor = 0.5;
-            }
-
-            // pbrMetallicRoughness.metallicRoughnessTexture
-            if (material.metalnessMap || material.roughnessMap) {
-              const metalRoughTexture = this.buildMetalRoughTexture(
-                material.metalnessMap,
-                material.roughnessMap
-              );
-
-              const metalRoughMapDef = {
-                index: this.processTexture(metalRoughTexture),
-                channel: metalRoughTexture.channel
-              };
-              this.applyTextureTransform(metalRoughMapDef, metalRoughTexture);
-              materialDef.pbrMetallicRoughness.metallicRoughnessTexture =
-                metalRoughMapDef;
-            }
-
-            // pbrMetallicRoughness.baseColorTexture
-            if (material.map) {
-              const baseColorMapDef = {
-                index: this.processTexture(material.map),
-                texCoord: material.map.channel
-              };
-              this.applyTextureTransform(baseColorMapDef, material.map);
-              materialDef.pbrMetallicRoughness.baseColorTexture =
-                baseColorMapDef;
-            }
-
-            if (material.emissive) {
-              const emissive = material.emissive;
-              const maxEmissiveComponent = Math.max(
-                emissive.r,
-                emissive.g,
-                emissive.b
-              );
-
-              if (maxEmissiveComponent > 0) {
-                materialDef.emissiveFactor = material.emissive.toArray();
-              }
-
-              // emissiveTexture
-              if (material.emissiveMap) {
-                const emissiveMapDef = {
-                  index: this.processTexture(material.emissiveMap),
-                  texCoord: material.emissiveMap.channel
-                };
-                this.applyTextureTransform(
-                  emissiveMapDef,
-                  material.emissiveMap
-                );
-                materialDef.emissiveTexture = emissiveMapDef;
-              }
-            }
-
-            // normalTexture
-            if (material.normalMap) {
-              const normalMapDef = {
-                index: this.processTexture(material.normalMap),
-                texCoord: material.normalMap.channel
-              };
-
-              if (material.normalScale && material.normalScale.x !== 1) {
-                // glTF normal scale is univariate. Ignore `y`, which may be flipped.
-                // Context: https://github.com/mrdoob/three.js/issues/11438#issuecomment-507003995
-                normalMapDef.scale = material.normalScale.x;
-              }
-
-              this.applyTextureTransform(normalMapDef, material.normalMap);
-              materialDef.normalTexture = normalMapDef;
-            }
-
-            // occlusionTexture
-            if (material.aoMap) {
-              const occlusionMapDef = {
-                index: this.processTexture(material.aoMap),
-                texCoord: material.aoMap.channel
-              };
-
-              if (material.aoMapIntensity !== 1.0) {
-                occlusionMapDef.strength = material.aoMapIntensity;
-              }
-
-              this.applyTextureTransform(occlusionMapDef, material.aoMap);
-              materialDef.occlusionTexture = occlusionMapDef;
-            }
-
-            // alphaMode
-            if (material.transparent) {
-              materialDef.alphaMode = 'BLEND';
-            } else {
-              if (material.alphaTest > 0.0) {
-                materialDef.alphaMode = 'MASK';
-                materialDef.alphaCutoff = material.alphaTest;
-              }
-            }
-
-            // doubleSided
-            if (material.side === three__WEBPACK_IMPORTED_MODULE_0__.DoubleSide)
-              materialDef.doubleSided = true;
-            if (material.name !== '') materialDef.name = material.name;
-
-            this.serializeUserData(material, materialDef);
-
-            this._invokeAll(function (ext) {
-              ext.writeMaterial && ext.writeMaterial(material, materialDef);
-            });
-
-            const index = json.materials.push(materialDef) - 1;
-            cache.materials.set(material, index);
-            return index;
-          }
-
-          /**
-           * Process mesh
-           * @param  {THREE.Mesh} mesh Mesh to process
-           * @return {Integer|null} Index of the processed mesh in the "meshes" array
-           */
-          processMesh(mesh) {
-            const cache = this.cache;
-            const json = this.json;
-
-            const meshCacheKeyParts = [mesh.geometry.uuid];
-
-            if (Array.isArray(mesh.material)) {
-              for (let i = 0, l = mesh.material.length; i < l; i++) {
-                meshCacheKeyParts.push(mesh.material[i].uuid);
-              }
-            } else {
-              meshCacheKeyParts.push(mesh.material.uuid);
-            }
-
-            const meshCacheKey = meshCacheKeyParts.join(':');
-
-            if (cache.meshes.has(meshCacheKey))
-              return cache.meshes.get(meshCacheKey);
-
-            const geometry = mesh.geometry;
-
-            let mode;
-
-            // Use the correct mode
-            if (mesh.isLineSegments) {
-              mode = WEBGL_CONSTANTS.LINES;
-            } else if (mesh.isLineLoop) {
-              mode = WEBGL_CONSTANTS.LINE_LOOP;
-            } else if (mesh.isLine) {
-              mode = WEBGL_CONSTANTS.LINE_STRIP;
-            } else if (mesh.isPoints) {
-              mode = WEBGL_CONSTANTS.POINTS;
-            } else {
-              mode = mesh.material.wireframe
-                ? WEBGL_CONSTANTS.LINES
-                : WEBGL_CONSTANTS.TRIANGLES;
-            }
-
-            const meshDef = {};
-            const attributes = {};
-            const primitives = [];
-            const targets = [];
-
-            // Conversion between attributes names in threejs and gltf spec
-            const nameConversion = {
-              uv: 'TEXCOORD_0',
-              uv1: 'TEXCOORD_1',
-              uv2: 'TEXCOORD_2',
-              uv3: 'TEXCOORD_3',
-              color: 'COLOR_0',
-              skinWeight: 'WEIGHTS_0',
-              skinIndex: 'JOINTS_0'
-            };
-
-            const originalNormal = geometry.getAttribute('normal');
-
-            if (
-              originalNormal !== undefined &&
-              !this.isNormalizedNormalAttribute(originalNormal)
-            ) {
-              console.warn(
-                'THREE.GLTFExporter: Creating normalized normal attribute from the non-normalized one.'
-              );
-
-              geometry.setAttribute(
-                'normal',
-                this.createNormalizedNormalAttribute(originalNormal)
-              );
-            }
-
-            // @QUESTION Detect if .vertexColors = true?
-            // For every attribute create an accessor
-            let modifiedAttribute = null;
-
-            for (let attributeName in geometry.attributes) {
-              // Ignore morph target attributes, which are exported later.
-              if (attributeName.slice(0, 5) === 'morph') continue;
-
-              const attribute = geometry.attributes[attributeName];
-              attributeName =
-                nameConversion[attributeName] || attributeName.toUpperCase();
-
-              // Prefix all geometry attributes except the ones specifically
-              // listed in the spec; non-spec attributes are considered custom.
-              const validVertexAttributes =
-                /^(POSITION|NORMAL|TANGENT|TEXCOORD_\d+|COLOR_\d+|JOINTS_\d+|WEIGHTS_\d+)$/;
-
-              if (!validVertexAttributes.test(attributeName))
-                attributeName = '_' + attributeName;
-
-              if (cache.attributes.has(this.getUID(attribute))) {
-                attributes[attributeName] = cache.attributes.get(
-                  this.getUID(attribute)
-                );
-                continue;
-              }
-
-              // JOINTS_0 must be UNSIGNED_BYTE or UNSIGNED_SHORT.
-              modifiedAttribute = null;
-              const array = attribute.array;
-
-              if (
-                attributeName === 'JOINTS_0' &&
-                !(array instanceof Uint16Array) &&
-                !(array instanceof Uint8Array)
-              ) {
-                console.warn(
-                  'GLTFExporter: Attribute "skinIndex" converted to type UNSIGNED_SHORT.'
-                );
-                modifiedAttribute =
-                  new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                    new Uint16Array(array),
-                    attribute.itemSize,
-                    attribute.normalized
-                  );
-              }
-
-              const accessor = this.processAccessor(
-                modifiedAttribute || attribute,
-                geometry
-              );
-
-              if (accessor !== null) {
-                if (!attributeName.startsWith('_')) {
-                  this.detectMeshQuantization(attributeName, attribute);
-                }
-
-                attributes[attributeName] = accessor;
-                cache.attributes.set(this.getUID(attribute), accessor);
-              }
-            }
-
-            if (originalNormal !== undefined)
-              geometry.setAttribute('normal', originalNormal);
-
-            // Skip if no exportable attributes found
-            if (Object.keys(attributes).length === 0) return null;
-
-            // Morph targets
-            if (
-              mesh.morphTargetInfluences !== undefined &&
-              mesh.morphTargetInfluences.length > 0
-            ) {
-              const weights = [];
-              const targetNames = [];
-              const reverseDictionary = {};
-
-              if (mesh.morphTargetDictionary !== undefined) {
-                for (const key in mesh.morphTargetDictionary) {
-                  reverseDictionary[mesh.morphTargetDictionary[key]] = key;
-                }
-              }
-
-              for (let i = 0; i < mesh.morphTargetInfluences.length; ++i) {
-                const target = {};
-                let warned = false;
-
-                for (const attributeName in geometry.morphAttributes) {
-                  // glTF 2.0 morph supports only POSITION/NORMAL/TANGENT.
-                  // Three.js doesn't support TANGENT yet.
-
-                  if (
-                    attributeName !== 'position' &&
-                    attributeName !== 'normal'
-                  ) {
-                    if (!warned) {
-                      console.warn(
-                        'GLTFExporter: Only POSITION and NORMAL morph are supported.'
-                      );
-                      warned = true;
-                    }
-
-                    continue;
-                  }
-
-                  const attribute = geometry.morphAttributes[attributeName][i];
-                  const gltfAttributeName = attributeName.toUpperCase();
-
-                  // Three.js morph attribute has absolute values while the one of glTF has relative values.
-                  //
-                  // glTF 2.0 Specification:
-                  // https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#morph-targets
-
-                  const baseAttribute = geometry.attributes[attributeName];
-
-                  if (cache.attributes.has(this.getUID(attribute, true))) {
-                    target[gltfAttributeName] = cache.attributes.get(
-                      this.getUID(attribute, true)
-                    );
-                    continue;
-                  }
-
-                  // Clones attribute not to override
-                  const relativeAttribute = attribute.clone();
-
-                  if (!geometry.morphTargetsRelative) {
-                    for (let j = 0, jl = attribute.count; j < jl; j++) {
-                      for (let a = 0; a < attribute.itemSize; a++) {
-                        if (a === 0)
-                          relativeAttribute.setX(
-                            j,
-                            attribute.getX(j) - baseAttribute.getX(j)
-                          );
-                        if (a === 1)
-                          relativeAttribute.setY(
-                            j,
-                            attribute.getY(j) - baseAttribute.getY(j)
-                          );
-                        if (a === 2)
-                          relativeAttribute.setZ(
-                            j,
-                            attribute.getZ(j) - baseAttribute.getZ(j)
-                          );
-                        if (a === 3)
-                          relativeAttribute.setW(
-                            j,
-                            attribute.getW(j) - baseAttribute.getW(j)
-                          );
-                      }
-                    }
-                  }
-
-                  target[gltfAttributeName] = this.processAccessor(
-                    relativeAttribute,
-                    geometry
-                  );
-                  cache.attributes.set(
-                    this.getUID(baseAttribute, true),
-                    target[gltfAttributeName]
-                  );
-                }
-
-                targets.push(target);
-
-                weights.push(mesh.morphTargetInfluences[i]);
-
-                if (mesh.morphTargetDictionary !== undefined)
-                  targetNames.push(reverseDictionary[i]);
-              }
-
-              meshDef.weights = weights;
-
-              if (targetNames.length > 0) {
-                meshDef.extras = {};
-                meshDef.extras.targetNames = targetNames;
-              }
-            }
-
-            const isMultiMaterial = Array.isArray(mesh.material);
-
-            if (isMultiMaterial && geometry.groups.length === 0) return null;
-
-            let didForceIndices = false;
-
-            if (isMultiMaterial && geometry.index === null) {
-              const indices = [];
-
-              for (
-                let i = 0, il = geometry.attributes.position.count;
-                i < il;
-                i++
-              ) {
-                indices[i] = i;
-              }
-
-              geometry.setIndex(indices);
-
-              didForceIndices = true;
-            }
-
-            const materials = isMultiMaterial ? mesh.material : [mesh.material];
-            const groups = isMultiMaterial
-              ? geometry.groups
-              : [{ materialIndex: 0, start: undefined, count: undefined }];
-
-            for (let i = 0, il = groups.length; i < il; i++) {
-              const primitive = {
-                mode: mode,
-                attributes: attributes
-              };
-
-              this.serializeUserData(geometry, primitive);
-
-              if (targets.length > 0) primitive.targets = targets;
-
-              if (geometry.index !== null) {
-                let cacheKey = this.getUID(geometry.index);
-
-                if (
-                  groups[i].start !== undefined ||
-                  groups[i].count !== undefined
-                ) {
-                  cacheKey += ':' + groups[i].start + ':' + groups[i].count;
-                }
-
-                if (cache.attributes.has(cacheKey)) {
-                  primitive.indices = cache.attributes.get(cacheKey);
-                } else {
-                  primitive.indices = this.processAccessor(
-                    geometry.index,
-                    geometry,
-                    groups[i].start,
-                    groups[i].count
-                  );
-                  cache.attributes.set(cacheKey, primitive.indices);
-                }
-
-                if (primitive.indices === null) delete primitive.indices;
-              }
-
-              const material = this.processMaterial(
-                materials[groups[i].materialIndex]
-              );
-
-              if (material !== null) primitive.material = material;
-
-              primitives.push(primitive);
-            }
-
-            if (didForceIndices === true) {
-              geometry.setIndex(null);
-            }
-
-            meshDef.primitives = primitives;
-
-            if (!json.meshes) json.meshes = [];
-
-            this._invokeAll(function (ext) {
-              ext.writeMesh && ext.writeMesh(mesh, meshDef);
-            });
-
-            const index = json.meshes.push(meshDef) - 1;
-            cache.meshes.set(meshCacheKey, index);
-            return index;
-          }
-
-          /**
-           * If a vertex attribute with a
-           * [non-standard data type](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#meshes-overview)
-           * is used, it is checked whether it is a valid data type according to the
-           * [KHR_mesh_quantization](https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_mesh_quantization/README.md)
-           * extension.
-           * In this case the extension is automatically added to the list of used extensions.
-           *
-           * @param {string} attributeName
-           * @param {THREE.BufferAttribute} attribute
-           */
-          detectMeshQuantization(attributeName, attribute) {
-            if (this.extensionsUsed[KHR_MESH_QUANTIZATION]) return;
-
-            let attrType = undefined;
-
-            switch (attribute.array.constructor) {
-              case Int8Array:
-                attrType = 'byte';
-
-                break;
-
-              case Uint8Array:
-                attrType = 'unsigned byte';
-
-                break;
-
-              case Int16Array:
-                attrType = 'short';
-
-                break;
-
-              case Uint16Array:
-                attrType = 'unsigned short';
-
-                break;
-
-              default:
-                return;
-            }
-
-            if (attribute.normalized) attrType += ' normalized';
-
-            const attrNamePrefix = attributeName.split('_', 1)[0];
-
-            if (
-              KHR_mesh_quantization_ExtraAttrTypes[attrNamePrefix] &&
-              KHR_mesh_quantization_ExtraAttrTypes[attrNamePrefix].includes(
-                attrType
-              )
-            ) {
-              this.extensionsUsed[KHR_MESH_QUANTIZATION] = true;
-              this.extensionsRequired[KHR_MESH_QUANTIZATION] = true;
-            }
-          }
-
-          /**
-           * Process camera
-           * @param  {THREE.Camera} camera Camera to process
-           * @return {Integer}      Index of the processed mesh in the "camera" array
-           */
-          processCamera(camera) {
-            const json = this.json;
-
-            if (!json.cameras) json.cameras = [];
-
-            const isOrtho = camera.isOrthographicCamera;
-
-            const cameraDef = {
-              type: isOrtho ? 'orthographic' : 'perspective'
-            };
-
-            if (isOrtho) {
-              cameraDef.orthographic = {
-                xmag: camera.right * 2,
-                ymag: camera.top * 2,
-                zfar: camera.far <= 0 ? 0.001 : camera.far,
-                znear: camera.near < 0 ? 0 : camera.near
-              };
-            } else {
-              cameraDef.perspective = {
-                aspectRatio: camera.aspect,
-                yfov: three__WEBPACK_IMPORTED_MODULE_0__.MathUtils.degToRad(
-                  camera.fov
-                ),
-                zfar: camera.far <= 0 ? 0.001 : camera.far,
-                znear: camera.near < 0 ? 0 : camera.near
-              };
-            }
-
-            // Question: Is saving "type" as name intentional?
-            if (camera.name !== '') cameraDef.name = camera.type;
-
-            return json.cameras.push(cameraDef) - 1;
-          }
-
-          /**
-           * Creates glTF animation entry from AnimationClip object.
-           *
-           * Status:
-           * - Only properties listed in PATH_PROPERTIES may be animated.
-           *
-           * @param {THREE.AnimationClip} clip
-           * @param {THREE.Object3D} root
-           * @return {number|null}
-           */
-          processAnimation(clip, root) {
-            const json = this.json;
-            const nodeMap = this.nodeMap;
-
-            if (!json.animations) json.animations = [];
-
-            clip = GLTFExporter.Utils.mergeMorphTargetTracks(
-              clip.clone(),
-              root
-            );
-
-            const tracks = clip.tracks;
-            const channels = [];
-            const samplers = [];
-
-            for (let i = 0; i < tracks.length; ++i) {
-              const track = tracks[i];
-              const trackBinding =
-                three__WEBPACK_IMPORTED_MODULE_0__.PropertyBinding.parseTrackName(
-                  track.name
-                );
-              let trackNode =
-                three__WEBPACK_IMPORTED_MODULE_0__.PropertyBinding.findNode(
-                  root,
-                  trackBinding.nodeName
-                );
-              const trackProperty = PATH_PROPERTIES[trackBinding.propertyName];
-
-              if (trackBinding.objectName === 'bones') {
-                if (trackNode.isSkinnedMesh === true) {
-                  trackNode = trackNode.skeleton.getBoneByName(
-                    trackBinding.objectIndex
-                  );
-                } else {
-                  trackNode = undefined;
-                }
-              }
-
-              if (!trackNode || !trackProperty) {
-                console.warn(
-                  'THREE.GLTFExporter: Could not export animation track "%s".',
-                  track.name
-                );
-                continue;
-              }
-
-              const inputItemSize = 1;
-              let outputItemSize = track.values.length / track.times.length;
-
-              if (trackProperty === PATH_PROPERTIES.morphTargetInfluences) {
-                outputItemSize /= trackNode.morphTargetInfluences.length;
-              }
-
-              let interpolation;
-
-              // @TODO export CubicInterpolant(InterpolateSmooth) as CUBICSPLINE
-
-              // Detecting glTF cubic spline interpolant by checking factory method's special property
-              // GLTFCubicSplineInterpolant is a custom interpolant and track doesn't return
-              // valid value from .getInterpolation().
-              if (
-                track.createInterpolant
-                  .isInterpolantFactoryMethodGLTFCubicSpline === true
-              ) {
-                interpolation = 'CUBICSPLINE';
-
-                // itemSize of CUBICSPLINE keyframe is 9
-                // (VEC3 * 3: inTangent, splineVertex, and outTangent)
-                // but needs to be stored as VEC3 so dividing by 3 here.
-                outputItemSize /= 3;
-              } else if (
-                track.getInterpolation() ===
-                three__WEBPACK_IMPORTED_MODULE_0__.InterpolateDiscrete
-              ) {
-                interpolation = 'STEP';
-              } else {
-                interpolation = 'LINEAR';
-              }
-
-              samplers.push({
-                input: this.processAccessor(
-                  new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                    track.times,
-                    inputItemSize
-                  )
-                ),
-                output: this.processAccessor(
-                  new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                    track.values,
-                    outputItemSize
-                  )
-                ),
-                interpolation: interpolation
-              });
-
-              channels.push({
-                sampler: samplers.length - 1,
-                target: {
-                  node: nodeMap.get(trackNode),
-                  path: trackProperty
-                }
-              });
-            }
-
-            json.animations.push({
-              name: clip.name || 'clip_' + json.animations.length,
-              samplers: samplers,
-              channels: channels
-            });
-
-            return json.animations.length - 1;
-          }
-
-          /**
-           * @param {THREE.Object3D} object
-           * @return {number|null}
-           */
-          processSkin(object) {
-            const json = this.json;
-            const nodeMap = this.nodeMap;
-
-            const node = json.nodes[nodeMap.get(object)];
-
-            const skeleton = object.skeleton;
-
-            if (skeleton === undefined) return null;
-
-            const rootJoint = object.skeleton.bones[0];
-
-            if (rootJoint === undefined) return null;
-
-            const joints = [];
-            const inverseBindMatrices = new Float32Array(
-              skeleton.bones.length * 16
-            );
-            const temporaryBoneInverse =
-              new three__WEBPACK_IMPORTED_MODULE_0__.Matrix4();
-
-            for (let i = 0; i < skeleton.bones.length; ++i) {
-              joints.push(nodeMap.get(skeleton.bones[i]));
-              temporaryBoneInverse.copy(skeleton.boneInverses[i]);
-              temporaryBoneInverse
-                .multiply(object.bindMatrix)
-                .toArray(inverseBindMatrices, i * 16);
-            }
-
-            if (json.skins === undefined) json.skins = [];
-
-            json.skins.push({
-              inverseBindMatrices: this.processAccessor(
-                new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                  inverseBindMatrices,
-                  16
-                )
-              ),
-              joints: joints,
-              skeleton: nodeMap.get(rootJoint)
-            });
-
-            const skinIndex = (node.skin = json.skins.length - 1);
-
-            return skinIndex;
-          }
-
-          /**
-           * Process Object3D node
-           * @param  {THREE.Object3D} node Object3D to processNode
-           * @return {Integer} Index of the node in the nodes list
-           */
-          processNode(object) {
-            const json = this.json;
-            const options = this.options;
-            const nodeMap = this.nodeMap;
-
-            if (!json.nodes) json.nodes = [];
-
-            const nodeDef = {};
-
-            if (options.trs) {
-              const rotation = object.quaternion.toArray();
-              const position = object.position.toArray();
-              const scale = object.scale.toArray();
-
-              if (!equalArray(rotation, [0, 0, 0, 1])) {
-                nodeDef.rotation = rotation;
-              }
-
-              if (!equalArray(position, [0, 0, 0])) {
-                nodeDef.translation = position;
-              }
-
-              if (!equalArray(scale, [1, 1, 1])) {
-                nodeDef.scale = scale;
-              }
-            } else {
-              if (object.matrixAutoUpdate) {
-                object.updateMatrix();
-              }
-
-              if (isIdentityMatrix(object.matrix) === false) {
-                nodeDef.matrix = object.matrix.elements;
-              }
-            }
-
-            // We don't export empty strings name because it represents no-name in Three.js.
-            if (object.name !== '') nodeDef.name = String(object.name);
-
-            this.serializeUserData(object, nodeDef);
-
-            if (object.isMesh || object.isLine || object.isPoints) {
-              const meshIndex = this.processMesh(object);
-
-              if (meshIndex !== null) nodeDef.mesh = meshIndex;
-            } else if (object.isCamera) {
-              nodeDef.camera = this.processCamera(object);
-            }
-
-            if (object.isSkinnedMesh) this.skins.push(object);
-
-            if (object.children.length > 0) {
-              const children = [];
-
-              for (let i = 0, l = object.children.length; i < l; i++) {
-                const child = object.children[i];
-
-                if (child.visible || options.onlyVisible === false) {
-                  const nodeIndex = this.processNode(child);
-
-                  if (nodeIndex !== null) children.push(nodeIndex);
-                }
-              }
-
-              if (children.length > 0) nodeDef.children = children;
-            }
-
-            this._invokeAll(function (ext) {
-              ext.writeNode && ext.writeNode(object, nodeDef);
-            });
-
-            const nodeIndex = json.nodes.push(nodeDef) - 1;
-            nodeMap.set(object, nodeIndex);
-            return nodeIndex;
-          }
-
-          /**
-           * Process Scene
-           * @param  {Scene} node Scene to process
-           */
-          processScene(scene) {
-            const json = this.json;
-            const options = this.options;
-
-            if (!json.scenes) {
-              json.scenes = [];
-              json.scene = 0;
-            }
-
-            const sceneDef = {};
-
-            if (scene.name !== '') sceneDef.name = scene.name;
-
-            json.scenes.push(sceneDef);
-
-            const nodes = [];
-
-            for (let i = 0, l = scene.children.length; i < l; i++) {
-              const child = scene.children[i];
-
-              if (child.visible || options.onlyVisible === false) {
-                const nodeIndex = this.processNode(child);
-
-                if (nodeIndex !== null) nodes.push(nodeIndex);
-              }
-            }
-
-            if (nodes.length > 0) sceneDef.nodes = nodes;
-
-            this.serializeUserData(scene, sceneDef);
-          }
-
-          /**
-           * Creates a Scene to hold a list of objects and parse it
-           * @param  {Array} objects List of objects to process
-           */
-          processObjects(objects) {
-            const scene = new three__WEBPACK_IMPORTED_MODULE_0__.Scene();
-            scene.name = 'AuxScene';
-
-            for (let i = 0; i < objects.length; i++) {
-              // We push directly to children instead of calling `add` to prevent
-              // modify the .parent and break its original scene and hierarchy
-              scene.children.push(objects[i]);
-            }
-
-            this.processScene(scene);
-          }
-
-          /**
-           * @param {THREE.Object3D|Array<THREE.Object3D>} input
-           */
-          processInput(input) {
-            const options = this.options;
-
-            input = input instanceof Array ? input : [input];
-
-            this._invokeAll(function (ext) {
-              ext.beforeParse && ext.beforeParse(input);
-            });
-
-            const objectsWithoutScene = [];
-
-            for (let i = 0; i < input.length; i++) {
-              if (
-                input[i] instanceof three__WEBPACK_IMPORTED_MODULE_0__.Scene
-              ) {
-                this.processScene(input[i]);
-              } else {
-                objectsWithoutScene.push(input[i]);
-              }
-            }
-
-            if (objectsWithoutScene.length > 0)
-              this.processObjects(objectsWithoutScene);
-
-            for (let i = 0; i < this.skins.length; ++i) {
-              this.processSkin(this.skins[i]);
-            }
-
-            for (let i = 0; i < options.animations.length; ++i) {
-              this.processAnimation(options.animations[i], input[0]);
-            }
-
-            this._invokeAll(function (ext) {
-              ext.afterParse && ext.afterParse(input);
-            });
-          }
-
-          _invokeAll(func) {
-            for (let i = 0, il = this.plugins.length; i < il; i++) {
-              func(this.plugins[i]);
-            }
-          }
-        }
-
-        /**
-         * Punctual Lights Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_lights_punctual
-         */
-        class GLTFLightExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_lights_punctual';
-          }
-
-          writeNode(light, nodeDef) {
-            if (!light.isLight) return;
-
-            if (
-              !light.isDirectionalLight &&
-              !light.isPointLight &&
-              !light.isSpotLight
-            ) {
-              console.warn(
-                'THREE.GLTFExporter: Only directional, point, and spot lights are supported.',
-                light
-              );
-              return;
-            }
-
-            const writer = this.writer;
-            const json = writer.json;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const lightDef = {};
-
-            if (light.name) lightDef.name = light.name;
-
-            lightDef.color = light.color.toArray();
-
-            lightDef.intensity = light.intensity;
-
-            if (light.isDirectionalLight) {
-              lightDef.type = 'directional';
-            } else if (light.isPointLight) {
-              lightDef.type = 'point';
-
-              if (light.distance > 0) lightDef.range = light.distance;
-            } else if (light.isSpotLight) {
-              lightDef.type = 'spot';
-
-              if (light.distance > 0) lightDef.range = light.distance;
-
-              lightDef.spot = {};
-              lightDef.spot.innerConeAngle =
-                (1.0 - light.penumbra) * light.angle;
-              lightDef.spot.outerConeAngle = light.angle;
-            }
-
-            if (light.decay !== undefined && light.decay !== 2) {
-              console.warn(
-                'THREE.GLTFExporter: Light decay may be lost. glTF is physically-based, ' +
-                  'and expects light.decay=2.'
-              );
-            }
-
-            if (
-              light.target &&
-              (light.target.parent !== light ||
-                light.target.position.x !== 0 ||
-                light.target.position.y !== 0 ||
-                light.target.position.z !== -1)
-            ) {
-              console.warn(
-                'THREE.GLTFExporter: Light direction may be lost. For best results, ' +
-                  'make light.target a child of the light with position 0,0,-1.'
-              );
-            }
-
-            if (!extensionsUsed[this.name]) {
-              json.extensions = json.extensions || {};
-              json.extensions[this.name] = { lights: [] };
-              extensionsUsed[this.name] = true;
-            }
-
-            const lights = json.extensions[this.name].lights;
-            lights.push(lightDef);
-
-            nodeDef.extensions = nodeDef.extensions || {};
-            nodeDef.extensions[this.name] = { light: lights.length - 1 };
-          }
-        }
-
-        /**
-         * Unlit Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_unlit
-         */
-        class GLTFMaterialsUnlitExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_unlit';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshBasicMaterial) return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = {};
-
-            extensionsUsed[this.name] = true;
-
-            materialDef.pbrMetallicRoughness.metallicFactor = 0.0;
-            materialDef.pbrMetallicRoughness.roughnessFactor = 0.9;
-          }
-        }
-
-        /**
-         * Clearcoat Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_clearcoat
-         */
-        class GLTFMaterialsClearcoatExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_clearcoat';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.clearcoat === 0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.clearcoatFactor = material.clearcoat;
-
-            if (material.clearcoatMap) {
-              const clearcoatMapDef = {
-                index: writer.processTexture(material.clearcoatMap),
-                texCoord: material.clearcoatMap.channel
-              };
-              writer.applyTextureTransform(
-                clearcoatMapDef,
-                material.clearcoatMap
-              );
-              extensionDef.clearcoatTexture = clearcoatMapDef;
-            }
-
-            extensionDef.clearcoatRoughnessFactor = material.clearcoatRoughness;
-
-            if (material.clearcoatRoughnessMap) {
-              const clearcoatRoughnessMapDef = {
-                index: writer.processTexture(material.clearcoatRoughnessMap),
-                texCoord: material.clearcoatRoughnessMap.channel
-              };
-              writer.applyTextureTransform(
-                clearcoatRoughnessMapDef,
-                material.clearcoatRoughnessMap
-              );
-              extensionDef.clearcoatRoughnessTexture = clearcoatRoughnessMapDef;
-            }
-
-            if (material.clearcoatNormalMap) {
-              const clearcoatNormalMapDef = {
-                index: writer.processTexture(material.clearcoatNormalMap),
-                texCoord: material.clearcoatNormalMap.channel
-              };
-
-              if (material.clearcoatNormalScale.x !== 1)
-                clearcoatNormalMapDef.scale = material.clearcoatNormalScale.x;
-
-              writer.applyTextureTransform(
-                clearcoatNormalMapDef,
-                material.clearcoatNormalMap
-              );
-              extensionDef.clearcoatNormalTexture = clearcoatNormalMapDef;
-            }
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials dispersion Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_dispersion
-         */
-        class GLTFMaterialsDispersionExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_dispersion';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.dispersion === 0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.dispersion = material.dispersion;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Iridescence Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_iridescence
-         */
-        class GLTFMaterialsIridescenceExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_iridescence';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.iridescence === 0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.iridescenceFactor = material.iridescence;
-
-            if (material.iridescenceMap) {
-              const iridescenceMapDef = {
-                index: writer.processTexture(material.iridescenceMap),
-                texCoord: material.iridescenceMap.channel
-              };
-              writer.applyTextureTransform(
-                iridescenceMapDef,
-                material.iridescenceMap
-              );
-              extensionDef.iridescenceTexture = iridescenceMapDef;
-            }
-
-            extensionDef.iridescenceIor = material.iridescenceIOR;
-            extensionDef.iridescenceThicknessMinimum =
-              material.iridescenceThicknessRange[0];
-            extensionDef.iridescenceThicknessMaximum =
-              material.iridescenceThicknessRange[1];
-
-            if (material.iridescenceThicknessMap) {
-              const iridescenceThicknessMapDef = {
-                index: writer.processTexture(material.iridescenceThicknessMap),
-                texCoord: material.iridescenceThicknessMap.channel
-              };
-              writer.applyTextureTransform(
-                iridescenceThicknessMapDef,
-                material.iridescenceThicknessMap
-              );
-              extensionDef.iridescenceThicknessTexture =
-                iridescenceThicknessMapDef;
-            }
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Transmission Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_transmission
-         */
-        class GLTFMaterialsTransmissionExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_transmission';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.transmission === 0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.transmissionFactor = material.transmission;
-
-            if (material.transmissionMap) {
-              const transmissionMapDef = {
-                index: writer.processTexture(material.transmissionMap),
-                texCoord: material.transmissionMap.channel
-              };
-              writer.applyTextureTransform(
-                transmissionMapDef,
-                material.transmissionMap
-              );
-              extensionDef.transmissionTexture = transmissionMapDef;
-            }
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials Volume Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_volume
-         */
-        class GLTFMaterialsVolumeExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_volume';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.transmission === 0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.thicknessFactor = material.thickness;
-
-            if (material.thicknessMap) {
-              const thicknessMapDef = {
-                index: writer.processTexture(material.thicknessMap),
-                texCoord: material.thicknessMap.channel
-              };
-              writer.applyTextureTransform(
-                thicknessMapDef,
-                material.thicknessMap
-              );
-              extensionDef.thicknessTexture = thicknessMapDef;
-            }
-
-            if (material.attenuationDistance !== Infinity) {
-              extensionDef.attenuationDistance = material.attenuationDistance;
-            }
-
-            extensionDef.attenuationColor = material.attenuationColor.toArray();
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials ior Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_ior
-         */
-        class GLTFMaterialsIorExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_ior';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.ior === 1.5)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.ior = material.ior;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials specular Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_materials_specular
-         */
-        class GLTFMaterialsSpecularExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_specular';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (
-              !material.isMeshPhysicalMaterial ||
-              (material.specularIntensity === 1.0 &&
-                material.specularColor.equals(DEFAULT_SPECULAR_COLOR) &&
-                !material.specularIntensityMap &&
-                !material.specularColorMap)
-            )
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            if (material.specularIntensityMap) {
-              const specularIntensityMapDef = {
-                index: writer.processTexture(material.specularIntensityMap),
-                texCoord: material.specularIntensityMap.channel
-              };
-              writer.applyTextureTransform(
-                specularIntensityMapDef,
-                material.specularIntensityMap
-              );
-              extensionDef.specularTexture = specularIntensityMapDef;
-            }
-
-            if (material.specularColorMap) {
-              const specularColorMapDef = {
-                index: writer.processTexture(material.specularColorMap),
-                texCoord: material.specularColorMap.channel
-              };
-              writer.applyTextureTransform(
-                specularColorMapDef,
-                material.specularColorMap
-              );
-              extensionDef.specularColorTexture = specularColorMapDef;
-            }
-
-            extensionDef.specularFactor = material.specularIntensity;
-            extensionDef.specularColorFactor = material.specularColor.toArray();
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Sheen Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_sheen
-         */
-        class GLTFMaterialsSheenExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_sheen';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.sheen == 0.0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            if (material.sheenRoughnessMap) {
-              const sheenRoughnessMapDef = {
-                index: writer.processTexture(material.sheenRoughnessMap),
-                texCoord: material.sheenRoughnessMap.channel
-              };
-              writer.applyTextureTransform(
-                sheenRoughnessMapDef,
-                material.sheenRoughnessMap
-              );
-              extensionDef.sheenRoughnessTexture = sheenRoughnessMapDef;
-            }
-
-            if (material.sheenColorMap) {
-              const sheenColorMapDef = {
-                index: writer.processTexture(material.sheenColorMap),
-                texCoord: material.sheenColorMap.channel
-              };
-              writer.applyTextureTransform(
-                sheenColorMapDef,
-                material.sheenColorMap
-              );
-              extensionDef.sheenColorTexture = sheenColorMapDef;
-            }
-
-            extensionDef.sheenRoughnessFactor = material.sheenRoughness;
-            extensionDef.sheenColorFactor = material.sheenColor.toArray();
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Anisotropy Materials Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_materials_anisotropy
-         */
-        class GLTFMaterialsAnisotropyExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_anisotropy';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (!material.isMeshPhysicalMaterial || material.anisotropy == 0.0)
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            if (material.anisotropyMap) {
-              const anisotropyMapDef = {
-                index: writer.processTexture(material.anisotropyMap)
-              };
-              writer.applyTextureTransform(
-                anisotropyMapDef,
-                material.anisotropyMap
-              );
-              extensionDef.anisotropyTexture = anisotropyMapDef;
-            }
-
-            extensionDef.anisotropyStrength = material.anisotropy;
-            extensionDef.anisotropyRotation = material.anisotropyRotation;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials Emissive Strength Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/blob/5768b3ce0ef32bc39cdf1bef10b948586635ead3/extensions/2.0/Khronos/KHR_materials_emissive_strength/README.md
-         */
-        class GLTFMaterialsEmissiveStrengthExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'KHR_materials_emissive_strength';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (
-              !material.isMeshStandardMaterial ||
-              material.emissiveIntensity === 1.0
-            )
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            extensionDef.emissiveStrength = material.emissiveIntensity;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * Materials bump Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/EXT_materials_bump
-         */
-        class GLTFMaterialsBumpExtension {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'EXT_materials_bump';
-          }
-
-          writeMaterial(material, materialDef) {
-            if (
-              !material.isMeshStandardMaterial ||
-              (material.bumpScale === 1 && !material.bumpMap)
-            )
-              return;
-
-            const writer = this.writer;
-            const extensionsUsed = writer.extensionsUsed;
-
-            const extensionDef = {};
-
-            if (material.bumpMap) {
-              const bumpMapDef = {
-                index: writer.processTexture(material.bumpMap),
-                texCoord: material.bumpMap.channel
-              };
-              writer.applyTextureTransform(bumpMapDef, material.bumpMap);
-              extensionDef.bumpTexture = bumpMapDef;
-            }
-
-            extensionDef.bumpFactor = material.bumpScale;
-
-            materialDef.extensions = materialDef.extensions || {};
-            materialDef.extensions[this.name] = extensionDef;
-
-            extensionsUsed[this.name] = true;
-          }
-        }
-
-        /**
-         * GPU Instancing Extension
-         *
-         * Specification: https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Vendor/EXT_mesh_gpu_instancing
-         */
-        class GLTFMeshGpuInstancing {
-          constructor(writer) {
-            this.writer = writer;
-            this.name = 'EXT_mesh_gpu_instancing';
-          }
-
-          writeNode(object, nodeDef) {
-            if (!object.isInstancedMesh) return;
-
-            const writer = this.writer;
-
-            const mesh = object;
-
-            const translationAttr = new Float32Array(mesh.count * 3);
-            const rotationAttr = new Float32Array(mesh.count * 4);
-            const scaleAttr = new Float32Array(mesh.count * 3);
-
-            const matrix = new three__WEBPACK_IMPORTED_MODULE_0__.Matrix4();
-            const position = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
-            const quaternion =
-              new three__WEBPACK_IMPORTED_MODULE_0__.Quaternion();
-            const scale = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
-
-            for (let i = 0; i < mesh.count; i++) {
-              mesh.getMatrixAt(i, matrix);
-              matrix.decompose(position, quaternion, scale);
-
-              position.toArray(translationAttr, i * 3);
-              quaternion.toArray(rotationAttr, i * 4);
-              scale.toArray(scaleAttr, i * 3);
-            }
-
-            const attributes = {
-              TRANSLATION: writer.processAccessor(
-                new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                  translationAttr,
-                  3
-                )
-              ),
-              ROTATION: writer.processAccessor(
-                new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                  rotationAttr,
-                  4
-                )
-              ),
-              SCALE: writer.processAccessor(
-                new three__WEBPACK_IMPORTED_MODULE_0__.BufferAttribute(
-                  scaleAttr,
-                  3
-                )
-              )
-            };
-
-            if (mesh.instanceColor)
-              attributes._COLOR_0 = writer.processAccessor(mesh.instanceColor);
-
-            nodeDef.extensions = nodeDef.extensions || {};
-            nodeDef.extensions[this.name] = { attributes };
-
-            writer.extensionsUsed[this.name] = true;
-            writer.extensionsRequired[this.name] = true;
-          }
-        }
-
-        /**
-         * Static utility functions
-         */
-        GLTFExporter.Utils = {
-          insertKeyframe: function (track, time) {
-            const tolerance = 0.001; // 1ms
-            const valueSize = track.getValueSize();
-
-            const times = new track.TimeBufferType(track.times.length + 1);
-            const values = new track.ValueBufferType(
-              track.values.length + valueSize
-            );
-            const interpolant = track.createInterpolant(
-              new track.ValueBufferType(valueSize)
-            );
-
-            let index;
-
-            if (track.times.length === 0) {
-              times[0] = time;
-
-              for (let i = 0; i < valueSize; i++) {
-                values[i] = 0;
-              }
-
-              index = 0;
-            } else if (time < track.times[0]) {
-              if (Math.abs(track.times[0] - time) < tolerance) return 0;
-
-              times[0] = time;
-              times.set(track.times, 1);
-
-              values.set(interpolant.evaluate(time), 0);
-              values.set(track.values, valueSize);
-
-              index = 0;
-            } else if (time > track.times[track.times.length - 1]) {
-              if (
-                Math.abs(track.times[track.times.length - 1] - time) < tolerance
-              ) {
-                return track.times.length - 1;
-              }
-
-              times[times.length - 1] = time;
-              times.set(track.times, 0);
-
-              values.set(track.values, 0);
-              values.set(interpolant.evaluate(time), track.values.length);
-
-              index = times.length - 1;
-            } else {
-              for (let i = 0; i < track.times.length; i++) {
-                if (Math.abs(track.times[i] - time) < tolerance) return i;
-
-                if (track.times[i] < time && track.times[i + 1] > time) {
-                  times.set(track.times.slice(0, i + 1), 0);
-                  times[i + 1] = time;
-                  times.set(track.times.slice(i + 1), i + 2);
-
-                  values.set(track.values.slice(0, (i + 1) * valueSize), 0);
-                  values.set(interpolant.evaluate(time), (i + 1) * valueSize);
-                  values.set(
-                    track.values.slice((i + 1) * valueSize),
-                    (i + 2) * valueSize
-                  );
-
-                  index = i + 1;
-
-                  break;
-                }
-              }
-            }
-
-            track.times = times;
-            track.values = values;
-
-            return index;
-          },
-
-          mergeMorphTargetTracks: function (clip, root) {
-            const tracks = [];
-            const mergedTracks = {};
-            const sourceTracks = clip.tracks;
-
-            for (let i = 0; i < sourceTracks.length; ++i) {
-              let sourceTrack = sourceTracks[i];
-              const sourceTrackBinding =
-                three__WEBPACK_IMPORTED_MODULE_0__.PropertyBinding.parseTrackName(
-                  sourceTrack.name
-                );
-              const sourceTrackNode =
-                three__WEBPACK_IMPORTED_MODULE_0__.PropertyBinding.findNode(
-                  root,
-                  sourceTrackBinding.nodeName
-                );
-
-              if (
-                sourceTrackBinding.propertyName !== 'morphTargetInfluences' ||
-                sourceTrackBinding.propertyIndex === undefined
-              ) {
-                // Tracks that don't affect morph targets, or that affect all morph targets together, can be left as-is.
-                tracks.push(sourceTrack);
-                continue;
-              }
-
-              if (
-                sourceTrack.createInterpolant !==
-                  sourceTrack.InterpolantFactoryMethodDiscrete &&
-                sourceTrack.createInterpolant !==
-                  sourceTrack.InterpolantFactoryMethodLinear
-              ) {
-                if (
-                  sourceTrack.createInterpolant
-                    .isInterpolantFactoryMethodGLTFCubicSpline
-                ) {
-                  // This should never happen, because glTF morph target animations
-                  // affect all targets already.
-                  throw new Error(
-                    'THREE.GLTFExporter: Cannot merge tracks with glTF CUBICSPLINE interpolation.'
-                  );
-                }
-
-                console.warn(
-                  'THREE.GLTFExporter: Morph target interpolation mode not yet supported. Using LINEAR instead.'
-                );
-
-                sourceTrack = sourceTrack.clone();
-                sourceTrack.setInterpolation(
-                  three__WEBPACK_IMPORTED_MODULE_0__.InterpolateLinear
-                );
-              }
-
-              const targetCount = sourceTrackNode.morphTargetInfluences.length;
-              const targetIndex =
-                sourceTrackNode.morphTargetDictionary[
-                  sourceTrackBinding.propertyIndex
-                ];
-
-              if (targetIndex === undefined) {
-                throw new Error(
-                  'THREE.GLTFExporter: Morph target name not found: ' +
-                    sourceTrackBinding.propertyIndex
-                );
-              }
-
-              let mergedTrack;
-
-              // If this is the first time we've seen this object, create a new
-              // track to store merged keyframe data for each morph target.
-              if (mergedTracks[sourceTrackNode.uuid] === undefined) {
-                mergedTrack = sourceTrack.clone();
-
-                const values = new mergedTrack.ValueBufferType(
-                  targetCount * mergedTrack.times.length
-                );
-
-                for (let j = 0; j < mergedTrack.times.length; j++) {
-                  values[j * targetCount + targetIndex] = mergedTrack.values[j];
-                }
-
-                // We need to take into consideration the intended target node
-                // of our original un-merged morphTarget animation.
-                mergedTrack.name =
-                  (sourceTrackBinding.nodeName || '') +
-                  '.morphTargetInfluences';
-                mergedTrack.values = values;
-
-                mergedTracks[sourceTrackNode.uuid] = mergedTrack;
-                tracks.push(mergedTrack);
-
-                continue;
-              }
-
-              const sourceInterpolant = sourceTrack.createInterpolant(
-                new sourceTrack.ValueBufferType(1)
-              );
-
-              mergedTrack = mergedTracks[sourceTrackNode.uuid];
-
-              // For every existing keyframe of the merged track, write a (possibly
-              // interpolated) value from the source track.
-              for (let j = 0; j < mergedTrack.times.length; j++) {
-                mergedTrack.values[j * targetCount + targetIndex] =
-                  sourceInterpolant.evaluate(mergedTrack.times[j]);
-              }
-
-              // For every existing keyframe of the source track, write a (possibly
-              // new) keyframe to the merged track. Values from the previous loop may
-              // be written again, but keyframes are de-duplicated.
-              for (let j = 0; j < sourceTrack.times.length; j++) {
-                const keyframeIndex = this.insertKeyframe(
-                  mergedTrack,
-                  sourceTrack.times[j]
-                );
-                mergedTrack.values[keyframeIndex * targetCount + targetIndex] =
-                  sourceTrack.values[j];
-              }
-            }
-
-            clip.tracks = tracks;
-
-            return clip;
-          }
-        };
-
-        /***/
-      },
-
-    /***/ './node_modules/three/examples/jsm/utils/TextureUtils.js':
-      /*!***************************************************************!*\
-  !*** ./node_modules/three/examples/jsm/utils/TextureUtils.js ***!
-  \***************************************************************/
-      /***/ (
-        __unused_webpack___webpack_module__,
-        __webpack_exports__,
-        __webpack_require__
-      ) => {
-        'use strict';
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-          /* harmony export */ decompress: () => /* binding */ decompress
-          /* harmony export */
-        });
-        /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ =
-          __webpack_require__(/*! three */ 'three');
-
-        let _renderer;
-        let fullscreenQuadGeometry;
-        let fullscreenQuadMaterial;
-        let fullscreenQuad;
-
-        function decompress(
-          texture,
-          maxTextureSize = Infinity,
-          renderer = null
-        ) {
-          if (!fullscreenQuadGeometry)
-            fullscreenQuadGeometry =
-              new three__WEBPACK_IMPORTED_MODULE_0__.PlaneGeometry(2, 2, 1, 1);
-          if (!fullscreenQuadMaterial)
-            fullscreenQuadMaterial =
-              new three__WEBPACK_IMPORTED_MODULE_0__.ShaderMaterial({
-                uniforms: {
-                  blitTexture: new three__WEBPACK_IMPORTED_MODULE_0__.Uniform(
-                    texture
-                  )
-                },
-                vertexShader: `
-			varying vec2 vUv;
-			void main(){
-				vUv = uv;
-				gl_Position = vec4(position.xy * 1.0,0.,.999999);
-			}`,
-                fragmentShader: `
-			uniform sampler2D blitTexture; 
-			varying vec2 vUv;
-
-			void main(){ 
-				gl_FragColor = vec4(vUv.xy, 0, 1);
-				
-				#ifdef IS_SRGB
-				gl_FragColor = sRGBTransferOETF( texture2D( blitTexture, vUv) );
-				#else
-				gl_FragColor = texture2D( blitTexture, vUv);
-				#endif
-			}`
-              });
-
-          fullscreenQuadMaterial.uniforms.blitTexture.value = texture;
-          fullscreenQuadMaterial.defines.IS_SRGB =
-            texture.colorSpace ==
-            three__WEBPACK_IMPORTED_MODULE_0__.SRGBColorSpace;
-          fullscreenQuadMaterial.needsUpdate = true;
-
-          if (!fullscreenQuad) {
-            fullscreenQuad = new three__WEBPACK_IMPORTED_MODULE_0__.Mesh(
-              fullscreenQuadGeometry,
-              fullscreenQuadMaterial
-            );
-            fullscreenQuad.frustumCulled = false;
-          }
-
-          const _camera =
-            new three__WEBPACK_IMPORTED_MODULE_0__.PerspectiveCamera();
-          const _scene = new three__WEBPACK_IMPORTED_MODULE_0__.Scene();
-          _scene.add(fullscreenQuad);
-
-          if (renderer === null) {
-            renderer = _renderer =
-              new three__WEBPACK_IMPORTED_MODULE_0__.WebGLRenderer({
-                antialias: false
-              });
-          }
-
-          const width = Math.min(texture.image.width, maxTextureSize);
-          const height = Math.min(texture.image.height, maxTextureSize);
-
-          renderer.setSize(width, height);
-          renderer.clear();
-          renderer.render(_scene, _camera);
-
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-
-          canvas.width = width;
-          canvas.height = height;
-
-          context.drawImage(renderer.domElement, 0, 0, width, height);
-
-          const readableTexture =
-            new three__WEBPACK_IMPORTED_MODULE_0__.CanvasTexture(canvas);
-
-          readableTexture.minFilter = texture.minFilter;
-          readableTexture.magFilter = texture.magFilter;
-          readableTexture.wrapS = texture.wrapS;
-          readableTexture.wrapT = texture.wrapT;
-          readableTexture.name = texture.name;
-
-          if (_renderer) {
-            _renderer.forceContextLoss();
-            _renderer.dispose();
-            _renderer = null;
-          }
-
-          return readableTexture;
-        }
-
-        /***/
-      },
-
     /***/ './node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js':
       /*!****************************************************************************************************!*\
   !*** ./node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js ***!
@@ -100864,7 +97926,7 @@ object-assign
       /***/ (module) => {
         'use strict';
         module.exports = /*#__PURE__*/ JSON.parse(
-          '{"name":"senangwebs-aframe-editor","version":"1.7.0","description":"A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.","main":"dist/aframe-inspector.min.js","scripts":{"build":"webpack --progress","deploy":"npm run ghpages","dist":"npm run dist:max && npm run dist:min","dist:max":"npm run build","dist:min":"cross-env MINIFY=true npm run build","ghpages":"npm run preghpages && ghpages -p gh-pages","lint":"npm run lintfile src/","lint:css":"stylelint src/css/main.css","lintfile":"eslint","preghpages":"npm run dist && shx rm -rf gh-pages && shx mkdir gh-pages && shx cp -r assets dist examples index.html gh-pages && shx sed -i http://localhost:3333 .. gh-pages/examples/index.html","prepare":"husky install","prepublish":"npm run dist","prettier":"prettier --write \'src/**/*.js\'","start":"webpack serve --progress -d eval-source-map","test":"jest --watch","test:ci":"jest"},"repository":"aframevr/aframe-inspector","license":"MIT","dependencies":{"@fortawesome/free-brands-svg-icons":"^6.5.1","@fortawesome/free-solid-svg-icons":"^6.5.1","clipboard-copy":"^4.0.1","clsx":"^2.1.0","lodash.debounce":"^4.0.8","prop-types":"^15.8.1","react":"^18.2.0","react-dom":"^18.2.0","react-select":"^5.8.0","sweetalert2":"^11.26.24","three":"0.168.0"},"devDependencies":{"@babel/core":"^7.24.0","@babel/eslint-parser":"^7.23.10","@babel/preset-env":"^7.24.0","@babel/preset-react":"^7.23.3","autoprefixer":"^10.4.17","babel-jest":"^29.7.0","babel-loader":"^9.1.3","cross-env":"^7.0.3","css-loader":"^6.10.0","eslint":"^8.57.0","eslint-config-standard":"^17.1.0","eslint-plugin-react":"^7.33.2","ghpages":"0.0.10","husky":"^8.0.1","jest":"^29.7.0","lint-staged":"^13.0.3","postcss-loader":"^8.1.1","prettier":"^3.2.5","react-test-renderer":"^18.2.0","shx":"^0.3.4","style-loader":"^3.3.4","stylelint":"^16.2.1","stylelint-config-standard":"^36.0.0","stylelint-order":"^6.0.4","stylus":"^0.62.0","stylus-loader":"^8.1.0","webpack":"^5.91.0","webpack-cli":"^5.1.4","webpack-dev-server":"^5.0.4"},"keywords":["3d","aframe","editor","inspector","three.js","tool","unity","vr","virtualreality","webvr","wysiwyg"],"lint-staged":{"*.js":"prettier --write"}}'
+          '{"name":"senangwebs-aframe-editor","version":"1.7.1","description":"A fork of A-Frame Inspector designed to be use as visual editor used in SenangWebs.","main":"dist/aframe-inspector.min.js","scripts":{"build":"webpack --progress","deploy":"npm run ghpages","dist":"npm run dist:max && npm run dist:min","dist:max":"npm run build","dist:min":"cross-env MINIFY=true npm run build","ghpages":"npm run preghpages && ghpages -p gh-pages","lint":"npm run lintfile src/","lint:css":"stylelint src/css/main.css","lintfile":"eslint","preghpages":"npm run dist && shx rm -rf gh-pages && shx mkdir gh-pages && shx cp -r assets dist examples index.html gh-pages && shx sed -i http://localhost:3333 .. gh-pages/examples/index.html","prepare":"husky install","prepublish":"npm run dist","prettier":"prettier --write \'src/**/*.js\'","start":"webpack serve --progress -d eval-source-map","test":"jest --watch","test:ci":"jest"},"repository":"aframevr/aframe-inspector","license":"MIT","dependencies":{"@fortawesome/free-brands-svg-icons":"^6.5.1","@fortawesome/free-solid-svg-icons":"^6.5.1","clipboard-copy":"^4.0.1","clsx":"^2.1.0","lodash.debounce":"^4.0.8","prop-types":"^15.8.1","react":"^18.2.0","react-dom":"^18.2.0","react-select":"^5.8.0","sweetalert2":"^11.26.24","three":"0.168.0"},"devDependencies":{"@babel/core":"^7.24.0","@babel/eslint-parser":"^7.23.10","@babel/preset-env":"^7.24.0","@babel/preset-react":"^7.23.3","autoprefixer":"^10.4.17","babel-jest":"^29.7.0","babel-loader":"^9.1.3","cross-env":"^7.0.3","css-loader":"^6.10.0","eslint":"^8.57.0","eslint-config-standard":"^17.1.0","eslint-plugin-react":"^7.33.2","ghpages":"0.0.10","husky":"^8.0.1","jest":"^29.7.0","lint-staged":"^13.0.3","postcss-loader":"^8.1.1","prettier":"^3.2.5","react-test-renderer":"^18.2.0","shx":"^0.3.4","style-loader":"^3.3.4","stylelint":"^16.2.1","stylelint-config-standard":"^36.0.0","stylelint-order":"^6.0.4","stylus":"^0.62.0","stylus-loader":"^8.1.0","webpack":"^5.91.0","webpack-cli":"^5.1.4","webpack-dev-server":"^5.0.4"},"keywords":["3d","aframe","editor","inspector","three.js","tool","unity","vr","virtualreality","webvr","wysiwyg"],"lint-staged":{"*.js":"prettier --write"}}'
         );
 
         /***/
@@ -101292,7 +98354,8 @@ object-assign
             _this = _callSuper(this, Collapsible, [props]);
             _defineProperty(_this, 'toggleVisibility', function (event) {
               // Don't collapse if we click on actions like clipboard
-              if (event.target.nodeName === 'A') return;
+              if (event.target.closest('button, a, input, select, textarea'))
+                return;
               _this.setState({
                 collapsed: !_this.state.collapsed
               });
@@ -101307,6 +98370,7 @@ object-assign
             {
               key: 'render',
               value: function render() {
+                var _this2 = this;
                 var rootClassNames = {
                   collapsible: true,
                   component: true,
@@ -101336,9 +98400,29 @@ object-assign
                         children: [
                           /*#__PURE__*/ (0,
                           react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
-                            'div',
+                            'button',
                             {
-                              className: 'collapse-button'
+                              type: 'button',
+                              className: 'collapse-toggle',
+                              'aria-label':
+                                this.props.id === 'componentEntityHeader'
+                                  ? 'Toggle entity properties'
+                                  : 'Toggle ' +
+                                    (this.props.label || 'component'),
+                              'aria-expanded': !this.state.collapsed,
+                              onClick: function onClick() {
+                                return _this2.setState({
+                                  collapsed: !_this2.state.collapsed
+                                });
+                              },
+                              children: /*#__PURE__*/ (0,
+                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
+                                'span',
+                                {
+                                  className: 'collapse-button',
+                                  'aria-hidden': 'true'
+                                }
+                              )
                             }
                           ),
                           this.props.children[0]
@@ -101357,6 +98441,7 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Collapsible, 'propTypes', {
+          label: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           className: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           collapsed: prop_types__WEBPACK_IMPORTED_MODULE_3___default().bool,
           children: prop_types__WEBPACK_IMPORTED_MODULE_3___default().oneOfType(
@@ -102001,11 +99086,11 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_12__ =
+        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_13__ =
           __webpack_require__(
             /*! @fortawesome/free-solid-svg-icons */ './node_modules/@fortawesome/free-solid-svg-icons/index.mjs'
           );
-        /* harmony import */ var _fortawesome_free_brands_svg_icons__WEBPACK_IMPORTED_MODULE_13__ =
+        /* harmony import */ var _fortawesome_free_brands_svg_icons__WEBPACK_IMPORTED_MODULE_14__ =
           __webpack_require__(
             /*! @fortawesome/free-brands-svg-icons */ './node_modules/@fortawesome/free-brands-svg-icons/index.mjs'
           );
@@ -102043,9 +99128,17 @@ object-assign
           __webpack_require__(
             /*! ./viewport/ViewportHUD */ './src/components/viewport/ViewportHUD.js'
           );
-        /* harmony import */ var _package_json__WEBPACK_IMPORTED_MODULE_10__ =
+        /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_10__ =
+          __webpack_require__(
+            /*! sweetalert2 */ './node_modules/sweetalert2/dist/sweetalert2.all.js'
+          );
+        /* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_10___default =
+          /*#__PURE__*/ __webpack_require__.n(
+            sweetalert2__WEBPACK_IMPORTED_MODULE_10__
+          );
+        /* harmony import */ var _package_json__WEBPACK_IMPORTED_MODULE_11__ =
           __webpack_require__(/*! ../../package.json */ './package.json');
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -102067,6 +99160,419 @@ object-assign
                   }),
             _typeof(o)
           );
+        }
+        function _regeneratorRuntime() {
+          'use strict';
+          /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ _regeneratorRuntime =
+            function _regeneratorRuntime() {
+              return r;
+            };
+          var t,
+            r = {},
+            e = Object.prototype,
+            n = e.hasOwnProperty,
+            o = 'function' == typeof Symbol ? Symbol : {},
+            i = o.iterator || '@@iterator',
+            a = o.asyncIterator || '@@asyncIterator',
+            u = o.toStringTag || '@@toStringTag';
+          function c(t, r, e, n) {
+            return Object.defineProperty(t, r, {
+              value: e,
+              enumerable: !n,
+              configurable: !n,
+              writable: !n
+            });
+          }
+          try {
+            c({}, '');
+          } catch (t) {
+            c = function c(t, r, e) {
+              return (t[r] = e);
+            };
+          }
+          function h(r, e, n, o) {
+            var i = e && e.prototype instanceof Generator ? e : Generator,
+              a = Object.create(i.prototype);
+            return (
+              c(
+                a,
+                '_invoke',
+                (function (r, e, n) {
+                  var o = 1;
+                  return function (i, a) {
+                    if (3 === o) throw Error('Generator is already running');
+                    if (4 === o) {
+                      if ('throw' === i) throw a;
+                      return { value: t, done: !0 };
+                    }
+                    for (n.method = i, n.arg = a; ; ) {
+                      var u = n.delegate;
+                      if (u) {
+                        var c = d(u, n);
+                        if (c) {
+                          if (c === f) continue;
+                          return c;
+                        }
+                      }
+                      if ('next' === n.method) n.sent = n._sent = n.arg;
+                      else if ('throw' === n.method) {
+                        if (1 === o) throw ((o = 4), n.arg);
+                        n.dispatchException(n.arg);
+                      } else 'return' === n.method && n.abrupt('return', n.arg);
+                      o = 3;
+                      var h = s(r, e, n);
+                      if ('normal' === h.type) {
+                        if (((o = n.done ? 4 : 2), h.arg === f)) continue;
+                        return { value: h.arg, done: n.done };
+                      }
+                      'throw' === h.type &&
+                        ((o = 4), (n.method = 'throw'), (n.arg = h.arg));
+                    }
+                  };
+                })(r, n, new Context(o || [])),
+                !0
+              ),
+              a
+            );
+          }
+          function s(t, r, e) {
+            try {
+              return { type: 'normal', arg: t.call(r, e) };
+            } catch (t) {
+              return { type: 'throw', arg: t };
+            }
+          }
+          r.wrap = h;
+          var f = {};
+          function Generator() {}
+          function GeneratorFunction() {}
+          function GeneratorFunctionPrototype() {}
+          var l = {};
+          c(l, i, function () {
+            return this;
+          });
+          var p = Object.getPrototypeOf,
+            y = p && p(p(x([])));
+          y && y !== e && n.call(y, i) && (l = y);
+          var v =
+            (GeneratorFunctionPrototype.prototype =
+            Generator.prototype =
+              Object.create(l));
+          function g(t) {
+            ['next', 'throw', 'return'].forEach(function (r) {
+              c(t, r, function (t) {
+                return this._invoke(r, t);
+              });
+            });
+          }
+          function AsyncIterator(t, r) {
+            function e(o, i, a, u) {
+              var c = s(t[o], t, i);
+              if ('throw' !== c.type) {
+                var h = c.arg,
+                  f = h.value;
+                return f && 'object' == _typeof(f) && n.call(f, '__await')
+                  ? r.resolve(f.__await).then(
+                      function (t) {
+                        e('next', t, a, u);
+                      },
+                      function (t) {
+                        e('throw', t, a, u);
+                      }
+                    )
+                  : r.resolve(f).then(
+                      function (t) {
+                        (h.value = t), a(h);
+                      },
+                      function (t) {
+                        return e('throw', t, a, u);
+                      }
+                    );
+              }
+              u(c.arg);
+            }
+            var o;
+            c(
+              this,
+              '_invoke',
+              function (t, n) {
+                function i() {
+                  return new r(function (r, o) {
+                    e(t, n, r, o);
+                  });
+                }
+                return (o = o ? o.then(i, i) : i());
+              },
+              !0
+            );
+          }
+          function d(r, e) {
+            var n = e.method,
+              o = r.i[n];
+            if (o === t)
+              return (
+                (e.delegate = null),
+                ('throw' === n &&
+                  r.i['return'] &&
+                  ((e.method = 'return'),
+                  (e.arg = t),
+                  d(r, e),
+                  'throw' === e.method)) ||
+                  ('return' !== n &&
+                    ((e.method = 'throw'),
+                    (e.arg = new TypeError(
+                      "The iterator does not provide a '" + n + "' method"
+                    )))),
+                f
+              );
+            var i = s(o, r.i, e.arg);
+            if ('throw' === i.type)
+              return (
+                (e.method = 'throw'), (e.arg = i.arg), (e.delegate = null), f
+              );
+            var a = i.arg;
+            return a
+              ? a.done
+                ? ((e[r.r] = a.value),
+                  (e.next = r.n),
+                  'return' !== e.method && ((e.method = 'next'), (e.arg = t)),
+                  (e.delegate = null),
+                  f)
+                : a
+              : ((e.method = 'throw'),
+                (e.arg = new TypeError('iterator result is not an object')),
+                (e.delegate = null),
+                f);
+          }
+          function w(t) {
+            this.tryEntries.push(t);
+          }
+          function m(r) {
+            var e = r[4] || {};
+            (e.type = 'normal'), (e.arg = t), (r[4] = e);
+          }
+          function Context(t) {
+            (this.tryEntries = [[-1]]), t.forEach(w, this), this.reset(!0);
+          }
+          function x(r) {
+            if (null != r) {
+              var e = r[i];
+              if (e) return e.call(r);
+              if ('function' == typeof r.next) return r;
+              if (!isNaN(r.length)) {
+                var o = -1,
+                  a = function e() {
+                    for (; ++o < r.length; )
+                      if (n.call(r, o))
+                        return (e.value = r[o]), (e.done = !1), e;
+                    return (e.value = t), (e.done = !0), e;
+                  };
+                return (a.next = a);
+              }
+            }
+            throw new TypeError(_typeof(r) + ' is not iterable');
+          }
+          return (
+            (GeneratorFunction.prototype = GeneratorFunctionPrototype),
+            c(v, 'constructor', GeneratorFunctionPrototype),
+            c(GeneratorFunctionPrototype, 'constructor', GeneratorFunction),
+            (GeneratorFunction.displayName = c(
+              GeneratorFunctionPrototype,
+              u,
+              'GeneratorFunction'
+            )),
+            (r.isGeneratorFunction = function (t) {
+              var r = 'function' == typeof t && t.constructor;
+              return (
+                !!r &&
+                (r === GeneratorFunction ||
+                  'GeneratorFunction' === (r.displayName || r.name))
+              );
+            }),
+            (r.mark = function (t) {
+              return (
+                Object.setPrototypeOf
+                  ? Object.setPrototypeOf(t, GeneratorFunctionPrototype)
+                  : ((t.__proto__ = GeneratorFunctionPrototype),
+                    c(t, u, 'GeneratorFunction')),
+                (t.prototype = Object.create(v)),
+                t
+              );
+            }),
+            (r.awrap = function (t) {
+              return { __await: t };
+            }),
+            g(AsyncIterator.prototype),
+            c(AsyncIterator.prototype, a, function () {
+              return this;
+            }),
+            (r.AsyncIterator = AsyncIterator),
+            (r.async = function (t, e, n, o, i) {
+              void 0 === i && (i = Promise);
+              var a = new AsyncIterator(h(t, e, n, o), i);
+              return r.isGeneratorFunction(e)
+                ? a
+                : a.next().then(function (t) {
+                    return t.done ? t.value : a.next();
+                  });
+            }),
+            g(v),
+            c(v, u, 'Generator'),
+            c(v, i, function () {
+              return this;
+            }),
+            c(v, 'toString', function () {
+              return '[object Generator]';
+            }),
+            (r.keys = function (t) {
+              var r = Object(t),
+                e = [];
+              for (var n in r) e.unshift(n);
+              return function t() {
+                for (; e.length; )
+                  if ((n = e.pop()) in r)
+                    return (t.value = n), (t.done = !1), t;
+                return (t.done = !0), t;
+              };
+            }),
+            (r.values = x),
+            (Context.prototype = {
+              constructor: Context,
+              reset: function reset(r) {
+                if (
+                  ((this.prev = this.next = 0),
+                  (this.sent = this._sent = t),
+                  (this.done = !1),
+                  (this.delegate = null),
+                  (this.method = 'next'),
+                  (this.arg = t),
+                  this.tryEntries.forEach(m),
+                  !r)
+                )
+                  for (var e in this)
+                    't' === e.charAt(0) &&
+                      n.call(this, e) &&
+                      !isNaN(+e.slice(1)) &&
+                      (this[e] = t);
+              },
+              stop: function stop() {
+                this.done = !0;
+                var t = this.tryEntries[0][4];
+                if ('throw' === t.type) throw t.arg;
+                return this.rval;
+              },
+              dispatchException: function dispatchException(r) {
+                if (this.done) throw r;
+                var e = this;
+                function n(t) {
+                  (a.type = 'throw'), (a.arg = r), (e.next = t);
+                }
+                for (var o = e.tryEntries.length - 1; o >= 0; --o) {
+                  var i = this.tryEntries[o],
+                    a = i[4],
+                    u = this.prev,
+                    c = i[1],
+                    h = i[2];
+                  if (-1 === i[0]) return n('end'), !1;
+                  if (!c && !h)
+                    throw Error('try statement without catch or finally');
+                  if (null != i[0] && i[0] <= u) {
+                    if (u < c)
+                      return (this.method = 'next'), (this.arg = t), n(c), !0;
+                    if (u < h) return n(h), !1;
+                  }
+                }
+              },
+              abrupt: function abrupt(t, r) {
+                for (var e = this.tryEntries.length - 1; e >= 0; --e) {
+                  var n = this.tryEntries[e];
+                  if (n[0] > -1 && n[0] <= this.prev && this.prev < n[2]) {
+                    var o = n;
+                    break;
+                  }
+                }
+                o &&
+                  ('break' === t || 'continue' === t) &&
+                  o[0] <= r &&
+                  r <= o[2] &&
+                  (o = null);
+                var i = o ? o[4] : {};
+                return (
+                  (i.type = t),
+                  (i.arg = r),
+                  o
+                    ? ((this.method = 'next'), (this.next = o[2]), f)
+                    : this.complete(i)
+                );
+              },
+              complete: function complete(t, r) {
+                if ('throw' === t.type) throw t.arg;
+                return (
+                  'break' === t.type || 'continue' === t.type
+                    ? (this.next = t.arg)
+                    : 'return' === t.type
+                      ? ((this.rval = this.arg = t.arg),
+                        (this.method = 'return'),
+                        (this.next = 'end'))
+                      : 'normal' === t.type && r && (this.next = r),
+                  f
+                );
+              },
+              finish: function finish(t) {
+                for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+                  var e = this.tryEntries[r];
+                  if (e[2] === t) return this.complete(e[4], e[3]), m(e), f;
+                }
+              },
+              catch: function _catch(t) {
+                for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+                  var e = this.tryEntries[r];
+                  if (e[0] === t) {
+                    var n = e[4];
+                    if ('throw' === n.type) {
+                      var o = n.arg;
+                      m(e);
+                    }
+                    return o;
+                  }
+                }
+                throw Error('illegal catch attempt');
+              },
+              delegateYield: function delegateYield(r, e, n) {
+                return (
+                  (this.delegate = { i: x(r), r: e, n: n }),
+                  'next' === this.method && (this.arg = t),
+                  f
+                );
+              }
+            }),
+            r
+          );
+        }
+        function asyncGeneratorStep(n, t, e, r, o, a, c) {
+          try {
+            var i = n[a](c),
+              u = i.value;
+          } catch (n) {
+            return void e(n);
+          }
+          i.done ? t(u) : Promise.resolve(u).then(r, o);
+        }
+        function _asyncToGenerator(n) {
+          return function () {
+            var t = this,
+              e = arguments;
+            return new Promise(function (r, o) {
+              var a = n.apply(t, e);
+              function _next(n) {
+                asyncGeneratorStep(a, r, o, _next, _throw, 'next', n);
+              }
+              function _throw(n) {
+                asyncGeneratorStep(a, r, o, _next, _throw, 'throw', n);
+              }
+              _next(void 0);
+            });
+          };
         }
         function ownKeys(e, r) {
           var t = Object.keys(e);
@@ -102219,139 +99725,151 @@ object-assign
           return ('string' === r ? String : Number)(t);
         }
 
-        THREE.ImageUtils.crossOrigin = '';
         var Main = /*#__PURE__*/ (function (_React$Component) {
-          function Main(props) {
+          function Main() {
             var _this;
             _classCallCheck(this, Main);
-            _this = _callSuper(this, Main, [props]);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Main, [].concat(args));
             _defineProperty(
               _this,
-              'handleOpenTexturesModal',
-              function (selectedTexture, textureOnClose) {
-                _this.setState({
-                  selectedTexture: selectedTexture,
-                  isModalTexturesOpen: true,
-                  textureOnClose: textureOnClose
-                });
-              }
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_2__.createEventScope)()
             );
-            _defineProperty(_this, 'handleEntitySelect', function (entity) {
-              // Set the selected entity and ensure the attributes sidebar is visible
-              _this.setState({
-                entity: entity,
-                visible: _objectSpread(
-                  _objectSpread({}, _this.state.visible),
-                  {},
-                  {
-                    attributes: true
-                  }
-                )
-              });
-            });
-            _defineProperty(_this, 'handleInspectorToggle', function (enabled) {
-              _this.setState({
-                inspectorEnabled: enabled
-              });
-            });
-            _defineProperty(_this, 'handleSceneReload', function (newSceneEl) {
-              _this.setState({
-                entity: null,
-                sceneEl: newSceneEl
-              });
-            });
-            _defineProperty(_this, 'handleOpenHelpModal', function () {
-              _this.setState({
-                isHelpOpen: true
-              });
-            });
-            _defineProperty(_this, 'handleClose', function () {
-              _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].emit(
-                'togglesidebar',
-                {
-                  which: 'attributes'
-                }
-              );
-            });
-            _defineProperty(_this, 'onCloseHelpModal', function (value) {
-              _this.setState({
-                isHelpOpen: false
-              });
-            });
-            _defineProperty(_this, 'onModalTextureOnClose', function (value) {
-              _this.setState({
-                isModalTexturesOpen: false
-              });
-              if (_this.state.textureOnClose) {
-                _this.state.textureOnClose(value);
-              }
-            });
-            _defineProperty(_this, 'toggleEdit', function () {
-              if (_this.state.inspectorEnabled) {
-                AFRAME.INSPECTOR.close();
-              } else {
-                AFRAME.INSPECTOR.open();
-              }
-            });
-            _this.state = {
+            _defineProperty(_this, 'state', {
               entity: null,
               inspectorEnabled: true,
               isModalTexturesOpen: false,
+              isHelpOpen: false,
               sceneEl: AFRAME.scenes[0],
               visible: {
                 scenegraph: true,
-                attributes: false // Set this to false
+                attributes: false
+              },
+              save: {},
+              restoring: false
+            });
+            _defineProperty(_this, 'onResize', function () {
+              if (_this.media.matches) {
+                _this.setState(function (state) {
+                  return {
+                    visible: {
+                      scenegraph: !state.entity && state.visible.scenegraph,
+                      attributes: !!state.entity && state.visible.attributes
+                    }
+                  };
+                });
               }
-            };
-            _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-              'togglesidebar',
-              function (event) {
-                if (event.which === 'all') {
-                  if (
-                    _this.state.visible.scenegraph ||
-                    _this.state.visible.attributes
-                  ) {
-                    _this.setState({
-                      visible: {
-                        scenegraph: false,
-                        attributes: false
-                      }
-                    });
-                  } else {
-                    _this.setState({
-                      visible: {
-                        scenegraph: true,
-                        attributes: true
-                      }
-                    });
-                  }
-                } else if (event.which === 'attributes') {
-                  _this.setState(function (prevState) {
-                    return {
-                      visible: _objectSpread(
-                        _objectSpread({}, prevState.visible),
-                        {},
-                        {
-                          attributes: !prevState.visible.attributes
-                        }
-                      )
-                    };
-                  });
-                } else if (event.which === 'scenegraph') {
-                  _this.setState(function (prevState) {
-                    return {
-                      visible: _objectSpread(
-                        _objectSpread({}, prevState.visible),
-                        {},
-                        {
-                          scenegraph: !prevState.visible.scenegraph
-                        }
-                      )
-                    };
-                  });
+            });
+            _defineProperty(_this, 'onToggleSidebar', function (_ref) {
+              var which = _ref.which,
+                show = _ref.show;
+              _this.setState(function (state) {
+                if (which === 'all') {
+                  var _show =
+                    !state.visible.scenegraph && !state.visible.attributes;
+                  return {
+                    visible: {
+                      scenegraph: _show,
+                      attributes:
+                        _show && !_this.media.matches && !!state.entity
+                    }
+                  };
                 }
-              }
+                var visible = _objectSpread(
+                  _objectSpread({}, state.visible),
+                  {},
+                  _defineProperty(
+                    {},
+                    which,
+                    show === undefined ? !state.visible[which] : show
+                  )
+                );
+                if (_this.media.matches && visible[which])
+                  visible[
+                    which === 'scenegraph' ? 'attributes' : 'scenegraph'
+                  ] = false;
+                return {
+                  visible: visible
+                };
+              });
+            });
+            _defineProperty(
+              _this,
+              'restoreDraft',
+              /*#__PURE__*/ _asyncToGenerator(
+                /*#__PURE__*/ _regeneratorRuntime().mark(function _callee() {
+                  var result;
+                  return _regeneratorRuntime().wrap(
+                    function _callee$(_context) {
+                      while (1)
+                        switch ((_context.prev = _context.next)) {
+                          case 0:
+                            if (
+                              !(
+                                _this.state.restoring ||
+                                !_this.state.save.hasDraft
+                              )
+                            ) {
+                              _context.next = 2;
+                              break;
+                            }
+                            return _context.abrupt('return');
+                          case 2:
+                            if (!_this.state.save.dirty) {
+                              _context.next = 8;
+                              break;
+                            }
+                            _context.next = 5;
+                            return sweetalert2__WEBPACK_IMPORTED_MODULE_10___default().fire(
+                              {
+                                title: 'Restore saved draft?',
+                                text: 'Your current unsaved changes will be replaced.',
+                                showCancelButton: true,
+                                confirmButtonText: 'Restore draft'
+                              }
+                            );
+                          case 5:
+                            result = _context.sent;
+                            if (result.isConfirmed) {
+                              _context.next = 8;
+                              break;
+                            }
+                            return _context.abrupt('return');
+                          case 8:
+                            _this.setState({
+                              restoring: true
+                            });
+                            _context.prev = 9;
+                            _context.next = 12;
+                            return AFRAME.INSPECTOR.persistence.restoreDraft();
+                          case 12:
+                            _context.prev = 12;
+                            _this.setState({
+                              restoring: false
+                            });
+                            return _context.finish(12);
+                          case 15:
+                          case 'end':
+                            return _context.stop();
+                        }
+                    },
+                    _callee,
+                    null,
+                    [[9, , 12, 15]]
+                  );
+                })
+              )
             );
+            _defineProperty(_this, 'toggleEdit', function () {
+              return AFRAME.INSPECTOR.toggle();
+            });
             return _this;
           }
           _inherits(Main, _React$Component);
@@ -102359,134 +99877,163 @@ object-assign
             {
               key: 'componentDidMount',
               value: function componentDidMount() {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
+                var _this2 = this;
+                this.media = window.matchMedia('(max-width: 1000px)');
+                this.media.addEventListener('change', this.onResize);
+                this.events.on('togglesidebar', this.onToggleSidebar);
+                this.events.on(
                   'opentexturesmodal',
-                  this.handleOpenTexturesModal
+                  function (selectedTexture, textureOnClose) {
+                    return _this2.setState({
+                      selectedTexture: selectedTexture,
+                      textureOnClose: textureOnClose,
+                      isModalTexturesOpen: true
+                    });
+                  }
                 );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'entityselect',
-                  this.handleEntitySelect
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'inspectortoggle',
-                  this.handleInspectorToggle
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'openhelpmodal',
-                  this.handleOpenHelpModal
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'scenereload',
-                  this.handleSceneReload
-                );
+                this.events.on('entityselect', function (entity) {
+                  return _this2.setState(function (state) {
+                    return {
+                      entity: entity,
+                      visible: entity
+                        ? {
+                            scenegraph: _this2.media.matches
+                              ? false
+                              : state.visible.scenegraph,
+                            attributes: true
+                          }
+                        : state.visible
+                    };
+                  });
+                });
+                this.events.on('inspectortoggle', function (inspectorEnabled) {
+                  return _this2.setState({
+                    inspectorEnabled: inspectorEnabled
+                  });
+                });
+                this.events.on('openhelpmodal', function () {
+                  return _this2.setState({
+                    isHelpOpen: true
+                  });
+                });
+                this.events.on('scenereload', function (sceneEl) {
+                  return _this2.setState({
+                    sceneEl: sceneEl,
+                    entity: null
+                  });
+                });
+                this.events.on('scenesavestate', function (save) {
+                  return _this2.setState({
+                    save: save
+                  });
+                });
+                this.events.on('scenerestore', this.restoreDraft);
+                this.setState({
+                  save: AFRAME.INSPECTOR.persistence.getState()
+                });
               }
             },
             {
               key: 'componentWillUnmount',
               value: function componentWillUnmount() {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'opentexturesmodal',
-                  this.handleOpenTexturesModal
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'entityselect',
-                  this.handleEntitySelect
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'inspectortoggle',
-                  this.handleInspectorToggle
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'openhelpmodal',
-                  this.handleOpenHelpModal
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'scenereload',
-                  this.handleSceneReload
-                );
-              }
-            },
-            {
-              key: 'renderSceneGraphToggle',
-              value: function renderSceneGraphToggle() {
-                if (
-                  !this.state.inspectorEnabled ||
-                  this.state.visible.scenegraph
-                ) {
-                  return null;
-                }
-                return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)('div', {
-                  className: 'toggle-sidebar left',
-                  children: /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)('a', {
-                    onClick: function onClick() {
-                      _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].emit(
-                        'togglesidebar',
-                        {
-                          which: 'scenegraph'
-                        }
-                      );
-                    },
-                    title: 'Show scenegraph',
-                    children: /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                      _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                      {
-                        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_12__.faPlus
-                      }
-                    )
-                  })
-                });
+                this.events.dispose();
+                this.media.removeEventListener('change', this.onResize);
               }
             },
             {
               key: 'render',
               value: function render() {
-                var scene = this.state.sceneEl;
+                var _this3 = this;
+                var _this$state = this.state,
+                  visible = _this$state.visible,
+                  save = _this$state.save,
+                  entity = _this$state.entity,
+                  inspectorEnabled = _this$state.inspectorEnabled;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)('div', {
+                  className: 'editor-ui',
                   children: [
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)('a', {
-                      id: 'previewSceneBtn',
-                      className: 'toggle-edit',
-                      onClick: this.toggleEdit,
-                      children: /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                        _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                      'button',
+                      {
+                        type: 'button',
+                        id: 'previewSceneBtn',
+                        className: 'toggle-edit',
+                        onClick: this.toggleEdit,
+                        'aria-label': inspectorEnabled
+                          ? 'Preview scene'
+                          : 'Return to editor',
+                        title: inspectorEnabled
+                          ? 'Preview scene'
+                          : 'Return to editor',
+                        children: /*#__PURE__*/ (0,
+                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                          {
+                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_13__.faVrCardboard
+                          }
+                        )
+                      }
+                    ),
+                    inspectorEnabled &&
+                      !visible.scenegraph &&
+                      /*#__PURE__*/ (0,
+                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                        'div',
                         {
-                          icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_12__.faVrCardboard
+                          className: 'toggle-sidebar left',
+                          children: /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                            'button',
+                            {
+                              type: 'button',
+                              'aria-label': 'Show scenegraph',
+                              title: 'Show scenegraph',
+                              onClick: function onClick() {
+                                return _this3.onToggleSidebar({
+                                  which: 'scenegraph',
+                                  show: true
+                                });
+                              },
+                              children: /*#__PURE__*/ (0,
+                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                                {
+                                  icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_13__.faPlus
+                                }
+                              )
+                            }
+                          )
                         }
-                      )
-                    }),
-                    this.renderSceneGraphToggle(),
+                      ),
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                       'div',
                       {
                         id: 'inspectorContainer',
-                        className: this.state.inspectorEnabled ? '' : 'hidden',
+                        className: inspectorEnabled ? '' : 'hidden',
                         children: [
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                             'div',
                             {
                               id: 'leftPanel',
+                              hidden: !visible.scenegraph,
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                                   'div',
                                   {
                                     className: 'scenegraph-menubar',
                                     children: [
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                         'div',
                                         {
                                           id: 'scenegraph-menu-back',
                                           children: /*#__PURE__*/ (0,
-                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                                             'a',
                                             {
                                               href: 'https://github.com/a-hakim/senangwebs-aframe-editor',
@@ -102495,14 +100042,14 @@ object-assign
                                               id: 'githubLink',
                                               children: [
                                                 /*#__PURE__*/ (0,
-                                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                                   _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
                                                   {
-                                                    icon: _fortawesome_free_brands_svg_icons__WEBPACK_IMPORTED_MODULE_13__.faGithub
+                                                    icon: _fortawesome_free_brands_svg_icons__WEBPACK_IMPORTED_MODULE_14__.faGithub
                                                   }
                                                 ),
                                                 /*#__PURE__*/ (0,
-                                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                                   'span',
                                                   {
                                                     children:
@@ -102515,7 +100062,7 @@ object-assign
                                         }
                                       ),
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                         'div',
                                         {
                                           id: 'scenegraph-panel-action'
@@ -102525,46 +100072,46 @@ object-assign
                                   }
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                   _scenegraph_SceneGraph__WEBPACK_IMPORTED_MODULE_6__[
                                     'default'
                                   ],
                                   {
-                                    scene: scene,
-                                    selectedEntity: this.state.entity,
-                                    visible: this.state.visible.scenegraph
+                                    scene: this.state.sceneEl,
+                                    selectedEntity: entity,
+                                    visible: visible.scenegraph
                                   }
                                 )
                               ]
                             }
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                             'div',
                             {
                               id: 'viewportBar',
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                   _viewport_CameraToolbar__WEBPACK_IMPORTED_MODULE_7__[
                                     'default'
                                   ],
                                   {}
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                   _viewport_TransformToolbar__WEBPACK_IMPORTED_MODULE_8__[
                                     'default'
                                   ],
                                   {}
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                   'div',
                                   {
                                     className: 'viewportHud-menubar',
                                     children: /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                       _viewport_ViewportHUD__WEBPACK_IMPORTED_MODULE_9__[
                                         'default'
                                       ],
@@ -102576,37 +100123,42 @@ object-assign
                             }
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                             'div',
                             {
                               id: 'rightPanel',
-                              className: this.state.visible.attributes
-                                ? ''
-                                : 'hidden',
+                              hidden: !visible.attributes,
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                                   'div',
                                   {
                                     className: 'componentHeader title',
                                     children: [
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                         'div',
                                         {
                                           id: 'entity-panel-action'
                                         }
                                       ),
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                                        'a',
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                        'button',
                                         {
-                                          onClick: this.handleClose,
+                                          type: 'button',
+                                          'aria-label': 'Close properties',
+                                          title: 'Close properties',
+                                          onClick: function onClick() {
+                                            return _this3.onToggleSidebar({
+                                              which: 'attributes'
+                                            });
+                                          },
                                           children: /*#__PURE__*/ (0,
-                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                                             _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
                                             {
-                                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_12__.faTimes
+                                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_13__.faTimes
                                             }
                                           )
                                         }
@@ -102614,84 +100166,143 @@ object-assign
                                     ]
                                   }
                                 ),
-                                /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                                  _components_Sidebar__WEBPACK_IMPORTED_MODULE_3__[
-                                    'default'
-                                  ],
-                                  {
-                                    entity: this.state.entity,
-                                    visible: this.state.visible.attributes // This prop might become redundant depending on CSS, but leave for now
-                                  }
-                                )
+                                entity
+                                  ? /*#__PURE__*/ (0,
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                      _components_Sidebar__WEBPACK_IMPORTED_MODULE_3__[
+                                        'default'
+                                      ],
+                                      {
+                                        entity: entity,
+                                        visible: visible.attributes
+                                      }
+                                    )
+                                  : /*#__PURE__*/ (0,
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                      'p',
+                                      {
+                                        className: 'panel-hint',
+                                        children:
+                                          'Select an entity in the scene or scene tree to edit its properties.'
+                                      }
+                                    )
                               ]
                             }
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
                             'div',
                             {
                               id: 'actionBar',
-                              children: /*#__PURE__*/ (0,
-                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
-                                'div',
-                                {
-                                  id: 'sw-info',
-                                  children: [
-                                    /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                                      'span',
-                                      {
-                                        children: /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                                          'b',
+                              children: [
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
+                                  'div',
+                                  {
+                                    className: 'save-feedback',
+                                    'aria-live': 'polite',
+                                    children: [
+                                      (save.message || save.dirty) &&
+                                        /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                          'span',
                                           {
-                                            children: 'Senangwebs Webverse'
+                                            role: 'status',
+                                            children:
+                                              save.message || 'Unsaved changes'
+                                          }
+                                        ),
+                                      save.error &&
+                                        /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                          'span',
+                                          {
+                                            role: 'alert',
+                                            className: 'form-error',
+                                            children: save.error
                                           }
                                         )
-                                      }
-                                    ),
-                                    /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
-                                      'span',
-                                      {
-                                        children: /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)(
-                                          'small',
-                                          {
-                                            children: [
-                                              'Ver ',
-                                              _package_json__WEBPACK_IMPORTED_MODULE_10__.version
-                                            ]
-                                          }
-                                        )
-                                      }
-                                    )
-                                  ]
-                                }
-                              )
+                                    ]
+                                  }
+                                ),
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
+                                  'div',
+                                  {
+                                    id: 'sw-info',
+                                    children: [
+                                      /*#__PURE__*/ (0,
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                        'span',
+                                        {
+                                          children: /*#__PURE__*/ (0,
+                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                            'b',
+                                            {
+                                              children: 'Senangwebs Webverse'
+                                            }
+                                          )
+                                        }
+                                      ),
+                                      /*#__PURE__*/ (0,
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
+                                        'span',
+                                        {
+                                          children: /*#__PURE__*/ (0,
+                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)(
+                                            'small',
+                                            {
+                                              children: [
+                                                'Ver ',
+                                                _package_json__WEBPACK_IMPORTED_MODULE_11__.version
+                                              ]
+                                            }
+                                          )
+                                        }
+                                      )
+                                    ]
+                                  }
+                                )
+                              ]
                             }
                           )
                         ]
                       }
                     ),
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                       _modals_ModalHelp__WEBPACK_IMPORTED_MODULE_5__['default'],
                       {
                         isOpen: this.state.isHelpOpen,
-                        onClose: this.onCloseHelpModal
+                        onClose: function onClose() {
+                          return _this3.setState({
+                            isHelpOpen: false
+                          });
+                        }
                       }
                     ),
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                       _modals_ModalTextures__WEBPACK_IMPORTED_MODULE_4__[
                         'default'
                       ],
                       {
                         isOpen: this.state.isModalTexturesOpen,
                         selectedTexture: this.state.selectedTexture,
-                        onClose: this.onModalTextureOnClose
+                        onClose: function onClose(value) {
+                          var callback = _this3.state.textureOnClose;
+                          _this3.setState(
+                            {
+                              isModalTexturesOpen: false,
+                              textureOnClose: null
+                            },
+                            function () {
+                              return callback === null || callback === void 0
+                                ? void 0
+                                : callback(value);
+                            }
+                          );
+                        }
                       }
                     )
                   ]
@@ -102904,6 +100515,7 @@ object-assign
              * If component is instanced, generate an ID.
              */
             _defineProperty(_this, 'addComponent', function (value) {
+              if (!value) return;
               var componentName = value.value;
               var entity = _this.props.entity;
               if (AFRAME.components[componentName].multiple) {
@@ -103024,6 +100636,7 @@ object-assign
                     react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
                       react_select__WEBPACK_IMPORTED_MODULE_4__['default'],
                       {
+                        'aria-label': 'Add component',
                         id: 'addComponent',
                         className: 'addComponent',
                         classNamePrefix: 'select',
@@ -103277,31 +100890,48 @@ object-assign
         }
         var CommonComponents = /*#__PURE__*/ (function (_React$Component) {
           function CommonComponents() {
+            var _this;
             _classCallCheck(this, CommonComponents);
-            return _callSuper(this, CommonComponents, arguments);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, CommonComponents, [].concat(args));
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_8__.createEventScope)()
+            );
+            return _this;
           }
           _inherits(CommonComponents, _React$Component);
           return _createClass(CommonComponents, [
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
+              }
+            },
+            {
               key: 'componentDidMount',
               value: function componentDidMount() {
-                var _this = this;
-                _lib_Events__WEBPACK_IMPORTED_MODULE_8__['default'].on(
-                  'entityupdate',
-                  function (detail) {
-                    if (detail.entity !== _this.props.entity) {
-                      return;
-                    }
-                    if (
-                      _DefaultComponents__WEBPACK_IMPORTED_MODULE_2__[
-                        'default'
-                      ].indexOf(detail.component) !== -1 ||
-                      detail.component === 'mixin'
-                    ) {
-                      _this.forceUpdate();
-                    }
+                var _this2 = this;
+                this.events.on('entityupdate', function (detail) {
+                  if (detail.entity !== _this2.props.entity) {
+                    return;
                   }
-                );
+                  if (
+                    _DefaultComponents__WEBPACK_IMPORTED_MODULE_2__[
+                      'default'
+                    ].indexOf(detail.component) !== -1 ||
+                    detail.component === 'mixin'
+                  ) {
+                    _this2.forceUpdate();
+                  }
+                });
               }
             },
             {
@@ -103413,7 +101043,7 @@ object-assign
                                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(
                                     'label',
                                     {
-                                      htmlFor: 'id',
+                                      htmlFor: 'entity-id',
                                       className: 'text',
                                       children: 'ID'
                                     }
@@ -103422,6 +101052,8 @@ object-assign
                                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(
                                     _widgets__WEBPACK_IMPORTED_MODULE_1__.InputWidget,
                                     {
+                                      id: 'entity-id',
+                                      label: 'Entity ID',
                                       onChange: changeId,
                                       entity: entity,
                                       name: 'id',
@@ -103685,6 +101317,11 @@ object-assign
             var _this;
             _classCallCheck(this, Component);
             _this = _callSuper(this, Component, [props]);
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_4__.createEventScope)()
+            );
             _defineProperty(_this, 'removeComponent', function (event) {
               var componentName = _this.props.name;
               event.stopPropagation();
@@ -103766,20 +101403,23 @@ object-assign
             Component,
             [
               {
+                key: 'componentWillUnmount',
+                value: function componentWillUnmount() {
+                  this.events.dispose();
+                }
+              },
+              {
                 key: 'componentDidMount',
                 value: function componentDidMount() {
                   var _this2 = this;
-                  _lib_Events__WEBPACK_IMPORTED_MODULE_4__['default'].on(
-                    'entityupdate',
-                    function (detail) {
-                      if (detail.entity !== _this2.props.entity) {
-                        return;
-                      }
-                      if (detail.component === _this2.props.name) {
-                        _this2.forceUpdate();
-                      }
+                  this.events.on('entityupdate', function (detail) {
+                    if (detail.entity !== _this2.props.entity) {
+                      return;
                     }
-                  );
+                    if (detail.component === _this2.props.name) {
+                      _this2.forceUpdate();
+                    }
+                  });
                 }
               },
               {
@@ -103799,6 +101439,7 @@ object-assign
                     _Collapsible__WEBPACK_IMPORTED_MODULE_3__['default'],
                     {
                       collapsed: this.props.isCollapsed,
+                      label: this.props.name,
                       children: [
                         /*#__PURE__*/ (0,
                         react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(
@@ -103829,8 +101470,9 @@ object-assign
                                   className: 'componentHeaderActions',
                                   children: /*#__PURE__*/ (0,
                                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                                    'a',
+                                    'button',
                                     {
+                                      type: 'button',
                                       title: 'Remove component',
                                       className: 'button',
                                       onClick: this.removeComponent,
@@ -104081,26 +101723,43 @@ object-assign
 
         var ComponentsContainer = /*#__PURE__*/ (function (_React$Component) {
           function ComponentsContainer() {
+            var _this;
             _classCallCheck(this, ComponentsContainer);
-            return _callSuper(this, ComponentsContainer, arguments);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, ComponentsContainer, [].concat(args));
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_5__.createEventScope)()
+            );
+            return _this;
           }
           _inherits(ComponentsContainer, _React$Component);
           return _createClass(ComponentsContainer, [
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
+              }
+            },
+            {
               key: 'componentDidMount',
               value: function componentDidMount() {
-                var _this = this;
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].on(
-                  'entityupdate',
-                  function (detail) {
-                    if (detail.entity !== _this.props.entity) {
-                      return;
-                    }
-                    if (detail.component === 'mixin') {
-                      _this.forceUpdate();
-                    }
+                var _this2 = this;
+                this.events.on('entityupdate', function (detail) {
+                  if (detail.entity !== _this2.props.entity) {
+                    return;
                   }
-                );
+                  if (detail.component === 'mixin') {
+                    _this2.forceUpdate();
+                  }
+                });
               }
             },
             {
@@ -104124,7 +101783,8 @@ object-assign
                     react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
                       _Component__WEBPACK_IMPORTED_MODULE_2__['default'],
                       {
-                        isCollapsed: definedComponents.length > 2,
+                        isCollapsed:
+                          definedComponents.length > 2 || key === 'material',
                         component: components[key],
                         entity: entity,
                         name: key
@@ -104470,6 +102130,7 @@ object-assign
                               'default'
                             ],
                             {
+                              'aria-label': 'Mixins',
                               id: 'mixinSelect',
                               classNamePrefix: 'select',
                               options: this.getMixinOptions(),
@@ -104747,7 +102408,13 @@ object-assign
             var _this;
             _classCallCheck(this, PropertyRow);
             _this = _callSuper(this, PropertyRow, [props]);
-            _this.id = props.componentname + ':' + props.name;
+            _this.id =
+              'inspector-' +
+              props.entity.object3D.uuid +
+              '-' +
+              props.componentname +
+              '-' +
+              props.name;
             return _this;
           }
           _inherits(PropertyRow, _React$Component);
@@ -104777,6 +102444,11 @@ object-assign
                       : _props$entity$getDOMA[props.name]
                     : props.data;
                 var widgetProps = {
+                  id: this.id,
+                  label:
+                    props.componentname === props.name
+                      ? props.name
+                      : props.componentname + ' ' + props.name,
                   componentname: props.componentname,
                   entity: props.entity,
                   isSingle: props.isSingle,
@@ -104792,6 +102464,7 @@ object-assign
                   value: value
                 };
                 var numberWidgetProps = {
+                  step: props.schema.step || (type === 'int' ? 1 : 0.01),
                   min: props.schema.hasOwnProperty('min')
                     ? props.schema.min
                     : -Infinity,
@@ -104956,7 +102629,11 @@ object-assign
                     react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                       'label',
                       {
-                        htmlFor: this.id,
+                        htmlFor: ['vec2', 'vec3', 'vec4'].includes(
+                          props.schema.type
+                        )
+                          ? this.id + '-x'
+                          : this.id,
                         className: 'text',
                         title: title,
                         children: props.name
@@ -106455,15 +104132,19 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ =
+        /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(
+            /*! react-dom */ './node_modules/react-dom/index.js'
+          );
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_2__
+            prop_types__WEBPACK_IMPORTED_MODULE_3__
           );
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -106602,134 +104283,295 @@ object-assign
           }
           return ('string' === r ? String : Number)(t);
         }
+        function _toConsumableArray(r) {
+          return (
+            _arrayWithoutHoles(r) ||
+            _iterableToArray(r) ||
+            _unsupportedIterableToArray(r) ||
+            _nonIterableSpread()
+          );
+        }
+        function _nonIterableSpread() {
+          throw new TypeError(
+            'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+          );
+        }
+        function _unsupportedIterableToArray(r, a) {
+          if (r) {
+            if ('string' == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return (
+              'Object' === t && r.constructor && (t = r.constructor.name),
+              'Map' === t || 'Set' === t
+                ? Array.from(r)
+                : 'Arguments' === t ||
+                    /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+                  ? _arrayLikeToArray(r, a)
+                  : void 0
+            );
+          }
+        }
+        function _iterableToArray(r) {
+          if (
+            ('undefined' != typeof Symbol && null != r[Symbol.iterator]) ||
+            null != r['@@iterator']
+          )
+            return Array.from(r);
+        }
+        function _arrayWithoutHoles(r) {
+          if (Array.isArray(r)) return _arrayLikeToArray(r);
+        }
+        function _arrayLikeToArray(r, a) {
+          (null == a || a > r.length) && (a = r.length);
+          for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+          return n;
+        }
 
+        var stack = [];
+        var background = new Map();
+        var nextId = 0;
+        var focusable =
+          'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]';
+        function updateBackground() {
+          background.forEach(function (inert, node) {
+            node.inert = inert;
+          });
+          background.clear();
+          var top = stack[stack.length - 1];
+          var branch =
+            top === null || top === void 0 ? void 0 : top.self.current;
+          while (branch && branch !== document.body) {
+            var parent = branch.parentElement;
+            if (!parent) break;
+            _toConsumableArray(parent.children)
+              .filter(function (node) {
+                return node !== branch;
+              })
+              .forEach(function (node) {
+                background.set(node, node.inert);
+                node.inert = true;
+              });
+            branch = parent;
+          }
+        }
         var Modal = /*#__PURE__*/ (function (_React$Component) {
-          function Modal(props) {
+          function Modal() {
             var _this;
             _classCallCheck(this, Modal);
-            _this = _callSuper(this, Modal, [props]);
-            _defineProperty(_this, 'handleGlobalKeydown', function (event) {
-              if (
-                _this.state.isOpen &&
-                (event.keyCode === 27 ||
-                  (_this.props.extraCloseKeyCode &&
-                    event.keyCode === _this.props.extraCloseKeyCode))
-              ) {
-                _this.close();
-
-                // Prevent closing the inspector
-                event.stopPropagation();
-              }
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Modal, [].concat(args));
+            _defineProperty(
+              _this,
+              'self',
+              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef()
+            );
+            _defineProperty(_this, 'titleId', 'inspector-dialog-' + ++nextId);
+            _defineProperty(_this, 'isTop', function () {
+              return stack[stack.length - 1] === _this;
             });
-            _defineProperty(_this, 'shouldClickDismiss', function (event) {
-              var target = event.target;
-              // This piece of code isolates targets which are fake clicked by things
-              // like file-drop handlers
-              if (target.tagName === 'INPUT' && target.type === 'file') {
-                return false;
-              }
-              if (
-                target === _this.self.current ||
-                _this.self.current.contains(target)
-              ) {
-                return false;
-              }
-              return true;
+            _defineProperty(_this, 'getControls', function () {
+              var _this$self$current;
+              return _toConsumableArray(
+                ((_this$self$current = _this.self.current) === null ||
+                _this$self$current === void 0
+                  ? void 0
+                  : _this$self$current.querySelectorAll(focusable)) || []
+              ).filter(function (node) {
+                return node.getClientRects().length && !node.closest('[inert]');
+              });
             });
-            _defineProperty(_this, 'handleGlobalMousedown', function (event) {
+            _defineProperty(_this, 'focusFirst', function () {
+              var _ref;
+              return (_ref = _this.getControls()[0] || _this.self.current) ===
+                null || _ref === void 0
+                ? void 0
+                : _ref.focus();
+            });
+            _defineProperty(_this, 'onFocus', function (event) {
+              var _this$self$current2;
               if (
-                _this.props.closeOnClickOutside &&
-                _this.state.isOpen &&
-                _this.shouldClickDismiss(event)
-              ) {
-                if (typeof _this.props.onClose === 'function') {
-                  _this.props.onClose();
+                _this.isTop() &&
+                !(
+                  (_this$self$current2 = _this.self.current) !== null &&
+                  _this$self$current2 !== void 0 &&
+                  _this$self$current2.contains(event.target)
+                )
+              )
+                _this.focusFirst();
+            });
+            _defineProperty(_this, 'onKeyDown', function (event) {
+              if (!_this.isTop()) return;
+              // Stop global editor shortcuts without suppressing the controls' own handlers.
+              if (event.key === 'Tab') {
+                var controls = _this.getControls();
+                var first = controls[0];
+                var last = controls[controls.length - 1];
+                if (!first) {
+                  var _this$self$current3;
+                  event.preventDefault();
+                  (_this$self$current3 = _this.self.current) === null ||
+                    _this$self$current3 === void 0 ||
+                    _this$self$current3.focus();
+                } else if (
+                  event.shiftKey &&
+                  (document.activeElement === first ||
+                    !_this.self.current.contains(document.activeElement))
+                ) {
+                  event.preventDefault();
+                  last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                  event.preventDefault();
+                  first.focus();
                 }
               }
             });
-            _defineProperty(_this, 'close', function () {
-              _this.setState({
-                isOpen: false
-              });
-              if (_this.props.onClose) {
-                _this.props.onClose();
+            _defineProperty(_this, 'onKeyUp', function (event) {
+              if (!_this.isTop()) return;
+              if (
+                event.key === 'Escape' ||
+                (_this.props.extraCloseKeyCode &&
+                  event.keyCode === _this.props.extraCloseKeyCode &&
+                  !event.target.matches('input, textarea, select'))
+              ) {
+                var _this$props$onClose, _this$props;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                (_this$props$onClose = (_this$props = _this.props).onClose) ===
+                  null ||
+                  _this$props$onClose === void 0 ||
+                  _this$props$onClose.call(_this$props);
               }
             });
-            _this.state = {
-              isOpen: _this.props.isOpen
-            };
-            _this.self =
-              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
             return _this;
           }
           _inherits(Modal, _React$Component);
-          return _createClass(
-            Modal,
-            [
-              {
-                key: 'componentDidMount',
-                value: function componentDidMount() {
-                  document.addEventListener('keyup', this.handleGlobalKeydown);
-                  document.addEventListener(
-                    'mousedown',
-                    this.handleGlobalMousedown
-                  );
+          return _createClass(Modal, [
+            {
+              key: 'componentDidMount',
+              value: function componentDidMount() {
+                if (this.props.isOpen) this.activate();
+              }
+            },
+            {
+              key: 'componentDidUpdate',
+              value: function componentDidUpdate(prevProps) {
+                if (!prevProps.isOpen && this.props.isOpen) this.activate();
+                if (prevProps.isOpen && !this.props.isOpen) this.deactivate();
+              }
+            },
+            {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.deactivate();
+              }
+            },
+            {
+              key: 'activate',
+              value: function activate() {
+                this.opener = document.activeElement;
+                stack.push(this);
+                updateBackground();
+                document.addEventListener('keydown', this.onKeyDown, true);
+                document.addEventListener('keyup', this.onKeyUp, true);
+                document.addEventListener('focusin', this.onFocus, true);
+                this.focusFirst();
+              }
+            },
+            {
+              key: 'deactivate',
+              value: function deactivate() {
+                var _this$opener;
+                var index = stack.indexOf(this);
+                if (index === -1) return;
+                var wasTop = index === stack.length - 1;
+                stack.splice(index, 1);
+                document.removeEventListener('keydown', this.onKeyDown, true);
+                document.removeEventListener('keyup', this.onKeyUp, true);
+                document.removeEventListener('focusin', this.onFocus, true);
+                updateBackground();
+                if (
+                  wasTop &&
+                  (_this$opener = this.opener) !== null &&
+                  _this$opener !== void 0 &&
+                  _this$opener.isConnected &&
+                  !this.opener.closest('[inert]')
+                ) {
+                  this.opener.focus();
                 }
-              },
-              {
-                key: 'componentWillUnmount',
-                value: function componentWillUnmount() {
-                  document.removeEventListener(
-                    'keyup',
-                    this.handleGlobalKeydown
-                  );
-                  document.removeEventListener(
-                    'mousedown',
-                    this.handleGlobalMousedown
-                  );
-                }
-              },
-              {
-                key: 'render',
-                value: function render() {
-                  return /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('div', {
+              }
+            },
+            {
+              key: 'render',
+              value: function render() {
+                var _this2 = this;
+                if (!this.props.isOpen) return null;
+                return /*#__PURE__*/ (0,
+                react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(
+                  /*#__PURE__*/ (0,
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)('div', {
                     id: this.props.id,
-                    className: this.state.isOpen ? 'modal' : 'modal hide',
+                    className: 'modal',
+                    onMouseDown: function onMouseDown(event) {
+                      var _this2$props$onClose, _this2$props;
+                      if (
+                        event.target === event.currentTarget &&
+                        _this2.props.closeOnClickOutside &&
+                        _this2.isTop()
+                      )
+                        (_this2$props$onClose = (_this2$props = _this2.props)
+                          .onClose) === null ||
+                          _this2$props$onClose === void 0 ||
+                          _this2$props$onClose.call(_this2$props);
+                    },
                     children: /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(
                       'div',
                       {
                         className: 'modal-content',
                         ref: this.self,
+                        role: 'dialog',
+                        'aria-modal': 'true',
+                        'aria-labelledby': this.titleId,
+                        tabIndex: '-1',
                         children: [
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(
                             'div',
                             {
                               className: 'modal-header',
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
-                                  'span',
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
+                                  'h3',
                                   {
-                                    className: 'close',
-                                    onClick: this.close,
-                                    children: '\xD7'
+                                    id: this.titleId,
+                                    children: this.props.title
                                   }
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
-                                  'h3',
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
+                                  'button',
                                   {
-                                    children: this.props.title
+                                    type: 'button',
+                                    className: 'close',
+                                    'aria-label': 'Close '.concat(
+                                      this.props.title || 'dialog'
+                                    ),
+                                    onClick: this.props.onClose,
+                                    children: '\xD7'
                                   }
                                 )
                               ]
                             }
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
                             'div',
                             {
                               className: 'modal-body',
@@ -106739,40 +104581,24 @@ object-assign
                         ]
                       }
                     )
-                  });
-                }
+                  }),
+                  document.getElementById('aframeInspector') || document.body
+                );
               }
-            ],
-            [
-              {
-                key: 'getDerivedStateFromProps',
-                value: function getDerivedStateFromProps(props, state) {
-                  if (state.isOpen !== props.isOpen) {
-                    return {
-                      isOpen: props.isOpen
-                    };
-                  }
-                  return null;
-                }
-              }
-            ]
-          );
+            }
+          ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Modal, 'propTypes', {
-          id: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
-          children: prop_types__WEBPACK_IMPORTED_MODULE_2___default().oneOfType(
-            [
-              prop_types__WEBPACK_IMPORTED_MODULE_2___default().array,
-              prop_types__WEBPACK_IMPORTED_MODULE_2___default().element
-            ]
-          ).isRequired,
-          isOpen: prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool,
+          id: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          children:
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().node.isRequired,
+          isOpen: prop_types__WEBPACK_IMPORTED_MODULE_3___default().bool,
           extraCloseKeyCode:
-            prop_types__WEBPACK_IMPORTED_MODULE_2___default().number,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().number,
           closeOnClickOutside:
-            prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool,
-          onClose: prop_types__WEBPACK_IMPORTED_MODULE_2___default().func,
-          title: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().bool,
+          onClose: prop_types__WEBPACK_IMPORTED_MODULE_3___default().func,
+          title: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string
         });
         _defineProperty(Modal, 'defaultProps', {
           closeOnClickOutside: true
@@ -107011,7 +104837,7 @@ object-assign
                         description: 'Toggle local between global transform'
                       },
                       {
-                        key: ['supr | backspace'],
+                        key: ['delete | backspace'],
                         description: 'Delete selected entity'
                       }
                     ],
@@ -107049,15 +104875,27 @@ object-assign
                         description: 'Front view'
                       },
                       {
-                        key: ['ctrl | cmd', 'x'],
-                        description: 'Cut selected entity'
+                        key: ['ctrl | cmd', 's'],
+                        description: 'Save browser draft'
                       },
                       {
-                        key: ['ctrl | cmd', 'c'],
+                        key: ['ctrl | cmd', 'shift', 's'],
+                        description: 'Download scene HTML'
+                      },
+                      {
+                        key: ['ctrl | cmd', 'alt', 'r'],
+                        description: 'Restore browser draft'
+                      },
+                      {
+                        key: ['ctrl | cmd', 'f'],
+                        description: 'Search scene entities'
+                      },
+                      {
+                        key: ['ctrl | cmd', 'c'],
                         description: 'Copy selected entity'
                       },
                       {
-                        key: ['ctrl | cmd', 'v'],
+                        key: ['ctrl | cmd', 'v'],
                         description: 'Paste entity'
                       },
                       {
@@ -107179,19 +105017,23 @@ object-assign
           /* harmony export */ default: () => /* binding */ ModalPrimitive
           /* harmony export */
         });
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_2__
+            prop_types__WEBPACK_IMPORTED_MODULE_3__
           );
         /* harmony import */ var _icons_Primitives__WEBPACK_IMPORTED_MODULE_0__ =
           __webpack_require__(
             /*! ../icons/Primitives */ './src/components/icons/Primitives.js'
           );
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ =
+        /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(
+            /*! ./Modal */ './src/components/modals/Modal.js'
+          );
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -107265,92 +105107,61 @@ object-assign
           var handleSelect = function handleSelect(primitiveType) {
             onSelectPrimitive(primitiveType);
           };
-
-          // Stop propagation to prevent closing modal when clicking inside
-          var handleModalContentClick = function handleModalContentClick(e) {
-            e.stopPropagation();
-          };
           return /*#__PURE__*/ (0,
-          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('div', {
-            className: 'modal-overlay',
-            onClick: onClose,
-            children: /*#__PURE__*/ (0,
-            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)('div', {
-              className: 'modal-content',
+          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
+            _Modal__WEBPACK_IMPORTED_MODULE_1__['default'],
+            {
               id: 'primitive-modal',
-              onClick: handleModalContentClick,
-              children: [
-                /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)('div', {
-                  className: 'modal-header',
-                  children: [
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('h3', {
-                      children: 'Select Primitive'
-                    }),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
-                      'span',
-                      {
-                        className: 'close',
-                        onClick: onClose,
-                        children: '\xD7'
-                      }
-                    )
-                  ]
-                }),
-                /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('div', {
-                  className: 'modal-body',
-                  children: /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('div', {
-                    className: 'primitive-grid',
-                    children: PRIMITIVES.map(function (primitive) {
-                      return /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(
-                        'button',
-                        {
-                          className: 'primitive-button',
-                          onClick: function onClick() {
-                            return handleSelect(primitive.type);
-                          },
-                          title: 'Add '.concat(primitive.label),
-                          children: [
-                            typeof primitive.icon === 'string'
-                              ? /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
-                                  'div',
-                                  {
-                                    style: {
-                                      width: '50px',
-                                      height: '50px',
-                                      margin: '0 auto'
-                                    },
-                                    dangerouslySetInnerHTML: {
-                                      __html: primitive.icon
-                                    }
-                                  }
-                                )
-                              : primitive.icon,
-                            primitive.label
-                          ]
-                        },
-                        primitive.type
-                      );
-                    })
-                  })
+              title: 'Select Primitive',
+              isOpen: isOpen,
+              onClose: onClose,
+              children: /*#__PURE__*/ (0,
+              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)('div', {
+                className: 'primitive-grid',
+                children: PRIMITIVES.map(function (primitive) {
+                  return /*#__PURE__*/ (0,
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(
+                    'button',
+                    {
+                      className: 'primitive-button',
+                      onClick: function onClick() {
+                        return handleSelect(primitive.type);
+                      },
+                      title: 'Add '.concat(primitive.label),
+                      children: [
+                        typeof primitive.icon === 'string'
+                          ? /*#__PURE__*/ (0,
+                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
+                              'div',
+                              {
+                                style: {
+                                  width: '50px',
+                                  height: '50px',
+                                  margin: '0 auto'
+                                },
+                                dangerouslySetInnerHTML: {
+                                  __html: primitive.icon
+                                }
+                              }
+                            )
+                          : primitive.icon,
+                        primitive.label
+                      ]
+                    },
+                    primitive.type
+                  );
                 })
-              ]
-            })
-          });
+              })
+            }
+          );
         }
         ModalPrimitive.propTypes = {
           isOpen:
-            prop_types__WEBPACK_IMPORTED_MODULE_2___default().bool.isRequired,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().bool.isRequired,
           onClose:
-            prop_types__WEBPACK_IMPORTED_MODULE_2___default().func.isRequired,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().func.isRequired,
           onSelectPrimitive:
-            prop_types__WEBPACK_IMPORTED_MODULE_2___default().func.isRequired
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().func.isRequired
         };
 
         /***/
@@ -107377,33 +105188,25 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_6__
+            prop_types__WEBPACK_IMPORTED_MODULE_5__
           );
-        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__ =
-          __webpack_require__(
-            /*! @fortawesome/free-solid-svg-icons */ './node_modules/@fortawesome/free-solid-svg-icons/index.mjs'
-          );
-        /* harmony import */ var _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(
-            /*! ../AwesomeIcon */ './src/components/AwesomeIcon.js'
-          );
-        /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_2__ =
+        /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(/*! ../../lib/Events */ './src/lib/Events.js');
-        /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_3__ =
+        /* harmony import */ var _Modal__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! ./Modal */ './src/components/modals/Modal.js'
           );
-        /* harmony import */ var _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_4__ =
+        /* harmony import */ var _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! ../../lib/assetsUtils */ './src/lib/assetsUtils.js'
           );
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -107425,6 +105228,40 @@ object-assign
                   }),
             _typeof(o)
           );
+        }
+        function ownKeys(e, r) {
+          var t = Object.keys(e);
+          if (Object.getOwnPropertySymbols) {
+            var o = Object.getOwnPropertySymbols(e);
+            r &&
+              (o = o.filter(function (r) {
+                return Object.getOwnPropertyDescriptor(e, r).enumerable;
+              })),
+              t.push.apply(t, o);
+          }
+          return t;
+        }
+        function _objectSpread(e) {
+          for (var r = 1; r < arguments.length; r++) {
+            var t = null != arguments[r] ? arguments[r] : {};
+            r % 2
+              ? ownKeys(Object(t), !0).forEach(function (r) {
+                  _defineProperty(e, r, t[r]);
+                })
+              : Object.getOwnPropertyDescriptors
+                ? Object.defineProperties(
+                    e,
+                    Object.getOwnPropertyDescriptors(t)
+                  )
+                : ownKeys(Object(t)).forEach(function (r) {
+                    Object.defineProperty(
+                      e,
+                      r,
+                      Object.getOwnPropertyDescriptor(t, r)
+                    );
+                  });
+          }
+          return e;
         }
         function _toConsumableArray(r) {
           return (
@@ -107468,40 +105305,6 @@ object-assign
           (null == a || a > r.length) && (a = r.length);
           for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
           return n;
-        }
-        function ownKeys(e, r) {
-          var t = Object.keys(e);
-          if (Object.getOwnPropertySymbols) {
-            var o = Object.getOwnPropertySymbols(e);
-            r &&
-              (o = o.filter(function (r) {
-                return Object.getOwnPropertyDescriptor(e, r).enumerable;
-              })),
-              t.push.apply(t, o);
-          }
-          return t;
-        }
-        function _objectSpread(e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = null != arguments[r] ? arguments[r] : {};
-            r % 2
-              ? ownKeys(Object(t), !0).forEach(function (r) {
-                  _defineProperty(e, r, t[r]);
-                })
-              : Object.getOwnPropertyDescriptors
-                ? Object.defineProperties(
-                    e,
-                    Object.getOwnPropertyDescriptors(t)
-                  )
-                : ownKeys(Object(t)).forEach(function (r) {
-                    Object.defineProperty(
-                      e,
-                      r,
-                      Object.getOwnPropertyDescriptor(t, r)
-                    );
-                  });
-          }
-          return e;
         }
         function _classCallCheck(a, n) {
           if (!(a instanceof n))
@@ -107620,107 +105423,90 @@ object-assign
           return ('string' === r ? String : Number)(t);
         }
 
-        // Regex compiled once for performance
-
-        var VALID_ID_REGEX = /^[A-Za-z]+[\w-]*$/;
-        var getFilename = function getFilename(url) {
-          var converted =
-            arguments.length > 1 && arguments[1] !== undefined
-              ? arguments[1]
-              : false;
-          var filename = url.split('/').pop();
-          return converted ? getValidId(filename) : filename;
+        var validId = function validId(id) {
+          return /^[A-Za-z][\w-]*$/.test(id);
         };
-        var isValidId = function isValidId(id) {
-          return VALID_ID_REGEX.test(id);
+        function filename(src) {
+          try {
+            return decodeURIComponent(
+              new URL(src, document.baseURI).pathname.split('/').pop()
+            );
+          } catch (error) {
+            return '';
+          }
+        }
+        function assetName(src) {
+          return (
+            filename(src)
+              .replace(/\.[^.]*$/, '')
+              .replace(/[^\w-]/g, '-')
+              .replace(/^[^A-Za-z]+/, '') || 'texture'
+          );
+        }
+        var emptyPreview = function emptyPreview() {
+          return {
+            src: '',
+            name: '',
+            width: 0,
+            height: 0,
+            loaded: false
+          };
         };
-        var getValidId = function getValidId(name) {
-          return name
-            .split('.')
-            .shift()
-            .replace(/\s/, '-')
-            .replace(/^\d+\s*/, '')
-            .replace(/[\W]/, '')
-            .toLowerCase();
-        };
-
-        // Default preview state - reusable constant
-        var DEFAULT_PREVIEW = {
-          width: 0,
-          height: 0,
-          src: 'https://use.senangwebs.com/img/app_icon.png',
-          id: '',
-          name: '',
-          filename: '',
-          type: '',
-          value: '',
-          loaded: false
-        };
-
-        // Reusable ImageItem component to prevent repeated JSX
-        var ImageItem =
-          /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().memo(
-            function (_ref) {
-              var image = _ref.image,
-                onClick = _ref.onClick,
-                isSelected = _ref.isSelected;
-              return /*#__PURE__*/ (0,
-              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)('div', {
-                onClick: onClick,
-                className: 'gallery-item'.concat(isSelected ? ' selected' : ''),
+        function ImageItem(_ref) {
+          var image = _ref.image,
+            onClick = _ref.onClick,
+            isSelected = _ref.isSelected;
+          var src = image.type === 'registry' ? image.thumbnail : image.src;
+          return /*#__PURE__*/ (0,
+          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)('button', {
+            type: 'button',
+            onClick: onClick,
+            'aria-label': 'Select '.concat(image.name),
+            'aria-pressed': !!isSelected,
+            className: 'gallery-item'.concat(isSelected ? ' selected' : ''),
+            children: [
+              src &&
+                /*#__PURE__*/ (0,
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)('img', {
+                  width: '155',
+                  height: '155',
+                  loading: 'lazy',
+                  decoding: 'async',
+                  src: src,
+                  alt: ''
+                }),
+              /*#__PURE__*/ (0,
+              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)('span', {
+                className: 'detail',
                 children: [
                   /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)('img', {
-                    width: '155px',
-                    height: '155px',
-                    src: image.src,
-                    alt: image.name
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)('span', {
+                    className: 'title',
+                    children: image.name
                   }),
                   /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)('div', {
-                    className: 'detail',
-                    children: [
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                        'span',
-                        {
-                          className: 'title',
-                          children: image.name
-                        }
-                      ),
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                        'span',
-                        {
-                          children: getFilename(image.src)
-                        }
-                      ),
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                        'span',
-                        {
-                          children: [image.width, ' x ', image.height]
-                        }
-                      )
-                    ]
-                  })
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)('span', {
+                    children: filename(image.src)
+                  }),
+                  image.width > 0 &&
+                    /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                      'span',
+                      {
+                        children: [image.width, ' x ', image.height]
+                      }
+                    )
                 ]
-              });
-            }
-          );
-        ImageItem.displayName = 'ImageItem';
+              })
+            ]
+          });
+        }
         ImageItem.propTypes = {
-          image: prop_types__WEBPACK_IMPORTED_MODULE_6___default().shape({
-            src: prop_types__WEBPACK_IMPORTED_MODULE_6___default().string
-              .isRequired,
-            name: prop_types__WEBPACK_IMPORTED_MODULE_6___default().string
-              .isRequired,
-            width: prop_types__WEBPACK_IMPORTED_MODULE_6___default().number,
-            height: prop_types__WEBPACK_IMPORTED_MODULE_6___default().number
-          }).isRequired,
+          image:
+            prop_types__WEBPACK_IMPORTED_MODULE_5___default().object.isRequired,
           onClick:
-            prop_types__WEBPACK_IMPORTED_MODULE_6___default().func.isRequired,
-          isSelected: prop_types__WEBPACK_IMPORTED_MODULE_6___default().bool
+            prop_types__WEBPACK_IMPORTED_MODULE_5___default().func.isRequired,
+          isSelected: prop_types__WEBPACK_IMPORTED_MODULE_5___default().bool
         };
         var ModalTextures = /*#__PURE__*/ (function (_React$Component) {
           function ModalTextures() {
@@ -107741,8 +105527,12 @@ object-assign
               addNewDialogOpened: false,
               newUrl: '',
               isLoading: false,
+              isPreviewLoading: false,
               isGalleryLoading: false,
-              preview: _objectSpread({}, DEFAULT_PREVIEW)
+              error: '',
+              registryError: '',
+              assetError: '',
+              preview: emptyPreview()
             });
             _defineProperty(
               _this,
@@ -107751,247 +105541,237 @@ object-assign
             );
             _defineProperty(
               _this,
-              'previewImg',
-              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef()
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_1__.createEventScope)()
             );
-            _defineProperty(_this, 'handleAssetsImagesLoad', function () {
-              _this.generateFromRegistry();
-            });
-            _defineProperty(_this, 'onClose', function () {
-              var _this$props$onClose, _this$props;
-              (_this$props$onClose = (_this$props = _this.props).onClose) ===
-                null ||
-                _this$props$onClose === void 0 ||
-                _this$props$onClose.call(_this$props);
-            });
-            _defineProperty(_this, 'selectTexture', function (image) {
-              var _this$props$onClose2, _this$props2;
-              (_this$props$onClose2 = (_this$props2 = _this.props).onClose) ===
-                null ||
-                _this$props$onClose2 === void 0 ||
-                _this$props$onClose2.call(_this$props2, image);
-            });
-            _defineProperty(_this, 'generateFromRegistry', function () {
-              var images = AFRAME.INSPECTOR.assetsLoader.images;
-              var newImages = [];
-              var loadedCount = 0;
-              if (images.length === 0) {
-                _this.setState({
-                  registryImages: [],
-                  isGalleryLoading: false
-                });
-                return;
-              }
-              _this.setState({
-                isGalleryLoading: true
+            _defineProperty(_this, 'previewVersion', 0);
+            _defineProperty(_this, 'assetWatchers', []);
+            _defineProperty(_this, 'clearAssetWatchers', function () {
+              _this.assetWatchers.splice(0).forEach(function (remove) {
+                return remove();
               });
-              var checkAllLoaded = function checkAllLoaded() {
-                loadedCount++;
-                // Update state when all images are processed (loaded or errored)
-                if (loadedCount === images.length) {
-                  _this.setState({
-                    registryImages: newImages,
-                    isGalleryLoading: false
-                  });
-                }
-              };
-              images.forEach(function (imageData) {
-                var image = new Image();
-                image.onload = function () {
-                  newImages.push({
-                    id: imageData.id,
-                    src: imageData.fullPath,
-                    width: imageData.width,
-                    height: imageData.height,
-                    name: imageData.id,
-                    type: 'registry',
-                    tags: imageData.tags,
-                    value: 'url('.concat(imageData.fullPath, ')')
-                  });
-                  checkAllLoaded();
-                };
-                image.onerror = function () {
-                  console.warn(
-                    'Failed to load registry image: '.concat(
-                      imageData.fullThumbPath
-                    )
-                  );
-                  checkAllLoaded();
-                };
-                image.src = imageData.fullThumbPath;
-              });
+              clearTimeout(_this.assetTimer);
             });
             _defineProperty(_this, 'generateFromAssets', function () {
-              var assets = Array.from(
-                document.querySelectorAll('a-assets img')
+              _this.clearAssetWatchers();
+              var assets = _toConsumableArray(
+                AFRAME.INSPECTOR.sceneEl.querySelectorAll('a-assets img')
               );
-              var newImages = [];
-              var seenIds = new Set();
-              var loadedCount = 0;
-              if (assets.length === 0) {
-                _this.setState({
-                  assetsImages: []
+              var ready = assets.filter(function (asset) {
+                return asset.complete && asset.naturalWidth > 0 && asset.id;
+              });
+              var pending = assets.filter(function (asset) {
+                return !asset.complete;
+              });
+              var broken = assets.some(function (asset) {
+                return asset.complete && !asset.naturalWidth;
+              });
+              _this.setState({
+                assetsImages: ready.map(function (asset) {
+                  return {
+                    id: asset.id,
+                    src: asset.src,
+                    name: asset.id,
+                    width: asset.naturalWidth,
+                    height: asset.naturalHeight,
+                    type: 'asset',
+                    value: '#' + asset.id
+                  };
+                }),
+                assetError: broken
+                  ? 'Some project images could not be loaded. Check their URLs, then retry.'
+                  : ''
+              });
+              pending.forEach(function (asset) {
+                asset.addEventListener('load', _this.generateFromAssets);
+                asset.addEventListener('error', _this.generateFromAssets);
+                _this.assetWatchers.push(function () {
+                  asset.removeEventListener('load', _this.generateFromAssets);
+                  asset.removeEventListener('error', _this.generateFromAssets);
                 });
-                return;
+              });
+              if (pending.length) {
+                _this.assetTimer = setTimeout(function () {
+                  if (_this.mounted && _this.props.isOpen)
+                    _this.setState({
+                      assetError:
+                        'Some project images are taking too long to load. Check their URLs, then retry.'
+                    });
+                }, 15000);
               }
-              assets.forEach(function (asset) {
-                var image = new Image();
-                image.onload = function () {
-                  // Prevent duplicates
-                  if (!seenIds.has(asset.id)) {
-                    seenIds.add(asset.id);
-                    newImages.push({
-                      id: asset.id,
-                      src: image.src,
+            });
+            _defineProperty(_this, 'generateFromRegistry', function () {
+              _this.setState({
+                registryImages: AFRAME.INSPECTOR.assetsLoader.images.map(
+                  function (image) {
+                    return {
+                      id: image.id,
+                      src: image.fullPath,
+                      thumbnail: image.fullThumbPath,
+                      name: image.id,
                       width: image.width,
                       height: image.height,
-                      name: asset.id,
-                      type: 'asset',
-                      value: '#' + asset.id
-                    });
+                      tags: image.tags || [],
+                      type: 'registry'
+                    };
                   }
-                  loadedCount++;
-                  // Batch update when all images are loaded
-                  if (loadedCount === assets.length) {
-                    _this.setState({
-                      assetsImages: newImages
-                    });
-                  }
-                };
-                image.src = asset.src;
+                ),
+                isGalleryLoading: false,
+                registryError: ''
               });
             });
-            _defineProperty(_this, 'onNewUrl', function (event) {
-              if (event.keyCode !== 13) return;
-              _this.loadImageFromUrl();
-            });
-            _defineProperty(_this, 'loadImageFromUrl', function () {
-              var _this$imageName$curre;
-              var url = _this.state.newUrl;
-              if (!url) return;
-              var previewEl = _this.previewImg.current;
-              var _handleLoad = function handleLoad() {
-                var src = previewEl.src;
-                _this.setState({
-                  preview: {
-                    width: previewEl.naturalWidth,
-                    height: previewEl.naturalHeight,
-                    src: src,
-                    id: '',
-                    name: getFilename(src, true),
-                    filename: getFilename(src),
-                    type: 'new',
-                    loaded: true,
-                    value: 'url('.concat(src, ')')
-                  }
-                });
-                previewEl.removeEventListener('load', _handleLoad);
-              };
-              previewEl.addEventListener('load', _handleLoad);
-              previewEl.src = url;
-              (_this$imageName$curre = _this.imageName.current) === null ||
-                _this$imageName$curre === void 0 ||
-                _this$imageName$curre.focus();
-            });
-            _defineProperty(_this, 'onNameKeyUp', function (event) {
-              if (event.keyCode === 13 && _this.isValidAsset()) {
-                _this.addNewAsset();
-              }
-            });
-            _defineProperty(_this, 'onNameChanged', function (event) {
-              _this.setState(function (prevState) {
-                return {
-                  preview: _objectSpread(
-                    _objectSpread({}, prevState.preview),
-                    {},
-                    {
-                      name: event.target.value
-                    }
-                  )
-                };
-              });
+            _defineProperty(_this, 'ensureRegistry', function () {
+              var loader = AFRAME.INSPECTOR.assetsLoader;
+              if (loader.hasLoaded) _this.generateFromRegistry();
+              else loader.load();
             });
             _defineProperty(_this, 'toggleNewDialog', function () {
-              _this.setState(function (prevState) {
-                return {
-                  addNewDialogOpened: !prevState.addNewDialogOpened
+              var _this$cancelPreview, _this2;
+              (_this$cancelPreview = (_this2 = _this).cancelPreview) === null ||
+                _this$cancelPreview === void 0 ||
+                _this$cancelPreview.call(_this2);
+              _this.setState(
+                function (state) {
+                  return {
+                    addNewDialogOpened: !state.addNewDialogOpened,
+                    isPreviewLoading: false,
+                    error: '',
+                    preview: emptyPreview()
+                  };
+                },
+                function () {
+                  if (_this.state.addNewDialogOpened) _this.ensureRegistry();
+                }
+              );
+            });
+            _defineProperty(
+              _this,
+              'loadPreview',
+              function (src, suggestedName) {
+                var _this$cancelPreview2, _this3;
+                (_this$cancelPreview2 = (_this3 = _this).cancelPreview) ===
+                  null ||
+                  _this$cancelPreview2 === void 0 ||
+                  _this$cancelPreview2.call(_this3);
+                var version = ++_this.previewVersion;
+                var image = new Image();
+                var timer;
+                var clear = function clear() {
+                  clearTimeout(timer);
+                  image.onload = image.onerror = null;
                 };
-              });
+                _this.cancelPreview = function () {
+                  _this.previewVersion++;
+                  clear();
+                };
+                _this.setState({
+                  preview: emptyPreview(),
+                  isPreviewLoading: true,
+                  error: ''
+                });
+                var fail = function fail() {
+                  clear();
+                  if (
+                    _this.mounted &&
+                    _this.props.isOpen &&
+                    version === _this.previewVersion
+                  ) {
+                    _this.setState({
+                      isPreviewLoading: false,
+                      error:
+                        'The image could not be loaded. Check the URL and image permissions, then retry.'
+                    });
+                  }
+                };
+                image.crossOrigin = 'anonymous';
+                image.onload = function () {
+                  clear();
+                  if (
+                    !_this.mounted ||
+                    !_this.props.isOpen ||
+                    version !== _this.previewVersion
+                  )
+                    return;
+                  _this.setState(
+                    {
+                      isPreviewLoading: false,
+                      preview: {
+                        src: image.src,
+                        name: suggestedName || assetName(src),
+                        width: image.naturalWidth,
+                        height: image.naturalHeight,
+                        loaded: true
+                      }
+                    },
+                    function () {
+                      var _this$imageName$curre;
+                      return (_this$imageName$curre =
+                        _this.imageName.current) === null ||
+                        _this$imageName$curre === void 0
+                        ? void 0
+                        : _this$imageName$curre.focus();
+                    }
+                  );
+                };
+                image.onerror = fail;
+                timer = setTimeout(fail, 15000);
+                image.src = src;
+              }
+            );
+            _defineProperty(_this, 'loadImageFromUrl', function () {
+              var src = _this.state.newUrl.trim();
+              if (src) _this.loadPreview(src);
             });
-            _defineProperty(_this, 'clear', function () {
-              _this.setState({
-                preview: _objectSpread({}, DEFAULT_PREVIEW),
-                newUrl: ''
-              });
-            });
-            _defineProperty(_this, 'onUrlChange', function (e) {
-              _this.setState({
-                newUrl: e.target.value
-              });
-            });
-            _defineProperty(_this, 'isValidAsset', function () {
-              var preview = _this.state.preview;
-              return preview.loaded && isValidId(preview.name);
+            _defineProperty(_this, 'validAsset', function () {
+              var _this$state = _this.state,
+                preview = _this$state.preview,
+                isLoading = _this$state.isLoading,
+                isPreviewLoading = _this$state.isPreviewLoading;
+              var existing = document.getElementById(preview.name);
+              return (
+                preview.loaded &&
+                validId(preview.name) &&
+                !isLoading &&
+                !isPreviewLoading &&
+                (!existing ||
+                  (existing.tagName === 'IMG' && existing.src === preview.src))
+              );
             });
             _defineProperty(_this, 'addNewAsset', function () {
-              _this.setState({
-                isLoading: true
-              });
+              if (!_this.validAsset()) return;
               var preview = _this.state.preview;
-              (0, _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_4__.insertNewAsset)(
+              if (document.getElementById(preview.name)) {
+                _this.setState({
+                  addNewDialogOpened: false,
+                  preview: emptyPreview()
+                });
+                _this.generateFromAssets();
+                return;
+              }
+              _this.setState({
+                isLoading: true,
+                error: ''
+              });
+              (0, _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_3__.insertNewAsset)(
                 'img',
                 preview.name,
                 preview.src,
                 true,
                 function () {
-                  _this.generateFromAssets();
+                  if (!_this.mounted || !_this.props.isOpen) return;
                   _this.setState({
                     addNewDialogOpened: false,
-                    isLoading: false
+                    isLoading: false,
+                    preview: emptyPreview()
                   });
-                  _this.clear();
-                }
-              );
-            });
-            _defineProperty(_this, 'onChangeFilter', function (e) {
-              _this.setState({
-                filterText: e.target.value
-              });
-            });
-            _defineProperty(_this, 'selectRegistryImage', function (image) {
-              var _this$imageName$curre2;
-              _this.setState({
-                preview: {
-                  width: image.width,
-                  height: image.height,
-                  src: image.src,
-                  id: '',
-                  name: getFilename(image.name, true),
-                  filename: getFilename(image.src),
-                  type: 'registry',
-                  loaded: true,
-                  value: 'url('.concat(image.src, ')')
-                }
-              });
-              (_this$imageName$curre2 = _this.imageName.current) === null ||
-                _this$imageName$curre2 === void 0 ||
-                _this$imageName$curre2.focus();
-            });
-            _defineProperty(_this, 'getFilteredRegistryImages', function () {
-              var filterText = _this.state.filterText.toUpperCase();
-              if (!filterText) return _this.state.registryImages;
-              return _this.state.registryImages.filter(function (image) {
-                return (
-                  image.id.toUpperCase().includes(filterText) ||
-                  image.name.toUpperCase().includes(filterText) ||
-                  image.tags.includes(filterText)
-                );
-              });
-            });
-            _defineProperty(_this, 'getSortedAssetImages', function () {
-              return _toConsumableArray(_this.state.assetsImages).sort(
-                function (a, b) {
-                  return a.id.localeCompare(b.id);
+                  _this.generateFromAssets();
+                },
+                function (error) {
+                  if (_this.mounted && _this.props.isOpen)
+                    _this.setState({
+                      isLoading: false,
+                      error: error.message
+                    });
                 }
               );
             });
@@ -108002,103 +105782,161 @@ object-assign
             {
               key: 'componentDidMount',
               value: function componentDidMount() {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'assetsimagesload',
-                  this.handleAssetsImagesLoad
-                );
-                this.generateFromAssets();
-              }
-            },
-            {
-              key: 'componentWillUnmount',
-              value: function componentWillUnmount() {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].off(
-                  'assetsimagesload',
-                  this.handleAssetsImagesLoad
-                );
+                var _this4 = this;
+                this.mounted = true;
+                this.events.on('assetsimagesload', this.generateFromRegistry);
+                this.events.on('assetsimagesloading', function () {
+                  return _this4.setState({
+                    isGalleryLoading: true,
+                    registryError: ''
+                  });
+                });
+                this.events.on('assetsimageserror', function (registryError) {
+                  return _this4.setState({
+                    isGalleryLoading: false,
+                    registryError: registryError
+                  });
+                });
+                if (this.props.isOpen) this.generateFromAssets();
               }
             },
             {
               key: 'componentDidUpdate',
               value: function componentDidUpdate(prevProps) {
-                var isOpen = this.props.isOpen;
-                if (isOpen && !AFRAME.INSPECTOR.assetsLoader.hasLoaded) {
-                  AFRAME.INSPECTOR.assetsLoader.load();
-                }
-                if (isOpen && isOpen !== prevProps.isOpen) {
+                if (this.props.isOpen && !prevProps.isOpen) {
+                  this.setState({
+                    addNewDialogOpened: false,
+                    error: '',
+                    preview: emptyPreview(),
+                    isLoading: false,
+                    isPreviewLoading: false
+                  });
                   this.generateFromAssets();
                 }
+                if (!this.props.isOpen && prevProps.isOpen) {
+                  var _this$cancelPreview3;
+                  (_this$cancelPreview3 = this.cancelPreview) === null ||
+                    _this$cancelPreview3 === void 0 ||
+                    _this$cancelPreview3.call(this);
+                  this.clearAssetWatchers();
+                }
+              }
+            },
+            {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                var _this$cancelPreview4;
+                this.mounted = false;
+                (_this$cancelPreview4 = this.cancelPreview) === null ||
+                  _this$cancelPreview4 === void 0 ||
+                  _this$cancelPreview4.call(this);
+                this.clearAssetWatchers();
+                this.events.dispose();
               }
             },
             {
               key: 'render',
               value: function render() {
-                var _this2 = this;
-                var _this$props3 = this.props,
-                  isOpen = _this$props3.isOpen,
-                  selectedTexture = _this$props3.selectedTexture;
-                var _this$state = this.state,
-                  preview = _this$state.preview,
-                  addNewDialogOpened = _this$state.addNewDialogOpened,
-                  newUrl = _this$state.newUrl,
-                  filterText = _this$state.filterText,
-                  isLoading = _this$state.isLoading;
-                var validUrl = isValidId(preview.name);
-                var validAsset = this.isValidAsset();
-                var addNewAssetButton = addNewDialogOpened
-                  ? 'BACK'
-                  : 'LOAD TEXTURE';
+                var _this5 = this;
+                if (!this.props.isOpen) return null;
+                var _this$state2 = this.state,
+                  preview = _this$state2.preview,
+                  addNewDialogOpened = _this$state2.addNewDialogOpened,
+                  filterText = _this$state2.filterText,
+                  newUrl = _this$state2.newUrl,
+                  isLoading = _this$state2.isLoading,
+                  isPreviewLoading = _this$state2.isPreviewLoading,
+                  isGalleryLoading = _this$state2.isGalleryLoading,
+                  error = _this$state2.error,
+                  registryError = _this$state2.registryError,
+                  assetError = _this$state2.assetError;
+                var filter = filterText.toLowerCase();
+                var images = this.state.registryImages.filter(function (image) {
+                  return [image.id]
+                    .concat(_toConsumableArray(image.tags))
+                    .some(function (text) {
+                      return String(text).toLowerCase().includes(filter);
+                    });
+                });
+                var existing = document.getElementById(preview.name);
+                var nameConflict =
+                  !!preview.name &&
+                  (!validId(preview.name) ||
+                    (existing && existing.src !== preview.src));
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                  _Modal__WEBPACK_IMPORTED_MODULE_3__['default'],
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                  _Modal__WEBPACK_IMPORTED_MODULE_2__['default'],
                   {
                     id: 'textureModal',
                     title: 'Textures',
-                    isOpen: isOpen,
-                    onClose: this.onClose,
+                    isOpen: this.props.isOpen,
+                    onClose: this.props.onClose,
                     closeOnClickOutside: false,
                     children: [
                       /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                         'div',
                         {
                           className: 'texture-toolbar',
                           children: [
                             /*#__PURE__*/ (0,
-                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                               'button',
                               {
+                                type: 'button',
                                 onClick: this.toggleNewDialog,
-                                children: addNewAssetButton
+                                children: addNewDialogOpened
+                                  ? 'Back'
+                                  : 'Load texture'
                               }
                             ),
                             addNewDialogOpened &&
                               /*#__PURE__*/ (0,
-                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                                 'div',
                                 {
                                   className: 'url-input-group',
                                   children: [
                                     /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                       'input',
                                       {
-                                        type: 'text',
-                                        className: 'imageUrl',
+                                        type: 'url',
+                                        'aria-label': 'Image URL',
                                         placeholder: 'Paste image URL',
                                         value: newUrl,
-                                        onChange: this.onUrlChange,
-                                        onKeyUp: this.onNewUrl
+                                        onChange: function onChange(event) {
+                                          var _this5$cancelPreview;
+                                          (_this5$cancelPreview =
+                                            _this5.cancelPreview) === null ||
+                                            _this5$cancelPreview === void 0 ||
+                                            _this5$cancelPreview.call(_this5);
+                                          _this5.setState({
+                                            newUrl: event.target.value,
+                                            preview: emptyPreview(),
+                                            isPreviewLoading: false,
+                                            error: ''
+                                          });
+                                        },
+                                        onKeyDown: function onKeyDown(event) {
+                                          if (event.key === 'Enter') {
+                                            event.preventDefault();
+                                            _this5.loadImageFromUrl();
+                                          }
+                                        }
                                       }
                                     ),
                                     /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                       'button',
                                       {
-                                        className: 'load-url-btn',
+                                        type: 'button',
+                                        disabled:
+                                          !newUrl.trim() ||
+                                          isPreviewLoading ||
+                                          isLoading,
                                         onClick: this.loadImageFromUrl,
-                                        disabled: !newUrl,
-                                        children: 'LOAD'
+                                        children: 'Load'
                                       }
                                     )
                                   ]
@@ -108107,169 +105945,202 @@ object-assign
                           ]
                         }
                       ),
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                        'div',
-                        {
-                          className: addNewDialogOpened ? '' : 'hide',
-                          children: /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                      error &&
+                        /*#__PURE__*/ (0,
+                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                          'p',
+                          {
+                            role: 'alert',
+                            className: 'form-error',
+                            children: error
+                          }
+                        ),
+                      addNewDialogOpened
+                        ? /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                             'div',
                             {
                               className: 'newimage',
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                                   'div',
                                   {
                                     className: 'new_asset_options',
                                     children: [
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                        'div',
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                        'p',
                                         {
-                                          className: 'registry-section',
-                                          children: [
-                                            /*#__PURE__*/ (0,
-                                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                              'span',
-                                              {
-                                                className: 'section-label',
-                                                children:
-                                                  'Select from assets registry:'
-                                              }
-                                            ),
-                                            /*#__PURE__*/ (0,
-                                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                              'div',
-                                              {
-                                                className: 'assets search',
-                                                children: [
-                                                  /*#__PURE__*/ (0,
-                                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                                    'input',
-                                                    {
-                                                      placeholder:
-                                                        'Filter textures...',
-                                                      value: filterText,
-                                                      onChange:
-                                                        this.onChangeFilter
-                                                    }
-                                                  ),
-                                                  /*#__PURE__*/ (0,
-                                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                                    _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                                                    {
-                                                      icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faSearch
-                                                    }
-                                                  )
-                                                ]
-                                              }
-                                            )
-                                          ]
+                                          className: 'section-label',
+                                          children:
+                                            'Choose a library texture or enter an image URL.'
                                         }
                                       ),
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                        'input',
+                                        {
+                                          'aria-label': 'Filter textures',
+                                          placeholder: 'Filter textures...',
+                                          value: filterText,
+                                          onChange: function onChange(event) {
+                                            return _this5.setState({
+                                              filterText: event.target.value
+                                            });
+                                          }
+                                        }
+                                      ),
+                                      registryError &&
+                                        /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                                          'p',
+                                          {
+                                            role: 'alert',
+                                            className: 'form-error',
+                                            children: [
+                                              registryError,
+                                              ' Go back and choose Load texture to retry.'
+                                            ]
+                                          }
+                                        ),
+                                      /*#__PURE__*/ (0,
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                                         'div',
                                         {
                                           className: 'gallery',
-                                          children: this.state.isGalleryLoading
-                                            ? /*#__PURE__*/ (0,
-                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                                'div',
-                                                {
-                                                  className:
-                                                    'loading-indicator',
-                                                  children:
-                                                    'Loading textures...'
-                                                }
-                                              )
-                                            : this.getFilteredRegistryImages().map(
-                                                function (image) {
+                                          'aria-busy': isGalleryLoading,
+                                          children: [
+                                            isGalleryLoading
+                                              ? /*#__PURE__*/ (0,
+                                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                                  'p',
+                                                  {
+                                                    role: 'status',
+                                                    children:
+                                                      'Loading texture library...'
+                                                  }
+                                                )
+                                              : images.map(function (image) {
                                                   return /*#__PURE__*/ (0,
-                                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                                     ImageItem,
                                                     {
                                                       image: image,
                                                       onClick:
                                                         function onClick() {
-                                                          return _this2.selectRegistryImage(
-                                                            image
+                                                          return _this5.loadPreview(
+                                                            image.src,
+                                                            assetName(image.src)
                                                           );
                                                         }
                                                     },
                                                     image.src
                                                   );
+                                                }),
+                                            !isGalleryLoading &&
+                                              !registryError &&
+                                              !images.length &&
+                                              /*#__PURE__*/ (0,
+                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                                'p',
+                                                {
+                                                  children:
+                                                    'No matching textures.'
                                                 }
                                               )
+                                          ]
                                         }
                                       )
                                     ]
                                   }
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                                   'div',
                                   {
                                     className: 'preview',
+                                    'aria-busy': isPreviewLoading || isLoading,
                                     children: [
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                        'span',
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                        'label',
                                         {
-                                          className: 'section-label',
-                                          children: 'Name:'
+                                          htmlFor: 'texture-name',
+                                          children: 'Texture name'
                                         }
                                       ),
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                         'input',
                                         {
+                                          id: 'texture-name',
                                           ref: this.imageName,
-                                          className:
-                                            preview.name.length > 0 && !validUrl
-                                              ? 'error'
-                                              : '',
                                           type: 'text',
-                                          placeholder: 'Enter texture name',
                                           value: preview.name,
-                                          onChange: this.onNameChanged,
-                                          onKeyUp: this.onNameKeyUp
+                                          'aria-invalid': nameConflict,
+                                          'aria-describedby': nameConflict
+                                            ? 'texture-name-error'
+                                            : undefined,
+                                          onChange: function onChange(event) {
+                                            return _this5.setState({
+                                              preview: _objectSpread(
+                                                _objectSpread({}, preview),
+                                                {},
+                                                {
+                                                  name: event.target.value
+                                                }
+                                              )
+                                            });
+                                          },
+                                          onKeyDown: function onKeyDown(event) {
+                                            if (event.key === 'Enter') {
+                                              event.preventDefault();
+                                              _this5.addNewAsset();
+                                            }
+                                          }
                                         }
                                       ),
-                                      /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                        'img',
-                                        {
-                                          ref: this.previewImg,
-                                          width: '242px',
-                                          height: '242px',
-                                          src: preview.src,
-                                          alt: 'Preview'
-                                        }
-                                      ),
+                                      nameConflict &&
+                                        /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                          'p',
+                                          {
+                                            id: 'texture-name-error',
+                                            className: 'form-error',
+                                            children:
+                                              'Use a unique name starting with a letter; letters, numbers, hyphens and underscores are allowed.'
+                                          }
+                                        ),
+                                      isPreviewLoading &&
+                                        /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                          'p',
+                                          {
+                                            role: 'status',
+                                            children: 'Loading image...'
+                                          }
+                                        ),
                                       preview.loaded &&
                                         /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                          'div',
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment,
                                           {
-                                            className: 'detail',
                                             children: [
                                               /*#__PURE__*/ (0,
-                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                                'span',
+                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                                'img',
                                                 {
-                                                  className: 'title',
-                                                  title: preview.filename,
-                                                  children: preview.filename
+                                                  width: '242',
+                                                  height: '242',
+                                                  src: preview.src,
+                                                  alt: 'Selected texture preview'
                                                 }
                                               ),
                                               /*#__PURE__*/ (0,
-                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                                'span',
+                                              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                                                'p',
                                                 {
-                                                  className: 'dimensions',
                                                   children: [
                                                     preview.width,
                                                     ' x ',
@@ -108281,14 +106152,15 @@ object-assign
                                           }
                                         ),
                                       /*#__PURE__*/ (0,
-                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                         'button',
                                         {
-                                          disabled: !validAsset || isLoading,
+                                          type: 'button',
+                                          disabled: !this.validAsset(),
                                           onClick: this.addNewAsset,
                                           children: isLoading
-                                            ? 'LOADING...'
-                                            : 'LOAD THIS TEXTURE'
+                                            ? 'Adding texture...'
+                                            : 'Load this texture'
                                         }
                                       )
                                     ]
@@ -108297,56 +106169,83 @@ object-assign
                               ]
                             }
                           )
-                        }
-                      ),
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                        'div',
-                        {
-                          className: addNewDialogOpened ? 'hide' : '',
-                          children: [
-                            /*#__PURE__*/ (0,
-                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                              'div',
-                              {
-                                children: /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                  'span',
+                        : /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                            'div',
+                            {
+                              children: [
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                  'p',
                                   {
                                     className: 'section-label',
-                                    children:
-                                      'Following are assets loaded in this project:'
+                                    children: 'Project textures'
                                   }
-                                )
-                              }
-                            ),
-                            /*#__PURE__*/ (0,
-                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                              'div',
-                              {
-                                className: 'gallery',
-                                children: this.getSortedAssetImages().map(
-                                  function (image) {
-                                    return /*#__PURE__*/ (0,
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                      ImageItem,
-                                      {
-                                        image: image,
-                                        onClick: function onClick() {
-                                          return _this2.selectTexture(image);
-                                        },
-                                        isSelected:
-                                          selectedTexture === '#' + image.id
-                                      },
-                                      image.id
-                                    );
+                                ),
+                                assetError &&
+                                  /*#__PURE__*/ (0,
+                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                                    'p',
+                                    {
+                                      role: 'alert',
+                                      className: 'form-error',
+                                      children: [
+                                        assetError,
+                                        ' Close and reopen Textures to retry.'
+                                      ]
+                                    }
+                                  ),
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                  'div',
+                                  {
+                                    className: 'gallery',
+                                    children: _toConsumableArray(
+                                      this.state.assetsImages
+                                    )
+                                      .sort(function (a, b) {
+                                        return a.id.localeCompare(b.id);
+                                      })
+                                      .map(function (image) {
+                                        return /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                          ImageItem,
+                                          {
+                                            image: image,
+                                            isSelected:
+                                              _this5.props.selectedTexture ===
+                                              image.value,
+                                            onClick: function onClick() {
+                                              var _this5$props$onClose,
+                                                _this5$props;
+                                              return (_this5$props$onClose =
+                                                (_this5$props = _this5.props)
+                                                  .onClose) === null ||
+                                                _this5$props$onClose === void 0
+                                                ? void 0
+                                                : _this5$props$onClose.call(
+                                                    _this5$props,
+                                                    image
+                                                  );
+                                            }
+                                          },
+                                          image.id
+                                        );
+                                      })
                                   }
-                                )
-                              }
-                            )
-                          ]
-                        }
-                      )
+                                ),
+                                !this.state.assetsImages.length &&
+                                  /*#__PURE__*/ (0,
+                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                    'p',
+                                    {
+                                      children:
+                                        'No project textures yet. Choose Load texture to add one.'
+                                    }
+                                  )
+                              ]
+                            }
+                          )
                     ]
                   }
                 );
@@ -108355,10 +106254,10 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(ModalTextures, 'propTypes', {
-          isOpen: prop_types__WEBPACK_IMPORTED_MODULE_6___default().bool,
-          onClose: prop_types__WEBPACK_IMPORTED_MODULE_6___default().func,
+          isOpen: prop_types__WEBPACK_IMPORTED_MODULE_5___default().bool,
+          onClose: prop_types__WEBPACK_IMPORTED_MODULE_5___default().func,
           selectedTexture:
-            prop_types__WEBPACK_IMPORTED_MODULE_6___default().string
+            prop_types__WEBPACK_IMPORTED_MODULE_5___default().string
         });
 
         /***/
@@ -108566,13 +106465,24 @@ object-assign
                 _this.props.entity.object3D
               );
             });
-            _defineProperty(_this, 'toggleVisibility', function () {
+            _defineProperty(_this, 'toggleVisibility', function (event) {
+              event.stopPropagation();
               var entity = _this.props.entity;
               var visible =
                 entity.tagName.toLowerCase() === 'a-scene'
                   ? entity.object3D.visible
                   : entity.getAttribute('visible');
               entity.setAttribute('visible', !visible);
+              _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
+                'entityupdate',
+                {
+                  entity: entity,
+                  component: 'visible',
+                  property: '',
+                  value: !visible
+                }
+              );
+              _this.forceUpdate();
             });
             _defineProperty(_this, 'onDragStart', function (e) {
               if (_this.props.entity.tagName.toLowerCase() === 'a-scene') {
@@ -108636,72 +106546,89 @@ object-assign
                   tagName === 'a-scene'
                     ? null
                     : /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('a', {
-                        onClick: function onClick() {
-                          return (0,
-                          _lib_entity__WEBPACK_IMPORTED_MODULE_3__.cloneEntity)(
-                            entity
-                          );
-                        },
-                        title: 'Clone entity',
-                        className: 'button',
-                        children: /*#__PURE__*/ (0,
-                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                          {
-                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faClone
-                          }
-                        )
-                      });
+                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                        'button',
+                        {
+                          type: 'button',
+                          onClick: function onClick(event) {
+                            event.stopPropagation();
+                            (0,
+                            _lib_entity__WEBPACK_IMPORTED_MODULE_3__.cloneEntity)(
+                              entity
+                            );
+                          },
+                          title: 'Clone entity',
+                          className: 'button',
+                          children: /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                            {
+                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faClone
+                            }
+                          )
+                        }
+                      );
                 var removeButton =
                   tagName === 'a-scene'
                     ? null
                     : /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('a', {
-                        onClick: function onClick(event) {
-                          event.stopPropagation();
-                          (0,
-                          _lib_entity__WEBPACK_IMPORTED_MODULE_3__.removeEntity)(
-                            entity
-                          );
-                        },
-                        title: 'Remove entity',
-                        className: 'button',
-                        children: /*#__PURE__*/ (0,
-                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                          {
-                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faTrashAlt
-                          }
-                        )
-                      });
+                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                        'button',
+                        {
+                          type: 'button',
+                          onClick: function onClick(event) {
+                            event.stopPropagation();
+                            (0,
+                            _lib_entity__WEBPACK_IMPORTED_MODULE_3__.removeEntity)(
+                              entity
+                            );
+                          },
+                          title: 'Remove entity',
+                          className: 'button',
+                          children: /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                            {
+                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faTrashAlt
+                            }
+                          )
+                        }
+                      );
 
                 // Add spaces depending on depth.
-                var pad = '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(this.props.depth);
+                var label = entity.id || tagName;
                 var collapse;
                 if (entity.children.length > 0 && !isFiltering) {
                   collapse = /*#__PURE__*/ (0,
-                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('span', {
-                    onClick: function onClick() {
-                      return _this2.props.toggleExpandedCollapsed(entity);
-                    },
-                    className: 'collapsespace',
-                    children: isExpanded
-                      ? /*#__PURE__*/ (0,
-                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                          {
-                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faCaretDown
-                          }
-                        )
-                      : /*#__PURE__*/ (0,
-                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                          {
-                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faCaretRight
-                          }
-                        )
-                  });
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                    'button',
+                    {
+                      type: 'button',
+                      tabIndex: this.props.isSelected ? 0 : -1,
+                      'aria-label':
+                        (isExpanded ? 'Collapse ' : 'Expand ') + label,
+                      onClick: function onClick(event) {
+                        event.stopPropagation();
+                        _this2.props.toggleExpandedCollapsed(entity);
+                      },
+                      className: 'collapsespace',
+                      children: isExpanded
+                        ? /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                            {
+                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faCaretDown
+                            }
+                          )
+                        : /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                            {
+                              icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faCaretRight
+                            }
+                          )
+                    }
+                  );
                 } else {
                   collapse = /*#__PURE__*/ (0,
                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('span', {
@@ -108715,7 +106642,12 @@ object-assign
                     ? entity.object3D.visible
                     : entity.getAttribute('visible');
                 var visibilityButton = /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('i', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)('button', {
+                  type: 'button',
+                  className: 'visibility-button',
+                  tabIndex: this.props.isSelected ? 0 : -1,
+                  'aria-label': (visible ? 'Hide ' : 'Show ') + label,
+                  'aria-pressed': !!visible,
                   title: 'Toggle entity visibility',
                   onClick: this.toggleVisibility,
                   children: visible
@@ -108748,6 +106680,15 @@ object-assign
                 });
                 return /*#__PURE__*/ (0,
                 react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)('div', {
+                  id: this.props.id,
+                  role: 'treeitem',
+                  'aria-label': label,
+                  'aria-level': this.props.depth + 1,
+                  'aria-selected': this.props.isSelected,
+                  'aria-expanded':
+                    entity.children.length && !isFiltering
+                      ? isExpanded
+                      : undefined,
                   className: className,
                   onClick: this.onClick,
                   draggable: tagName !== 'a-scene',
@@ -108760,18 +106701,12 @@ object-assign
                     react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(
                       'span',
                       {
+                        className: 'entity-label',
+                        style: {
+                          paddingLeft: this.props.depth * 12
+                        },
                         children: [
                           visibilityButton,
-                          /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
-                            'span',
-                            {
-                              className: 'entityChildPadding',
-                              dangerouslySetInnerHTML: {
-                                __html: pad
-                              }
-                            }
-                          ),
                           collapse,
                           /*#__PURE__*/ (0,
                           react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
@@ -108801,6 +106736,7 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Entity, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_8___default().string,
           depth: prop_types__WEBPACK_IMPORTED_MODULE_8___default().number,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_8___default().object,
           isExpanded: prop_types__WEBPACK_IMPORTED_MODULE_8___default().bool,
@@ -108837,33 +106773,33 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9__ =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_9__
+            prop_types__WEBPACK_IMPORTED_MODULE_8__
           );
-        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_8__ =
-          __webpack_require__(
-            /*! @fortawesome/free-solid-svg-icons */ './node_modules/@fortawesome/free-solid-svg-icons/index.mjs'
-          );
-        /* harmony import */ var _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(
-            /*! ../AwesomeIcon */ './src/components/AwesomeIcon.js'
-          );
-        /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_2__ =
+        /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(
             /*! lodash.debounce */ './node_modules/lodash.debounce/index.js'
           );
-        /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_2___default =
+        /* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default =
           /*#__PURE__*/ __webpack_require__.n(
-            lodash_debounce__WEBPACK_IMPORTED_MODULE_2__
+            lodash_debounce__WEBPACK_IMPORTED_MODULE_1__
           );
-        /* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_3__ =
+        /* harmony import */ var _Entity__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! ./Entity */ './src/components/scenegraph/Entity.js'
+          );
+        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__ =
+          __webpack_require__(
+            /*! @fortawesome/free-solid-svg-icons */ './node_modules/@fortawesome/free-solid-svg-icons/index.mjs'
+          );
+        /* harmony import */ var _AwesomeIcon__WEBPACK_IMPORTED_MODULE_3__ =
+          __webpack_require__(
+            /*! ../AwesomeIcon */ './src/components/AwesomeIcon.js'
           );
         /* harmony import */ var _Toolbar__WEBPACK_IMPORTED_MODULE_4__ =
           __webpack_require__(
@@ -108871,11 +106807,7 @@ object-assign
           );
         /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_5__ =
           __webpack_require__(/*! ../../lib/Events */ './src/lib/Events.js');
-        /* harmony import */ var _viewport_CameraToolbar__WEBPACK_IMPORTED_MODULE_6__ =
-          __webpack_require__(
-            /*! ../viewport/CameraToolbar */ './src/components/viewport/CameraToolbar.js'
-          );
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -108898,39 +106830,48 @@ object-assign
             _typeof(o)
           );
         }
-        function ownKeys(e, r) {
-          var t = Object.keys(e);
-          if (Object.getOwnPropertySymbols) {
-            var o = Object.getOwnPropertySymbols(e);
-            r &&
-              (o = o.filter(function (r) {
-                return Object.getOwnPropertyDescriptor(e, r).enumerable;
-              })),
-              t.push.apply(t, o);
-          }
-          return t;
+        function _toConsumableArray(r) {
+          return (
+            _arrayWithoutHoles(r) ||
+            _iterableToArray(r) ||
+            _unsupportedIterableToArray(r) ||
+            _nonIterableSpread()
+          );
         }
-        function _objectSpread(e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = null != arguments[r] ? arguments[r] : {};
-            r % 2
-              ? ownKeys(Object(t), !0).forEach(function (r) {
-                  _defineProperty(e, r, t[r]);
-                })
-              : Object.getOwnPropertyDescriptors
-                ? Object.defineProperties(
-                    e,
-                    Object.getOwnPropertyDescriptors(t)
-                  )
-                : ownKeys(Object(t)).forEach(function (r) {
-                    Object.defineProperty(
-                      e,
-                      r,
-                      Object.getOwnPropertyDescriptor(t, r)
-                    );
-                  });
+        function _nonIterableSpread() {
+          throw new TypeError(
+            'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+          );
+        }
+        function _unsupportedIterableToArray(r, a) {
+          if (r) {
+            if ('string' == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return (
+              'Object' === t && r.constructor && (t = r.constructor.name),
+              'Map' === t || 'Set' === t
+                ? Array.from(r)
+                : 'Arguments' === t ||
+                    /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+                  ? _arrayLikeToArray(r, a)
+                  : void 0
+            );
           }
-          return e;
+        }
+        function _iterableToArray(r) {
+          if (
+            ('undefined' != typeof Symbol && null != r[Symbol.iterator]) ||
+            null != r['@@iterator']
+          )
+            return Array.from(r);
+        }
+        function _arrayWithoutHoles(r) {
+          if (Array.isArray(r)) return _arrayLikeToArray(r);
+        }
+        function _arrayLikeToArray(r, a) {
+          (null == a || a > r.length) && (a = r.length);
+          for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+          return n;
         }
         function _classCallCheck(a, n) {
           if (!(a instanceof n))
@@ -109048,400 +106989,347 @@ object-assign
           }
           return ('string' === r ? String : Number)(t);
         }
-        /* eslint-disable no-unused-vars, react/no-danger */
 
+        var ROW_HEIGHT = 40;
+        var OVERSCAN = 5;
+        var nextTreeId = 0;
         var SceneGraph = /*#__PURE__*/ (function (_React$Component) {
-          function SceneGraph(props) {
+          function SceneGraph() {
             var _this;
             _classCallCheck(this, SceneGraph);
-            _this = _callSuper(this, SceneGraph, [props]);
-            _defineProperty(_this, 'handleEntityUpdate', function (detail) {
-              if (detail.component === 'mixin') {
-                _this.rebuildEntityOptions();
-              }
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, SceneGraph, [].concat(args));
+            _defineProperty(_this, 'state', {
+              entities: [],
+              expandedElements: new WeakMap(),
+              filter: '',
+              scrollTop: 0,
+              height: 600
             });
-            _defineProperty(_this, 'selectEntity', function (entity) {
-              var found = false;
-              for (var i = 0; i < _this.state.filteredEntities.length; i++) {
-                var entityOption = _this.state.filteredEntities[i];
-                if (entityOption.entity === entity) {
-                  _this.setState({
-                    selectedEntity: entity,
-                    selectedIndex: i
-                  });
-                  // Make sure selected value is visible in scenegraph
-                  _this.expandToRoot(entity);
-                  if (_this.props.onChange) {
-                    _this.props.onChange(entity);
-                  }
-                  _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
-                    'entityselect',
-                    entity,
-                    true
-                  );
-                  found = true;
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_5__.createEventScope)()
+            );
+            _defineProperty(
+              _this,
+              'outliner',
+              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef()
+            );
+            _defineProperty(_this, 'rowIds', new WeakMap());
+            _defineProperty(
+              _this,
+              'batchChanges',
+              lodash_debounce__WEBPACK_IMPORTED_MODULE_1___default()(
+                function () {
+                  return _this.rebuildEntityOptions();
+                },
+                50,
+                {
+                  maxWait: 150
                 }
-              }
-              if (!found) {
-                _this.setState({
-                  selectedEntity: null,
-                  selectedIndex: -1
-                });
-              }
+              )
+            );
+            _defineProperty(_this, 'onChildChange', function (event) {
+              var _event$detail$el, _event$detail$el$clos;
+              if (
+                !(
+                  (_event$detail$el = event.detail.el) !== null &&
+                  _event$detail$el !== void 0 &&
+                  (_event$detail$el$clos = _event$detail$el.closest) !== null &&
+                  _event$detail$el$clos !== void 0 &&
+                  _event$detail$el$clos.call(
+                    _event$detail$el,
+                    '[data-aframe-inspector]'
+                  )
+                )
+              )
+                _this.batchChanges();
             });
             _defineProperty(_this, 'rebuildEntityOptions', function () {
-              var entities = [
-                {
-                  depth: 0,
-                  entity: _this.props.scene
-                }
-              ];
-              function treeIterate(element, depth) {
-                if (!element) {
-                  return;
-                }
-                depth += 1;
-                for (var i = 0; i < element.children.length; i++) {
-                  var entity = element.children[i];
-                  if (
-                    entity.dataset.isInspector ||
-                    !entity.isEntity ||
-                    entity.isInspector ||
-                    'aframeInspector' in entity.dataset
-                  ) {
-                    continue;
-                  }
-                  entities.push({
-                    entity: entity,
-                    depth: depth
+              if (!_this.props.scene) return;
+              _this.batchChanges.cancel();
+              var entities = [];
+              var _visit = function visit(entity, depth) {
+                entities.push({
+                  entity: entity,
+                  depth: depth
+                });
+                _toConsumableArray(entity.children)
+                  .filter(function (child) {
+                    return (
+                      child.isEntity &&
+                      !child.isInspector &&
+                      !child.dataset.isInspector &&
+                      !('aframeInspector' in child.dataset)
+                    );
+                  })
+                  .forEach(function (child) {
+                    return _visit(child, depth + 1);
                   });
-                  treeIterate(entity, depth);
-                }
-              }
-              treeIterate(_this.props.scene, 0);
+              };
+              _visit(_this.props.scene, 0);
               _this.setState({
-                entities: entities,
-                filteredEntities: _this.getFilteredEntities(
-                  _this.state.filter,
-                  entities
-                )
+                entities: entities
               });
             });
-            _defineProperty(_this, 'selectIndex', function (index) {
-              if (index >= 0 && index < _this.state.entities.length) {
-                _this.selectEntity(_this.state.entities[index].entity);
-              }
-            });
-            _defineProperty(_this, 'onFilterKeyUp', function (event) {
-              if (event.key === 'Escape') {
-                // Use event.key for consistency
-                _this.clearFilter();
-              }
-            });
-            _defineProperty(_this, 'onKeyDown', function (event) {
-              switch (event.key) {
-                case 'ArrowLeft':
-                case 'ArrowUp':
-                case 'ArrowRight':
-                case 'ArrowDown':
-                  event.preventDefault();
-                  event.stopPropagation();
-                  break;
-              }
-            });
-            _defineProperty(_this, 'onKeyUp', function (event) {
-              if (_this.props.selectedEntity === null) {
-                return;
-              }
-              switch (event.key) {
-                case 'ArrowLeft':
-                  if (_this.isExpanded(_this.props.selectedEntity)) {
-                    _this.toggleExpandedCollapsed(_this.props.selectedEntity);
+            _defineProperty(_this, 'getVisibleEntities', function () {
+              return _this.state.entities.filter(function (_ref) {
+                var entity = _ref.entity;
+                var filter = _this.state.filter.trim();
+                if (filter) {
+                  if (
+                    [entity.id, entity.tagName, entity.className].some(
+                      function (text) {
+                        return String(text)
+                          .toLowerCase()
+                          .includes(filter.toLowerCase());
+                      }
+                    )
+                  )
+                    return true;
+                  try {
+                    return entity.matches(filter);
+                  } catch (error) {
+                    return false;
                   }
-                  break;
-                case 'ArrowUp':
-                  _this.selectIndex(
-                    _this.previousExpandedIndexTo(_this.state.selectedIndex)
-                  );
-                  break;
-                case 'ArrowRight':
-                  if (!_this.isExpanded(_this.props.selectedEntity)) {
-                    _this.toggleExpandedCollapsed(_this.props.selectedEntity);
-                  }
-                  break;
-                case 'ArrowDown':
-                  _this.selectIndex(
-                    _this.nextExpandedIndexTo(_this.state.selectedIndex)
-                  );
-                  break;
-              }
-            });
-            _defineProperty(_this, 'isVisibleInSceneGraph', function (x) {
-              var curr = x.parentNode;
-              if (!curr) {
-                return false;
-              }
-              while (curr != null && curr.isEntity) {
-                if (!_this.isExpanded(curr)) {
-                  return false;
                 }
-                curr = curr.parentNode;
-              }
-              return true;
-            });
-            _defineProperty(_this, 'isExpanded', function (x) {
-              return _this.state.expandedElements.get(x) === true;
-            });
-            _defineProperty(_this, 'toggleExpandedCollapsed', function (x) {
-              _this.setState({
-                expandedElements: _this.state.expandedElements.set(
-                  x,
-                  !_this.isExpanded(x)
-                )
+                var parent = entity.parentElement;
+                while (
+                  (_parent = parent) !== null &&
+                  _parent !== void 0 &&
+                  _parent.isEntity
+                ) {
+                  var _parent;
+                  if (!_this.state.expandedElements.get(parent)) return false;
+                  parent = parent.parentElement;
+                }
+                return true;
               });
             });
-            _defineProperty(_this, 'expandToRoot', function (x) {
-              // Expand element all the way to the scene element
-              var curr = x.parentNode;
-              while (curr != null && curr.isEntity) {
-                _this.state.expandedElements.set(curr, true);
-                curr = curr.parentNode;
-              }
-              _this.setState({
-                expandedElements: _this.state.expandedElements
-              });
+            _defineProperty(_this, 'rowId', function (entity) {
+              if (!_this.rowIds.has(entity))
+                _this.rowIds.set(entity, 'scene-tree-item-' + ++nextTreeId);
+              return _this.rowIds.get(entity);
             });
-            _defineProperty(_this, 'previousExpandedIndexTo', function (i) {
-              for (var prevIter = i - 1; prevIter >= 0; prevIter--) {
-                var prevEl = _this.state.entities[prevIter].entity;
-                if (_this.isVisibleInSceneGraph(prevEl)) {
-                  return prevIter;
-                }
-              }
-              return -1;
+            _defineProperty(_this, 'selectEntity', function (entity) {
+              _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
+                'entityselect',
+                entity
+              );
             });
-            _defineProperty(_this, 'nextExpandedIndexTo', function (i) {
-              for (
-                var nextIter = i + 1;
-                nextIter < _this.state.entities.length;
-                nextIter++
+            _defineProperty(_this, 'handleRowSelect', function (entity) {
+              var _this$outliner$curren;
+              _this.selectEntity(entity);
+              (_this$outliner$curren = _this.outliner.current) === null ||
+                _this$outliner$curren === void 0 ||
+                _this$outliner$curren.focus();
+            });
+            _defineProperty(_this, 'revealSelection', function () {
+              var parent = _this.props.selectedEntity.parentElement;
+              while (
+                (_parent2 = parent) !== null &&
+                _parent2 !== void 0 &&
+                _parent2.isEntity
               ) {
-                var nextEl = _this.state.entities[nextIter].entity;
-                if (_this.isVisibleInSceneGraph(nextEl)) {
-                  return nextIter;
-                }
+                var _parent2;
+                _this.state.expandedElements.set(parent, true);
+                parent = parent.parentElement;
               }
-              return -1;
+              _this.setState(
+                {
+                  expandedElements: _this.state.expandedElements
+                },
+                function () {
+                  var index = _this
+                    .getVisibleEntities()
+                    .findIndex(function (_ref2) {
+                      var entity = _ref2.entity;
+                      return entity === _this.props.selectedEntity;
+                    });
+                  var element = _this.outliner.current;
+                  if (index < 0 || !element) return;
+                  var top = index * ROW_HEIGHT;
+                  if (top < element.scrollTop) element.scrollTop = top;
+                  else if (
+                    top + ROW_HEIGHT >
+                    element.scrollTop + element.clientHeight
+                  )
+                    element.scrollTop = top + ROW_HEIGHT - element.clientHeight;
+                  _this.setState({
+                    scrollTop: element.scrollTop
+                  });
+                }
+              );
             });
-            _defineProperty(_this, 'onChangeFilter', function (evt) {
-              var filter = evt.target.value;
-              _this.setState({
-                filter: filter
+            _defineProperty(
+              _this,
+              'toggleExpandedCollapsed',
+              function (entity) {
+                _this.state.expandedElements.set(
+                  entity,
+                  !_this.state.expandedElements.get(entity)
+                );
+                _this.setState({
+                  expandedElements: _this.state.expandedElements
+                });
+              }
+            );
+            _defineProperty(_this, 'onKeyDown', function (event) {
+              var _rows$index;
+              if (event.target !== event.currentTarget) return;
+              var rows = _this.getVisibleEntities();
+              if (!rows.length) return;
+              var index = rows.findIndex(function (_ref3) {
+                var entity = _ref3.entity;
+                return entity === _this.props.selectedEntity;
               });
-              _this.updateFilteredEntities(filter);
-            });
-            _defineProperty(_this, 'clearFilter', function () {
-              _this.setState({
-                filter: ''
-              });
-              _this.updateFilteredEntities('');
+              var selected =
+                (_rows$index = rows[index]) === null || _rows$index === void 0
+                  ? void 0
+                  : _rows$index.entity;
+              var next;
+              switch (event.key) {
+                case 'Home':
+                  next = 0;
+                  break;
+                case 'End':
+                  next = rows.length - 1;
+                  break;
+                case 'ArrowUp':
+                  next = Math.max(0, index - 1);
+                  break;
+                case 'ArrowDown':
+                  next = Math.min(rows.length - 1, index + 1);
+                  break;
+                case 'ArrowRight':
+                  if (
+                    selected &&
+                    !_this.state.filter &&
+                    !_this.state.expandedElements.get(selected)
+                  )
+                    _this.toggleExpandedCollapsed(selected);
+                  else next = Math.min(rows.length - 1, index + 1);
+                  break;
+                case 'ArrowLeft':
+                  if (
+                    selected &&
+                    !_this.state.filter &&
+                    _this.state.expandedElements.get(selected)
+                  )
+                    _this.toggleExpandedCollapsed(selected);
+                  else
+                    next = rows.findIndex(function (_ref4) {
+                      var entity = _ref4.entity;
+                      return (
+                        entity ===
+                        (selected === null || selected === void 0
+                          ? void 0
+                          : selected.parentElement)
+                      );
+                    });
+                  break;
+                case 'Enter':
+                case ' ':
+                  next = Math.max(0, index);
+                  break;
+                default:
+                  return;
+              }
+              event.preventDefault();
+              event.stopPropagation();
+              if (next >= 0) _this.selectEntity(rows[next].entity);
             });
             _defineProperty(_this, 'onDragStart', function (event, entity) {
               _this.draggedEntity = entity;
               event.dataTransfer.effectAllowed = 'move';
+              event.dataTransfer.setData('text/plain', _this.rowId(entity));
             });
-            _defineProperty(_this, 'onDrop', function (event, entity, place) {
-              console.log('onDrop called', {
-                entity: entity,
-                place: place,
-                draggedEntity: _this.draggedEntity
-              });
-              if (!_this.draggedEntity) {
-                console.warn('onDrop: No draggedEntity');
-                return;
-              }
-              if (_this.draggedEntity === entity) {
-                console.warn('onDrop: Dragged entity is target');
-                return;
-              }
-
-              // Check if trying to drop into itself or children
-              var iter = entity;
-              while (iter) {
-                if (iter === _this.draggedEntity) {
-                  console.warn('onDrop: Dropping into self/child');
+            _defineProperty(
+              _this,
+              'onDrop',
+              function (event, target, requestedPlace) {
+                event.preventDefault();
+                var original = _this.draggedEntity;
+                _this.draggedEntity = null;
+                if (
+                  !original ||
+                  original === target ||
+                  original.contains(target)
+                )
                   return;
-                }
-                iter = iter.parentNode;
-              }
-              var draggedObject = _this.draggedEntity.object3D;
-              if (!draggedObject) {
-                console.error('onDrop: Missing object3D');
-                return;
-              }
-
-              // Calculate the new parent
-              var newParentEl = entity;
-              if (place === 'before' || place === 'after') {
-                newParentEl = entity.parentNode;
-              }
-              console.log('onDrop: Proceeding with Clone & Replace', {
-                newParentEl: newParentEl
-              });
-
-              // 1. Get the current world transform of the dragged entity
-              draggedObject.updateMatrixWorld(true);
-              var worldMatrix = draggedObject.matrixWorld.clone();
-
-              // Capture draggedEntity in a local variable
-              var originalEntity = _this.draggedEntity;
-
-              // 2. Clone the entity
-              // We clone the node to create a fresh entity
-              var clonedEntity = originalEntity.cloneNode(true);
-              console.log('onDrop: Entity cloned', clonedEntity);
-
-              // 3. Calculate new local transform relative to the NEW parent
-              var newParentObj = newParentEl.object3D;
-              if (newParentObj) {
-                newParentObj.updateMatrixWorld(true);
-                var newParentMatrixWorldInverse = new THREE.Matrix4()
-                  .copy(newParentObj.matrixWorld)
-                  .invert();
-
-                // New Local Matrix = ParentInverse * WorldMatrix
-                var newLocalMatrix =
-                  newParentMatrixWorldInverse.multiply(worldMatrix);
-
-                // Decompose to get position, rotation, scale
-                var pos = new THREE.Vector3();
-                var quat = new THREE.Quaternion();
+                var place = ['before', 'after'].includes(requestedPlace)
+                  ? requestedPlace
+                  : 'inside';
+                var parent = place === 'inside' ? target : target.parentElement;
+                if (!(parent !== null && parent !== void 0 && parent.object3D))
+                  return;
+                original.object3D.updateWorldMatrix(true, false);
+                parent.object3D.updateWorldMatrix(true, false);
+                var matrix = new THREE.Matrix4()
+                  .copy(parent.object3D.matrixWorld)
+                  .invert()
+                  .multiply(original.object3D.matrixWorld);
+                var position = new THREE.Vector3();
+                var quaternion = new THREE.Quaternion();
                 var scale = new THREE.Vector3();
-                newLocalMatrix.decompose(pos, quat, scale);
-                console.log('Reparenting Debug (Clone & Replace):');
-                console.log('  Calculated Pos:', pos);
-
-                // Apply to the CLONED entity using strings
-                var euler = new THREE.Euler().setFromQuaternion(quat);
-                var radToDeg = 180 / Math.PI;
-                clonedEntity.setAttribute(
-                  'position',
-                  ''.concat(pos.x, ' ').concat(pos.y, ' ').concat(pos.z)
-                );
-                clonedEntity.setAttribute(
+                matrix.decompose(position, quaternion, scale);
+                // Serialize every descendant before cloning so component edits survive reparenting.
+                [original]
+                  .concat(_toConsumableArray(original.querySelectorAll('*')))
+                  .forEach(function (node) {
+                    var _node$flushToDOM;
+                    return (_node$flushToDOM = node.flushToDOM) === null ||
+                      _node$flushToDOM === void 0
+                      ? void 0
+                      : _node$flushToDOM.call(node);
+                  });
+                var clone = original.cloneNode(true);
+                var rotation = new THREE.Euler().setFromQuaternion(quaternion);
+                clone.setAttribute('position', position.toArray().join(' '));
+                clone.setAttribute(
                   'rotation',
-                  ''
-                    .concat(euler.x * radToDeg, ' ')
-                    .concat(euler.y * radToDeg, ' ')
-                    .concat(euler.z * radToDeg)
+                  [rotation.x, rotation.y, rotation.z]
+                    .map(THREE.MathUtils.radToDeg)
+                    .join(' ')
                 );
-                clonedEntity.setAttribute(
-                  'scale',
-                  ''.concat(scale.x, ' ').concat(scale.y, ' ').concat(scale.z)
-                );
-              } else {
-                console.error('Reparenting Error: New parent missing object3D');
-              }
-
-              // 4. Perform the DOM move (Remove old, Insert new)
-              try {
-                if (originalEntity.parentNode) {
-                  console.log('onDrop: Removing original entity');
-                  originalEntity.parentNode.removeChild(originalEntity);
-                } else {
-                  console.warn('onDrop: Original entity has no parent');
-                }
-                console.log('onDrop: Inserting cloned entity', {
-                  place: place
-                });
-                if (place === 'inside') {
-                  entity.appendChild(clonedEntity);
-                } else if (place === 'before') {
-                  entity.parentNode.insertBefore(clonedEntity, entity);
-                } else if (place === 'after') {
-                  entity.parentNode.insertBefore(
-                    clonedEntity,
-                    entity.nextSibling
-                  );
-                }
-              } catch (e) {
-                console.error('onDrop: DOM manipulation error', e);
-              }
-
-              // 5. Force scene update and notify
-              setTimeout(function () {
-                console.log('onDrop: Post-drop update');
-                if (AFRAME.INSPECTOR && AFRAME.INSPECTOR.sceneEl) {
-                  AFRAME.INSPECTOR.sceneEl.object3D.updateMatrixWorld(true);
-                }
-
-                // Select the NEW entity
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
-                  'entityselect',
-                  clonedEntity,
-                  true
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
-                  'entityupdate',
+                clone.setAttribute('scale', scale.toArray().join(' '));
+                clone.addEventListener(
+                  'loaded',
+                  function () {
+                    _this.selectEntity(clone);
+                    _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
+                      'entitycreated',
+                      clone
+                    );
+                  },
                   {
-                    component: 'scenegraph',
-                    entity: clonedEntity
+                    once: true
                   }
                 );
-              }, 50);
-
-              // Update the scene graph UI immediately
-              _this.rebuildEntityOptions();
-              _this.draggedEntity = null;
-            });
-            _defineProperty(_this, 'renderEntities', function () {
-              return _this.state.filteredEntities.map(
-                function (entityOption, idx) {
-                  if (
-                    !_this.isVisibleInSceneGraph(entityOption.entity) &&
-                    !_this.state.filter
-                  ) {
-                    return null;
-                  }
-                  return /*#__PURE__*/ (0,
-                  react__WEBPACK_IMPORTED_MODULE_0__.createElement)(
-                    _Entity__WEBPACK_IMPORTED_MODULE_3__['default'],
-                    _objectSpread(
-                      _objectSpread({}, entityOption),
-                      {},
-                      {
-                        key: idx,
-                        isFiltering: !!_this.state.filter,
-                        isExpanded: _this.isExpanded(entityOption.entity),
-                        isSelected:
-                          _this.props.selectedEntity === entityOption.entity,
-                        selectEntity: _this.selectEntity,
-                        toggleExpandedCollapsed: _this.toggleExpandedCollapsed,
-                        onDragStart: _this.onDragStart,
-                        onDrop: _this.onDrop
-                      }
-                    )
+                try {
+                  if (place === 'inside') parent.appendChild(clone);
+                  else
+                    parent.insertBefore(
+                      clone,
+                      place === 'before' ? target : target.nextSibling
+                    );
+                  original.remove();
+                  _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].emit(
+                    'scenechanged'
                   );
+                  _this.rebuildEntityOptions();
+                } catch (error) {
+                  clone.remove();
                 }
-              );
-            });
-            _this.state = {
-              entities: [],
-              expandedElements: new WeakMap([[props.scene, true]]),
-              filter: '',
-              filteredEntities: [],
-              selectedIndex: -1
-            };
-            _this.rebuildEntityOptions =
-              lodash_debounce__WEBPACK_IMPORTED_MODULE_2___default()(
-                _this.rebuildEntityOptions.bind(_this),
-                1000
-              );
-            _this.updateFilteredEntities =
-              lodash_debounce__WEBPACK_IMPORTED_MODULE_2___default()(
-                _this.updateFilteredEntities.bind(_this),
-                500
-              );
+              }
+            );
             return _this;
           }
           _inherits(SceneGraph, _React$Component);
@@ -109449,196 +107337,202 @@ object-assign
             {
               key: 'componentDidMount',
               value: function componentDidMount() {
+                var _this2 = this;
+                this.state.expandedElements.set(this.props.scene, true);
                 this.rebuildEntityOptions();
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].on(
-                  'entityidchange',
-                  this.rebuildEntityOptions
+                ['entityidchange', 'entitycreated', 'entityclone'].forEach(
+                  function (name) {
+                    return _this2.events.on(name, _this2.rebuildEntityOptions);
+                  }
                 );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].on(
-                  'entitycreated',
-                  this.rebuildEntityOptions
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].on(
-                  'entityclone',
-                  this.rebuildEntityOptions
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].on(
-                  'entityupdate',
-                  this.handleEntityUpdate
-                );
-
-                // Listen for DOM changes to keep Scenegraph in sync
-                if (this.props.scene) {
-                  this.props.scene.addEventListener(
-                    'child-attached',
-                    this.rebuildEntityOptions
-                  );
-                  this.props.scene.addEventListener(
-                    'child-detached',
-                    this.rebuildEntityOptions
-                  );
-                }
+                this.events.on('entityupdate', function (detail) {
+                  if (
+                    detail.component === 'mixin' ||
+                    detail.component === 'scenegraph'
+                  )
+                    _this2.rebuildEntityOptions();
+                });
+                this.bindScene(this.props.scene);
+                this.observeSize();
               }
             },
             {
               key: 'componentWillUnmount',
               value: function componentWillUnmount() {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].off(
-                  'entityidchange',
-                  this.rebuildEntityOptions
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].off(
-                  'entitycreated',
-                  this.rebuildEntityOptions
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].off(
-                  'entityclone',
-                  this.rebuildEntityOptions
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_5__['default'].off(
-                  'entityupdate',
-                  this.handleEntityUpdate
-                );
-                if (this.props.scene) {
-                  this.props.scene.removeEventListener(
-                    'child-attached',
-                    this.rebuildEntityOptions
-                  );
-                  this.props.scene.removeEventListener(
-                    'child-detached',
-                    this.rebuildEntityOptions
-                  );
-                }
+                var _this$resizeObserver;
+                this.events.dispose();
+                this.batchChanges.cancel();
+                this.bindScene(null);
+                (_this$resizeObserver = this.resizeObserver) === null ||
+                  _this$resizeObserver === void 0 ||
+                  _this$resizeObserver.disconnect();
               }
             },
             {
               key: 'componentDidUpdate',
-              value:
-                /**
-                 * Selected entity or scene updated from somewhere else in the app.
-                 */
-                function componentDidUpdate(prevProps) {
-                  if (prevProps.selectedEntity !== this.props.selectedEntity) {
-                    this.selectEntity(this.props.selectedEntity);
-                  }
-
-                  // Scene element was replaced — re-attach DOM listeners.
-                  if (prevProps.scene !== this.props.scene) {
-                    if (prevProps.scene) {
-                      prevProps.scene.removeEventListener(
-                        'child-attached',
-                        this.rebuildEntityOptions
-                      );
-                      prevProps.scene.removeEventListener(
-                        'child-detached',
-                        this.rebuildEntityOptions
-                      );
-                    }
-                    if (this.props.scene) {
-                      this.props.scene.addEventListener(
-                        'child-attached',
-                        this.rebuildEntityOptions
-                      );
-                      this.props.scene.addEventListener(
-                        'child-detached',
-                        this.rebuildEntityOptions
-                      );
-                    }
-                    // Reset expanded state with new scene root.
-                    this.setState({
-                      expandedElements: new WeakMap([[this.props.scene, true]])
-                    });
-                    this.rebuildEntityOptions();
-                  }
-                }
-            },
-            {
-              key: 'getFilteredEntities',
-              value: function getFilteredEntities(filter, entities) {
-                var _this2 = this;
-                entities = entities || this.state.entities;
-                if (!filter) {
-                  return entities;
-                }
-                return entities.filter(function (entityOption) {
-                  return filterEntity(
-                    entityOption.entity,
-                    filter || _this2.state.filter
+              value: function componentDidUpdate(prevProps) {
+                if (prevProps.scene !== this.props.scene) {
+                  this.batchChanges.cancel();
+                  this.bindScene(this.props.scene);
+                  this.setState(
+                    {
+                      expandedElements: new WeakMap([[this.props.scene, true]]),
+                      filter: '',
+                      scrollTop: 0
+                    },
+                    this.rebuildEntityOptions
                   );
-                });
+                }
+                if (
+                  prevProps.selectedEntity !== this.props.selectedEntity &&
+                  this.props.selectedEntity
+                )
+                  this.revealSelection();
+                if (prevProps.visible !== this.props.visible)
+                  this.observeSize();
               }
             },
             {
-              key: 'updateFilteredEntities',
-              value: function updateFilteredEntities(filter) {
-                this.setState({
-                  filteredEntities: this.getFilteredEntities(filter)
+              key: 'observeSize',
+              value: function observeSize() {
+                var _this$resizeObserver2,
+                  _this3 = this;
+                (_this$resizeObserver2 = this.resizeObserver) === null ||
+                  _this$resizeObserver2 === void 0 ||
+                  _this$resizeObserver2.disconnect();
+                var element = this.outliner.current;
+                if (!element) return;
+                var update = function update() {
+                  return _this3.setState({
+                    height: element.clientHeight || 400
+                  });
+                };
+                this.resizeObserver = new ResizeObserver(update);
+                this.resizeObserver.observe(element);
+                update();
+              }
+            },
+            {
+              key: 'bindScene',
+              value: function bindScene(scene) {
+                var _this4 = this;
+                ['child-attached', 'child-detached'].forEach(function (name) {
+                  var _this4$boundScene;
+                  (_this4$boundScene = _this4.boundScene) === null ||
+                    _this4$boundScene === void 0 ||
+                    _this4$boundScene.removeEventListener(
+                      name,
+                      _this4.onChildChange
+                    );
+                  scene === null ||
+                    scene === void 0 ||
+                    scene.addEventListener(name, _this4.onChildChange);
                 });
+                this.boundScene = scene;
               }
             },
             {
               key: 'render',
               value: function render() {
-                // To hide the SceneGraph we have to hide its parent too (#left-sidebar).
-                if (!this.props.visible) {
-                  return null;
-                }
-                var clearFilter = this.state.filter
-                  ? /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)('a', {
-                      onClick: this.clearFilter,
-                      className: 'button',
-                      children: /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(
-                        _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                        {
-                          icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_8__.faTimes
-                        }
-                      )
-                    })
-                  : null;
+                var _this5 = this;
+                if (!this.props.visible) return null;
+                var rows = this.getVisibleEntities();
+                var first = Math.max(
+                  0,
+                  Math.min(
+                    Math.floor(this.state.scrollTop / ROW_HEIGHT) - OVERSCAN,
+                    Math.max(0, rows.length - 1)
+                  )
+                );
+                var end = Math.min(
+                  rows.length,
+                  first +
+                    Math.ceil(this.state.height / ROW_HEIGHT) +
+                    OVERSCAN * 2
+                );
+                var selected = rows.findIndex(function (_ref5) {
+                  var entity = _ref5.entity;
+                  return entity === _this5.props.selectedEntity;
+                });
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)('div', {
                   id: 'scenegraph',
                   className: 'scenegraph',
                   children: [
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(
                       'div',
                       {
                         className: 'scenegraph-toolbar',
                         children: [
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
                             _Toolbar__WEBPACK_IMPORTED_MODULE_4__['default'],
                             {}
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(
                             'div',
                             {
                               className: 'search',
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
                                   'input',
                                   {
                                     id: 'filter',
+                                    'aria-label': 'Search scene entities',
                                     placeholder: 'Search...',
-                                    onChange: this.onChangeFilter,
-                                    onKeyUp: this.onFilterKeyUp,
-                                    value: this.state.filter
+                                    value: this.state.filter,
+                                    onChange: function onChange(event) {
+                                      if (_this5.outliner.current)
+                                        _this5.outliner.current.scrollTop = 0;
+                                      _this5.setState({
+                                        filter: event.target.value,
+                                        scrollTop: 0
+                                      });
+                                    },
+                                    onKeyDown: function onKeyDown(event) {
+                                      if (event.key === 'Escape') {
+                                        event.stopPropagation();
+                                        _this5.setState({
+                                          filter: ''
+                                        });
+                                      }
+                                    }
                                   }
                                 ),
-                                clearFilter,
-                                !this.state.filter &&
-                                  /*#__PURE__*/ (0,
-                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(
-                                    _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                                    {
-                                      icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_8__.faSearch
-                                    }
-                                  )
+                                this.state.filter
+                                  ? /*#__PURE__*/ (0,
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                                      'button',
+                                      {
+                                        type: 'button',
+                                        'aria-label': 'Clear scene search',
+                                        onClick: function onClick() {
+                                          if (_this5.outliner.current)
+                                            _this5.outliner.current.scrollTop = 0;
+                                          _this5.setState({
+                                            filter: '',
+                                            scrollTop: 0
+                                          });
+                                        },
+                                        children: /*#__PURE__*/ (0,
+                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_3__.AwesomeIcon,
+                                          {
+                                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faTimes
+                                          }
+                                        )
+                                      }
+                                    )
+                                  : /*#__PURE__*/ (0,
+                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                                      _AwesomeIcon__WEBPACK_IMPORTED_MODULE_3__.AwesomeIcon,
+                                      {
+                                        icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_7__.faSearch
+                                      }
+                                    )
                               ]
                             }
                           )
@@ -109646,13 +107540,83 @@ object-assign
                       }
                     ),
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)('div', {
-                      className: 'outliner',
-                      tabIndex: '0',
-                      onKeyDown: this.onKeyDown,
-                      onKeyUp: this.onKeyUp,
-                      children: this.renderEntities()
-                    })
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(
+                      'div',
+                      {
+                        className: 'outliner',
+                        role: 'tree',
+                        'aria-label': 'Scene entities',
+                        tabIndex: '0',
+                        ref: this.outliner,
+                        'aria-activedescendant':
+                          selected >= first && selected < end
+                            ? this.rowId(this.props.selectedEntity)
+                            : undefined,
+                        onKeyDown: this.onKeyDown,
+                        onScroll: function onScroll(event) {
+                          return _this5.setState({
+                            scrollTop: event.currentTarget.scrollTop
+                          });
+                        },
+                        children: [
+                          /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            'div',
+                            {
+                              role: 'presentation',
+                              'aria-hidden': 'true',
+                              style: {
+                                height: first * ROW_HEIGHT
+                              }
+                            }
+                          ),
+                          rows.slice(first, end).map(function (_ref6) {
+                            var entity = _ref6.entity,
+                              depth = _ref6.depth;
+                            return /*#__PURE__*/ (0,
+                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                              _Entity__WEBPACK_IMPORTED_MODULE_2__['default'],
+                              {
+                                id: _this5.rowId(entity),
+                                depth: depth,
+                                entity: entity,
+                                isFiltering: !!_this5.state.filter,
+                                isExpanded:
+                                  !!_this5.state.expandedElements.get(entity),
+                                isSelected:
+                                  entity === _this5.props.selectedEntity,
+                                selectEntity: _this5.handleRowSelect,
+                                toggleExpandedCollapsed:
+                                  _this5.toggleExpandedCollapsed,
+                                onDragStart: _this5.onDragStart,
+                                onDrop: _this5.onDrop
+                              },
+                              _this5.rowId(entity)
+                            );
+                          }),
+                          /*#__PURE__*/ (0,
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                            'div',
+                            {
+                              role: 'presentation',
+                              'aria-hidden': 'true',
+                              style: {
+                                height: (rows.length - end) * ROW_HEIGHT
+                              }
+                            }
+                          ),
+                          !rows.length &&
+                            /*#__PURE__*/ (0,
+                            react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(
+                              'p',
+                              {
+                                role: 'status',
+                                children: 'No matching entities.'
+                              }
+                            )
+                        ]
+                      }
+                    )
                   ]
                 });
               }
@@ -109660,43 +107624,11 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(SceneGraph, 'propTypes', {
-          id: prop_types__WEBPACK_IMPORTED_MODULE_9___default().string,
-          onChange: prop_types__WEBPACK_IMPORTED_MODULE_9___default().func,
-          scene: prop_types__WEBPACK_IMPORTED_MODULE_9___default().object,
+          scene: prop_types__WEBPACK_IMPORTED_MODULE_8___default().object,
           selectedEntity:
-            prop_types__WEBPACK_IMPORTED_MODULE_9___default().object,
-          visible: prop_types__WEBPACK_IMPORTED_MODULE_9___default().bool
+            prop_types__WEBPACK_IMPORTED_MODULE_8___default().object,
+          visible: prop_types__WEBPACK_IMPORTED_MODULE_8___default().bool
         });
-        _defineProperty(SceneGraph, 'defaultProps', {
-          selectedEntity: '',
-          index: -1,
-          id: 'left-sidebar'
-        });
-
-        function filterEntity(entity, filter) {
-          if (!filter) {
-            return true;
-          }
-
-          // Check if the ID, tagName, class includes the filter.
-          if (
-            entity.id.toUpperCase().indexOf(filter.toUpperCase()) !== -1 ||
-            entity.tagName.toUpperCase().indexOf(filter.toUpperCase()) !== -1 ||
-            entity.classList.contains(filter)
-          ) {
-            return true;
-          }
-
-          // Try CSS selector match - wrapped in try-catch since invalid selectors throw
-          try {
-            if (entity.matches(filter)) {
-              return true;
-            }
-          } catch (e) {
-            // Invalid CSS selector, ignore
-          }
-          return false;
-        }
 
         /***/
       },
@@ -109722,7 +107654,7 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__ =
+        /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__ =
           __webpack_require__(
             /*! @fortawesome/free-solid-svg-icons */ './node_modules/@fortawesome/free-solid-svg-icons/index.mjs'
           );
@@ -109732,13 +107664,11 @@ object-assign
           );
         /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(/*! ../../lib/Events */ './src/lib/Events.js');
-        /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_3__ =
-          __webpack_require__(/*! ../../lib/utils */ './src/lib/utils.js');
-        /* harmony import */ var _modals_ModalPrimitive__WEBPACK_IMPORTED_MODULE_4__ =
+        /* harmony import */ var _modals_ModalPrimitive__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! ../modals/ModalPrimitive */ './src/components/modals/ModalPrimitive.js'
           );
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -109878,147 +107808,106 @@ object-assign
           return ('string' === r ? String : Number)(t);
         }
 
-        function filterHelpers(scene, visible) {
-          scene.traverse(function (o) {
-            if (o.userData.source === 'INSPECTOR') {
-              o.visible = visible;
-            }
-          });
-        }
-        function getSceneName(scene) {
-          return (
-            scene.id || slugify(window.location.host + window.location.pathname)
-          );
-        }
-
-        /**
-         * Slugify the string removing non-word chars and spaces
-         * @param  {string} text String to slugify
-         * @return {string}      Slugified string
-         */
-        function slugify(text) {
-          return text
-            .toString()
-            .toLowerCase()
-            .replace(/\s+/g, '-') // Replace spaces with -
-            .replace(/[^\w-]+/g, '-') // Replace all non-word chars with -
-            .replace(/--+/g, '-') // Replace multiple - with single -
-            .replace(/^-+/, '') // Trim - from start of text
-            .replace(/-+$/, ''); // Trim - from end of text
-        }
-
-        /**
-         * Tools and actions.
-         */
         var Toolbar = /*#__PURE__*/ (function (_React$Component) {
-          function Toolbar(props) {
+          function Toolbar() {
             var _this;
             _classCallCheck(this, Toolbar);
-            _this = _callSuper(this, Toolbar, [props]);
-            // Renamed original addEntity to toggleAddEntityModal
-            _defineProperty(_this, 'toggleAddEntityModal', function () {
-              _this.setState({
-                isAddEntityModalOpen: !_this.state.isAddEntityModalOpen
-              });
-            });
-            // New function to handle entity creation based on modal selection
-            _defineProperty(_this, 'createEntity', function (primitiveType) {
-              if (primitiveType) {
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].emit(
-                  'entitycreate',
-                  {
-                    element: primitiveType,
-                    components: {}
-                  }
-                );
-              }
-              _this.setState({
-                isAddEntityModalOpen: false
-              }); // Close modal after selection or cancellation
-            });
-            _defineProperty(_this, 'toggleScenePlaying', function () {
-              if (_this.state.isPlaying) {
-                AFRAME.scenes[0].pause();
-                _this.setState({
-                  isPlaying: false
-                });
-                AFRAME.scenes[0].isPlaying = true;
-                document.getElementById('aframeInspectorMouseCursor').play();
-                return;
-              }
-              AFRAME.scenes[0].isPlaying = false;
-              AFRAME.scenes[0].play();
-              _this.setState({
-                isPlaying: true
-              });
-            });
-            _this.state = {
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Toolbar, [].concat(args));
+            _defineProperty(_this, 'state', {
               isPlaying: false,
-              isAddEntityModalOpen: false // Add state for modal visibility
-            };
+              isAddEntityModalOpen: false
+            });
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_2__.createEventScope)()
+            );
+            _defineProperty(_this, 'toggleScenePlaying', function () {
+              var scene = AFRAME.INSPECTOR.sceneEl;
+              if (_this.state.isPlaying) {
+                scene.pause();
+                scene.isPlaying = true;
+                AFRAME.INSPECTOR.cursor.play();
+              } else {
+                scene.isPlaying = false;
+                scene.play();
+              }
+              _this.setState(function (state) {
+                return {
+                  isPlaying: !state.isPlaying
+                };
+              });
+            });
             return _this;
           }
           _inherits(Toolbar, _React$Component);
           return _createClass(Toolbar, [
             {
-              key: 'exportSceneToGLTF',
-              value: function exportSceneToGLTF() {
-                var sceneName = getSceneName(AFRAME.scenes[0]);
-                var scene = AFRAME.scenes[0].object3D;
-                filterHelpers(scene, false);
-                AFRAME.INSPECTOR.exporters.gltf.parse(
-                  scene,
-                  function (buffer) {
-                    filterHelpers(scene, true);
-                    var blob = new Blob([buffer], {
-                      type: 'application/octet-stream'
-                    });
-                    (0, _lib_utils__WEBPACK_IMPORTED_MODULE_3__.saveBlob)(
-                      blob,
-                      sceneName + '.glb'
-                    );
-                  },
-                  function (error) {
-                    console.error(error);
-                  },
-                  {
-                    binary: true
-                  }
-                );
+              key: 'componentDidMount',
+              value: function componentDidMount() {
+                var _this2 = this;
+                this.events.on('inspectortoggle', function () {
+                  return _this2.setState({
+                    isPlaying: false
+                  });
+                });
+                this.events.on('scenereload', function () {
+                  return _this2.setState({
+                    isPlaying: false,
+                    isAddEntityModalOpen: false
+                  });
+                });
+              }
+            },
+            {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
               }
             },
             {
               key: 'render',
               value: function render() {
-                // const watcherTitle = 'Write changes with aframe-watcher.'; // Keep or remove as needed
-
+                var _this3 = this;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)('div', {
                   id: 'toolbar',
                   children: [
                     /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
                       'div',
                       {
                         className: 'toolbarActions',
                         children: [
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                            'a',
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                            'button',
                             {
+                              type: 'button',
                               className: 'button',
                               title: 'Add a new entity',
-                              onClick: this.toggleAddEntityModal, // Changed onClick handler
+                              onClick: function onClick() {
+                                return _this3.setState({
+                                  isAddEntityModalOpen: true
+                                });
+                              },
                               children: [
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                   _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
                                   {
-                                    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faPlus
+                                    icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__.faPlus
                                   }
                                 ),
                                 /*#__PURE__*/ (0,
-                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
                                   'span',
                                   {
                                     children: 'Add Entity'
@@ -110028,77 +107917,68 @@ object-assign
                             }
                           ),
                           /*#__PURE__*/ (0,
-                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                            'a',
+                          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(
+                            'button',
                             {
+                              type: 'button',
                               id: 'playPauseScene',
                               className: 'button',
+                              onClick: this.toggleScenePlaying,
+                              'aria-pressed': this.state.isPlaying,
                               title: this.state.isPlaying
                                 ? 'Pause scene'
-                                : 'Resume scene',
-                              onClick: this.toggleScenePlaying,
-                              children: this.state.isPlaying
-                                ? /*#__PURE__*/ (0,
-                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,
-                                    {
-                                      children: [
-                                        /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                                          {
-                                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faPause
-                                          }
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                          'span',
-                                          {
-                                            children: 'Pause Scene'
-                                          }
-                                        )
-                                      ]
-                                    }
-                                  )
-                                : /*#__PURE__*/ (0,
-                                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(
-                                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment,
-                                    {
-                                      children: [
-                                        /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                          _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
-                                          {
-                                            icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faPlay
-                                          }
-                                        ),
-                                        /*#__PURE__*/ (0,
-                                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                                          'span',
-                                          {
-                                            children: 'Play Scene'
-                                          }
-                                        )
-                                      ]
-                                    }
-                                  )
+                                : 'Play scene',
+                              children: [
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                  _AwesomeIcon__WEBPACK_IMPORTED_MODULE_1__.AwesomeIcon,
+                                  {
+                                    icon: this.state.isPlaying
+                                      ? _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__.faPause
+                                      : _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__.faPlay
+                                  }
+                                ),
+                                /*#__PURE__*/ (0,
+                                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                                  'span',
+                                  {
+                                    children: this.state.isPlaying
+                                      ? 'Pause Scene'
+                                      : 'Play Scene'
+                                  }
+                                )
+                              ]
                             }
                           )
                         ]
                       }
                     ),
-                    this.state.isAddEntityModalOpen &&
-                      /*#__PURE__*/ (0,
-                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(
-                        _modals_ModalPrimitive__WEBPACK_IMPORTED_MODULE_4__[
-                          'default'
-                        ],
-                        {
-                          isOpen: this.state.isAddEntityModalOpen,
-                          onClose: this.toggleAddEntityModal, // Pass function to close modal
-                          onSelectPrimitive: this.createEntity // Pass function to create entity
+                    /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
+                      _modals_ModalPrimitive__WEBPACK_IMPORTED_MODULE_3__[
+                        'default'
+                      ],
+                      {
+                        isOpen: this.state.isAddEntityModalOpen,
+                        onClose: function onClose() {
+                          return _this3.setState({
+                            isAddEntityModalOpen: false
+                          });
+                        },
+                        onSelectPrimitive: function onSelectPrimitive(element) {
+                          if (element)
+                            _lib_Events__WEBPACK_IMPORTED_MODULE_2__[
+                              'default'
+                            ].emit('entitycreate', {
+                              element: element,
+                              components: {}
+                            });
+                          _this3.setState({
+                            isAddEntityModalOpen: false
+                          });
                         }
-                      )
+                      }
+                    )
                   ]
                 });
               }
@@ -110208,20 +108088,6 @@ object-assign
             e
           );
         }
-        function _toPropertyKey(t) {
-          var i = _toPrimitive(t, 'string');
-          return 'symbol' == _typeof(i) ? i : i + '';
-        }
-        function _toPrimitive(t, r) {
-          if ('object' != _typeof(t) || !t) return t;
-          var e = t[Symbol.toPrimitive];
-          if (void 0 !== e) {
-            var i = e.call(t, r || 'default');
-            if ('object' != _typeof(i)) return i;
-            throw new TypeError('@@toPrimitive must return a primitive value.');
-          }
-          return ('string' === r ? String : Number)(t);
-        }
         function _callSuper(t, o, e) {
           return (
             (o = _getPrototypeOf(o)),
@@ -110289,6 +108155,33 @@ object-assign
                 }),
             _setPrototypeOf(t, e)
           );
+        }
+        function _defineProperty(e, r, t) {
+          return (
+            (r = _toPropertyKey(r)) in e
+              ? Object.defineProperty(e, r, {
+                  value: t,
+                  enumerable: !0,
+                  configurable: !0,
+                  writable: !0
+                })
+              : (e[r] = t),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
         }
 
         // Import custom SVG icons
@@ -110398,6 +108291,11 @@ object-assign
             var _this;
             _classCallCheck(this, CameraToolbar);
             _this = _callSuper(this, CameraToolbar, [props]);
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_1__.createEventScope)()
+            );
             _this.state = {
               selectedCamera: 'perspective'
             };
@@ -110407,34 +108305,41 @@ object-assign
           _inherits(CameraToolbar, _React$Component);
           return _createClass(CameraToolbar, [
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
+              }
+            },
+            {
               key: 'componentDidMount',
               value: function componentDidMount() {
                 var _this2 = this;
-                _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].on(
-                  'cameratoggle',
-                  function (data) {
-                    if (_this2.justChangedCamera) {
-                      // Prevent recursion.
-                      _this2.justChangedCamera = false;
-                      return;
-                    }
-                    // Check if the incoming data value exists in our options
-                    var isValidOption = options.some(function (opt) {
-                      return opt.value === data.value;
-                    });
-                    if (isValidOption) {
-                      _this2.setState({
-                        selectedCamera: data.value
-                      });
-                    }
+                this.events.on('scenereload', function () {
+                  return _this2.setState({
+                    selectedCamera: 'perspective'
+                  });
+                });
+                this.events.on('cameratoggle', function (data) {
+                  if (_this2.justChangedCamera) {
+                    // Prevent recursion.
+                    _this2.justChangedCamera = false;
+                    return;
                   }
-                );
+                  // Check if the incoming data value exists in our options
+                  var isValidOption = options.some(function (opt) {
+                    return opt.value === data.value;
+                  });
+                  if (isValidOption) {
+                    _this2.setState({
+                      selectedCamera: data.value
+                    });
+                  }
+                });
               }
             },
             {
               key: 'onChange',
               value: function onChange(option) {
-                console.log('Selected Camera Option:', option);
                 this.justChangedCamera = true;
                 this.setState({
                   selectedCamera: option.value
@@ -110481,6 +108386,7 @@ object-assign
                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(
                     react_select__WEBPACK_IMPORTED_MODULE_10__['default'],
                     {
+                      'aria-label': 'Camera view',
                       id: 'cameraSelect',
                       classNamePrefix: 'select',
                       options: options,
@@ -110711,6 +108617,11 @@ object-assign
             var _this;
             _classCallCheck(this, TransformToolbar);
             _this = _callSuper(this, TransformToolbar, [props]);
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_3__.createEventScope)()
+            );
             _defineProperty(_this, 'changeTransformMode', function (mode) {
               _this.setState({
                 selectedTransform: mode
@@ -110741,9 +108652,12 @@ object-assign
                   });
                   return /*#__PURE__*/ (0,
                   react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(
-                    'a',
+                    'button',
                     {
+                      type: 'button',
                       title: option.value,
+                      'aria-label': option.value,
+                      'aria-pressed': selected,
                       onClick: this.changeTransformMode.bind(
                         this,
                         option.value
@@ -110765,29 +108679,35 @@ object-assign
           _inherits(TransformToolbar, _React$Component);
           return _createClass(TransformToolbar, [
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
+              }
+            },
+            {
               key: 'componentDidMount',
               value: function componentDidMount() {
                 var _this2 = this;
-                _lib_Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-                  'transformmodechange',
-                  function (mode) {
-                    _this2.setState({
-                      selectedTransform: mode
-                    });
-                  }
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-                  'transformspacechange',
-                  function () {
-                    _lib_Events__WEBPACK_IMPORTED_MODULE_3__['default'].emit(
-                      'transformspacechanged',
-                      _this2.state.localSpace ? 'world' : 'local'
-                    );
-                    _this2.setState({
-                      localSpace: !_this2.state.localSpace
-                    });
-                  }
-                );
+                this.events.on('scenereload', function () {
+                  return _this2.setState({
+                    selectedTransform: 'translate',
+                    localSpace: false
+                  });
+                });
+                this.events.on('transformmodechange', function (mode) {
+                  _this2.setState({
+                    selectedTransform: mode
+                  });
+                });
+                this.events.on('transformspacechange', function () {
+                  _lib_Events__WEBPACK_IMPORTED_MODULE_3__['default'].emit(
+                    'transformspacechanged',
+                    _this2.state.localSpace ? 'world' : 'local'
+                  );
+                  _this2.setState({
+                    localSpace: !_this2.state.localSpace
+                  });
+                });
               }
             },
             {
@@ -110878,20 +108798,6 @@ object-assign
             e
           );
         }
-        function _toPropertyKey(t) {
-          var i = _toPrimitive(t, 'string');
-          return 'symbol' == _typeof(i) ? i : i + '';
-        }
-        function _toPrimitive(t, r) {
-          if ('object' != _typeof(t) || !t) return t;
-          var e = t[Symbol.toPrimitive];
-          if (void 0 !== e) {
-            var i = e.call(t, r || 'default');
-            if ('object' != _typeof(i)) return i;
-            throw new TypeError('@@toPrimitive must return a primitive value.');
-          }
-          return ('string' === r ? String : Number)(t);
-        }
         function _callSuper(t, o, e) {
           return (
             (o = _getPrototypeOf(o)),
@@ -110960,12 +108866,44 @@ object-assign
             _setPrototypeOf(t, e)
           );
         }
+        function _defineProperty(e, r, t) {
+          return (
+            (r = _toPropertyKey(r)) in e
+              ? Object.defineProperty(e, r, {
+                  value: t,
+                  enumerable: !0,
+                  configurable: !0,
+                  writable: !0
+                })
+              : (e[r] = t),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
+        }
 
         var ViewportHUD = /*#__PURE__*/ (function (_React$Component) {
           function ViewportHUD(props) {
             var _this;
             _classCallCheck(this, ViewportHUD);
             _this = _callSuper(this, ViewportHUD, [props]);
+            _defineProperty(
+              _this,
+              'events',
+              (0, _lib_Events__WEBPACK_IMPORTED_MODULE_2__.createEventScope)()
+            );
             _this.state = {
               hoveredEntity: null,
               selectedEntity: null
@@ -110975,25 +108913,30 @@ object-assign
           _inherits(ViewportHUD, _React$Component);
           return _createClass(ViewportHUD, [
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                this.events.dispose();
+              }
+            },
+            {
               key: 'componentDidMount',
               value: function componentDidMount() {
                 var _this2 = this;
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'raycastermouseenter',
-                  function (el) {
-                    _this2.setState({
-                      hoveredEntity: el
-                    });
-                  }
-                );
-                _lib_Events__WEBPACK_IMPORTED_MODULE_2__['default'].on(
-                  'raycastermouseleave',
-                  function (el) {
-                    _this2.setState({
-                      hoveredEntity: el
-                    });
-                  }
-                );
+                this.events.on('scenereload', function () {
+                  return _this2.setState({
+                    hoveredEntity: null
+                  });
+                });
+                this.events.on('raycastermouseenter', function (el) {
+                  _this2.setState({
+                    hoveredEntity: el
+                  });
+                });
+                this.events.on('raycastermouseleave', function () {
+                  _this2.setState({
+                    hoveredEntity: null
+                  });
+                });
               }
             },
             {
@@ -111226,10 +109169,13 @@ object-assign
             {
               key: 'render',
               value: function render() {
-                var id = this.props.componentname + '.' + this.props.name;
+                var id =
+                  this.props.id ||
+                  this.props.componentname + '.' + this.props.name;
                 return /*#__PURE__*/ (0,
                 react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('input', {
                   id: id,
+                  'aria-label': this.props.label || this.props.name,
                   type: 'checkbox',
                   checked: this.state.value,
                   value: this.state.value,
@@ -111240,6 +109186,8 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(BooleanWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           componentname:
             prop_types__WEBPACK_IMPORTED_MODULE_2___default().string.isRequired,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_2___default().object,
@@ -111493,6 +109441,8 @@ object-assign
                     react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
                       'input',
                       {
+                        'aria-label':
+                          (this.props.label || this.props.name) + ' picker',
                         type: 'color',
                         className: 'color',
                         value: this.state.pickerValue,
@@ -111505,6 +109455,8 @@ object-assign
                       'input',
                       {
                         type: 'text',
+                        id: this.props.id,
+                        'aria-label': this.props.label || this.props.name,
                         className: 'color_value',
                         value: this.state.value,
                         onKeyUp: this.onKeyUp,
@@ -111518,6 +109470,8 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(ColorWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           componentname:
             prop_types__WEBPACK_IMPORTED_MODULE_2___default().string.isRequired,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_2___default().object,
@@ -111738,6 +109692,8 @@ object-assign
               value: function render() {
                 return /*#__PURE__*/ (0,
                 react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('input', {
+                  id: this.props.id,
+                  'aria-label': this.props.label || this.props.name,
                   type: 'text',
                   className: 'string',
                   value: this.state.value || '',
@@ -111748,6 +109704,8 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(InputWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           componentname:
             prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_2___default().object,
@@ -111930,183 +109888,218 @@ object-assign
         }
 
         var NumberWidget = /*#__PURE__*/ (function (_React$Component) {
-          function NumberWidget(props) {
+          function NumberWidget() {
             var _this;
             _classCallCheck(this, NumberWidget);
-            _this = _callSuper(this, NumberWidget, [props]);
-            _defineProperty(_this, 'onMouseMove', function (event) {
-              var currentValue = parseFloat(_this.state.value);
-              var pointer = [event.clientX, event.clientY];
-              var delta =
-                pointer[0] -
-                _this.prevPointer[0] -
-                (pointer[1] - _this.prevPointer[1]);
-              _this.distance += delta;
-
-              // Add minimum tolerance to reduce unintentional drags when clicking on input.
-              // if (Math.abs(delta) <= 2) { return; }
-
-              var value =
-                _this.onMouseDownValue +
-                ((_this.distance / (event.shiftKey ? 5 : 50)) *
-                  _this.props.step) /
-                  2;
-              value = Math.min(
-                _this.props.max,
-                Math.max(_this.props.min, value)
-              );
-              if (currentValue !== value) {
-                _this.setValue(value);
-              }
-              _this.prevPointer = [event.clientX, event.clientY];
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, NumberWidget, [].concat(args));
+            _defineProperty(_this, 'state', {
+              displayValue: _this.format(_this.props.value),
+              error: ''
             });
+            _defineProperty(
+              _this,
+              'input',
+              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef()
+            );
+            _defineProperty(_this, 'distance', 0);
             _defineProperty(_this, 'onMouseDown', function (event) {
+              if (event.button !== 0) return;
               event.preventDefault();
               _this.distance = 0;
-              _this.onMouseDownValue = _this.state.value;
-              _this.prevPointer = [event.clientX, event.clientY];
-              document.addEventListener('mousemove', _this.onMouseMove, false);
-              document.addEventListener('mouseup', _this.onMouseUp, false);
+              _this.startValue = Number(_this.props.value) || 0;
+              _this.pointer = [event.clientX, event.clientY];
+              document.addEventListener('mousemove', _this.onMouseMove);
+              document.addEventListener('mouseup', _this.onMouseUp);
+            });
+            _defineProperty(_this, 'onMouseMove', function (event) {
+              _this.distance +=
+                event.clientX -
+                _this.pointer[0] -
+                (event.clientY - _this.pointer[1]);
+              _this.pointer = [event.clientX, event.clientY];
+              if (Math.abs(_this.distance) < 2) return;
+              var step =
+                _this.props.precision === 0
+                  ? Math.max(1, _this.props.step)
+                  : _this.props.step;
+              _this.setValue(
+                _this.startValue +
+                  Math.trunc(_this.distance / (event.shiftKey ? 1 : 5)) * step
+              );
             });
             _defineProperty(_this, 'onMouseUp', function () {
-              document.removeEventListener(
-                'mousemove',
-                _this.onMouseMove,
-                false
-              );
-              document.removeEventListener('mouseup', _this.onMouseUp, false);
-              if (Math.abs(_this.distance) < 2) {
+              document.removeEventListener('mousemove', _this.onMouseMove);
+              document.removeEventListener('mouseup', _this.onMouseUp);
+              if (Math.abs(_this.distance) < 2 && _this.input.current) {
                 _this.input.current.focus();
                 _this.input.current.select();
               }
             });
-            _defineProperty(_this, 'onBlur', function () {
-              _this.setValue(parseFloat(_this.input.current.value));
-              _this.setState({
-                class: ''
-              });
-            });
-            _defineProperty(_this, 'onChange', function (e) {
-              _this.setState({
-                value: e.target.value,
-                displayValue: e.target.value
-              });
-            });
             _defineProperty(_this, 'onKeyDown', function (event) {
-              event.stopPropagation();
-
-              // enter.
-              if (event.keyCode === 13) {
-                _this.setValue(parseFloat(_this.input.current.value));
-                _this.input.current.blur();
-                return;
-              }
-
-              // up.
-              if (event.keyCode === 38) {
-                _this.setValue(parseFloat(_this.state.value) + 0.01);
-                return;
-              }
-
-              // down.
-              if (event.keyCode === 40) {
-                _this.setValue(parseFloat(_this.state.value) - 0.01);
-                return;
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                if (_this.setValue(_this.input.current.value))
+                  _this.input.current.blur();
+              } else if (event.key === 'Escape') {
+                event.stopPropagation();
+                _this.setState({
+                  displayValue: _this.format(_this.props.value),
+                  error: ''
+                });
+              } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                event.preventDefault();
+                event.stopPropagation();
+                var step =
+                  _this.props.precision === 0
+                    ? Math.max(1, _this.props.step)
+                    : _this.props.step;
+                if (event.shiftKey) step *= 10;
+                if (event.altKey && _this.props.precision !== 0)
+                  step = Math.max(
+                    Math.pow(10, -_this.props.precision),
+                    step / 10
+                  );
+                var current = Number(_this.input.current.value);
+                _this.setValue(
+                  (Number.isFinite(current) ? current : _this.props.value) +
+                    (event.key === 'ArrowUp' ? step : -step)
+                );
               }
             });
-            _this.state = {
-              value: _this.props.value,
-              displayValue:
-                typeof _this.props.value === 'number'
-                  ? _this.props.value.toFixed(_this.props.precision)
-                  : ''
-            };
-            _this.input =
-              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
             return _this;
           }
           _inherits(NumberWidget, _React$Component);
           return _createClass(NumberWidget, [
             {
-              key: 'componentDidMount',
-              value: function componentDidMount() {
-                this.distance = 0;
-                this.onMouseDownValue = 0;
-                this.prevPointer = [0, 0];
-                this.setValue(this.props.value);
-                this.onBlur();
-              }
-            },
-            {
-              key: 'setValue',
-              value: function setValue(value) {
-                if (value === this.state.value) return;
-                if (value !== undefined) {
-                  if (this.props.precision === 0) {
-                    value = parseInt(value);
-                  } else {
-                    value = parseFloat(value);
-                  }
-
-                  // If we inadvertently typed a character in the field, set value to the previous value from props
-                  if (isNaN(value)) {
-                    value = this.props.value;
-                  }
-                  if (value < this.props.min) {
-                    value = this.props.min;
-                  }
-                  if (value > this.props.max) {
-                    value = this.props.max;
-                  }
-                  this.setState({
-                    value: value,
-                    displayValue: value.toFixed(this.props.precision)
-                  });
-                  if (this.props.onChange) {
-                    this.props.onChange(
-                      this.props.name,
-                      parseFloat(value.toFixed(5))
-                    );
-                  }
-                }
+              key: 'format',
+              value: function format(value) {
+                return Number.isFinite(value)
+                  ? value.toFixed(this.props.precision)
+                  : '';
               }
             },
             {
               key: 'componentDidUpdate',
               value: function componentDidUpdate(prevProps) {
-                // This will be triggered typically when the element is changed directly with
-                // element.setAttribute.
-
-                // We use Object.is instead of === for comparison here so that comparing two NaN doesn't trigger an infinite update.
-                // Object.is(NaN, NaN) is true, NaN === NaN is false
                 if (!Object.is(this.props.value, prevProps.value)) {
                   this.setState({
-                    value: this.props.value,
-                    displayValue: this.props.value.toFixed(this.props.precision)
+                    displayValue: this.format(this.props.value),
+                    error: ''
                   });
                 }
               }
             },
             {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                document.removeEventListener('mousemove', this.onMouseMove);
+                document.removeEventListener('mouseup', this.onMouseUp);
+              }
+            },
+            {
+              key: 'setValue',
+              value: function setValue(raw) {
+                var _this$props$onChange, _this$props;
+                var value =
+                  typeof raw === 'number'
+                    ? raw
+                    : raw.trim() === ''
+                      ? NaN
+                      : Number(raw);
+                if (!Number.isFinite(value)) {
+                  this.setState({
+                    error: 'Enter a finite number.'
+                  });
+                  return false;
+                }
+                if (this.props.precision === 0) value = Math.round(value);
+                value = Math.min(
+                  this.props.max,
+                  Math.max(this.props.min, value)
+                );
+                value = Number(value.toFixed(this.props.precision));
+                this.setState({
+                  displayValue: this.format(value),
+                  error: ''
+                });
+                if (!Object.is(value, this.props.value))
+                  (_this$props$onChange = (_this$props = this.props)
+                    .onChange) === null ||
+                    _this$props$onChange === void 0 ||
+                    _this$props$onChange.call(
+                      _this$props,
+                      this.props.name,
+                      value
+                    );
+                return true;
+              }
+            },
+            {
               key: 'render',
               value: function render() {
+                var _this2 = this;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)('input', {
-                  ref: this.input,
-                  className: 'number',
-                  type: 'text',
-                  value: this.state.displayValue,
-                  onKeyDown: this.onKeyDown,
-                  onChange: this.onChange,
-                  onMouseDown: this.onMouseDown,
-                  onFocus: this.onFocus,
-                  onBlur: this.onBlur
-                });
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(
+                  react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment,
+                  {
+                    children: [
+                      /*#__PURE__*/ (0,
+                      react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
+                        'input',
+                        {
+                          id: this.props.id,
+                          'aria-label': this.props.label || this.props.name,
+                          ref: this.input,
+                          className: 'number',
+                          type: 'text',
+                          inputMode: 'decimal',
+                          value: this.state.displayValue,
+                          'aria-invalid': !!this.state.error,
+                          'aria-describedby': this.state.error
+                            ? this.props.id + '-error'
+                            : undefined,
+                          onChange: function onChange(event) {
+                            return _this2.setState({
+                              displayValue: event.target.value,
+                              error: ''
+                            });
+                          },
+                          onKeyDown: this.onKeyDown,
+                          onMouseDown: this.onMouseDown,
+                          onBlur: function onBlur() {
+                            return _this2.setValue(_this2.input.current.value);
+                          }
+                        }
+                      ),
+                      this.state.error &&
+                        /*#__PURE__*/ (0,
+                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
+                          'span',
+                          {
+                            id: this.props.id + '-error',
+                            className: 'field-error',
+                            role: 'alert',
+                            children: this.state.error
+                          }
+                        )
+                    ]
+                  }
+                );
               }
             }
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(NumberWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           componentname:
             prop_types__WEBPACK_IMPORTED_MODULE_2___default().string,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_2___default().object,
@@ -112123,7 +110116,7 @@ object-assign
           max: Infinity,
           value: 0,
           precision: 3,
-          step: 1
+          step: 0.01
         });
 
         /***/
@@ -112308,6 +110301,7 @@ object-assign
             _classCallCheck(this, SelectWidget);
             _this = _callSuper(this, SelectWidget, [props]);
             _defineProperty(_this, 'onChange', function (value) {
+              if (!value) return;
               _this.setState(
                 {
                   value: value
@@ -112357,11 +110351,13 @@ object-assign
                 react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
                   react_select__WEBPACK_IMPORTED_MODULE_2__['default'],
                   {
+                    inputId: this.props.id,
+                    'aria-label': this.props.label || this.props.name,
                     className: 'select-widget',
                     classNamePrefix: 'select',
                     options: options,
                     simpleValue: true,
-                    clearable: true,
+                    isClearable: false,
                     placeholder: '',
                     value: this.state.value,
                     noResultsText: 'No value found',
@@ -112374,6 +110370,8 @@ object-assign
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(SelectWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           componentname:
             prop_types__WEBPACK_IMPORTED_MODULE_3___default().string.isRequired,
           entity: prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
@@ -112409,6 +110407,467 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ =
+          __webpack_require__(
+            /*! prop-types */ './node_modules/prop-types/index.js'
+          );
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default =
+          /*#__PURE__*/ __webpack_require__.n(
+            prop_types__WEBPACK_IMPORTED_MODULE_4__
+          );
+        /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(/*! ../../lib/Events */ './src/lib/Events.js');
+        /* harmony import */ var _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_2__ =
+          __webpack_require__(
+            /*! ../../lib/assetsUtils */ './src/lib/assetsUtils.js'
+          );
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ =
+          __webpack_require__(
+            /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
+          );
+        function _typeof(o) {
+          '@babel/helpers - typeof';
+          return (
+            (_typeof =
+              'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+                ? function (o) {
+                    return typeof o;
+                  }
+                : function (o) {
+                    return o &&
+                      'function' == typeof Symbol &&
+                      o.constructor === Symbol &&
+                      o !== Symbol.prototype
+                      ? 'symbol'
+                      : typeof o;
+                  }),
+            _typeof(o)
+          );
+        }
+        function _toConsumableArray(r) {
+          return (
+            _arrayWithoutHoles(r) ||
+            _iterableToArray(r) ||
+            _unsupportedIterableToArray(r) ||
+            _nonIterableSpread()
+          );
+        }
+        function _nonIterableSpread() {
+          throw new TypeError(
+            'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+          );
+        }
+        function _unsupportedIterableToArray(r, a) {
+          if (r) {
+            if ('string' == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return (
+              'Object' === t && r.constructor && (t = r.constructor.name),
+              'Map' === t || 'Set' === t
+                ? Array.from(r)
+                : 'Arguments' === t ||
+                    /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+                  ? _arrayLikeToArray(r, a)
+                  : void 0
+            );
+          }
+        }
+        function _iterableToArray(r) {
+          if (
+            ('undefined' != typeof Symbol && null != r[Symbol.iterator]) ||
+            null != r['@@iterator']
+          )
+            return Array.from(r);
+        }
+        function _arrayWithoutHoles(r) {
+          if (Array.isArray(r)) return _arrayLikeToArray(r);
+        }
+        function _arrayLikeToArray(r, a) {
+          (null == a || a > r.length) && (a = r.length);
+          for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+          return n;
+        }
+        function _classCallCheck(a, n) {
+          if (!(a instanceof n))
+            throw new TypeError('Cannot call a class as a function');
+        }
+        function _defineProperties(e, r) {
+          for (var t = 0; t < r.length; t++) {
+            var o = r[t];
+            (o.enumerable = o.enumerable || !1),
+              (o.configurable = !0),
+              'value' in o && (o.writable = !0),
+              Object.defineProperty(e, _toPropertyKey(o.key), o);
+          }
+        }
+        function _createClass(e, r, t) {
+          return (
+            r && _defineProperties(e.prototype, r),
+            t && _defineProperties(e, t),
+            Object.defineProperty(e, 'prototype', { writable: !1 }),
+            e
+          );
+        }
+        function _callSuper(t, o, e) {
+          return (
+            (o = _getPrototypeOf(o)),
+            _possibleConstructorReturn(
+              t,
+              _isNativeReflectConstruct()
+                ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor)
+                : o.apply(t, e)
+            )
+          );
+        }
+        function _possibleConstructorReturn(t, e) {
+          if (e && ('object' == _typeof(e) || 'function' == typeof e)) return e;
+          if (void 0 !== e)
+            throw new TypeError(
+              'Derived constructors may only return object or undefined'
+            );
+          return _assertThisInitialized(t);
+        }
+        function _assertThisInitialized(e) {
+          if (void 0 === e)
+            throw new ReferenceError(
+              "this hasn't been initialised - super() hasn't been called"
+            );
+          return e;
+        }
+        function _isNativeReflectConstruct() {
+          try {
+            var t = !Boolean.prototype.valueOf.call(
+              Reflect.construct(Boolean, [], function () {})
+            );
+          } catch (t) {}
+          return (_isNativeReflectConstruct =
+            function _isNativeReflectConstruct() {
+              return !!t;
+            })();
+        }
+        function _getPrototypeOf(t) {
+          return (
+            (_getPrototypeOf = Object.setPrototypeOf
+              ? Object.getPrototypeOf.bind()
+              : function (t) {
+                  return t.__proto__ || Object.getPrototypeOf(t);
+                }),
+            _getPrototypeOf(t)
+          );
+        }
+        function _inherits(t, e) {
+          if ('function' != typeof e && null !== e)
+            throw new TypeError(
+              'Super expression must either be null or a function'
+            );
+          (t.prototype = Object.create(e && e.prototype, {
+            constructor: { value: t, writable: !0, configurable: !0 }
+          })),
+            Object.defineProperty(t, 'prototype', { writable: !1 }),
+            e && _setPrototypeOf(t, e);
+        }
+        function _setPrototypeOf(t, e) {
+          return (
+            (_setPrototypeOf = Object.setPrototypeOf
+              ? Object.setPrototypeOf.bind()
+              : function (t, e) {
+                  return (t.__proto__ = e), t;
+                }),
+            _setPrototypeOf(t, e)
+          );
+        }
+        function _defineProperty(e, r, t) {
+          return (
+            (r = _toPropertyKey(r)) in e
+              ? Object.defineProperty(e, r, {
+                  value: t,
+                  enumerable: !0,
+                  configurable: !0,
+                  writable: !0
+                })
+              : (e[r] = t),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
+        }
+
+        function normalize(value) {
+          if (
+            value instanceof HTMLImageElement ||
+            value instanceof HTMLVideoElement
+          ) {
+            return value.id ? '#' + value.id : value.src;
+          }
+          return typeof value === 'string' ? value : '';
+        }
+        var TextureWidget = /*#__PURE__*/ (function (_React$Component) {
+          function TextureWidget() {
+            var _this;
+            _classCallCheck(this, TextureWidget);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, TextureWidget, [].concat(args));
+            _defineProperty(_this, 'state', {
+              value: normalize(_this.props.value)
+            });
+            _defineProperty(
+              _this,
+              'canvas',
+              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef()
+            );
+            _defineProperty(_this, 'previewVersion', 0);
+            _defineProperty(_this, 'changeValue', function (value) {
+              var _this$props$onChange, _this$props;
+              _this.setState({
+                value: value
+              });
+              (_this$props$onChange = (_this$props = _this.props).onChange) ===
+                null ||
+                _this$props$onChange === void 0 ||
+                _this$props$onChange.call(_this$props, _this.props.name, value);
+            });
+            _defineProperty(_this, 'openDialog', function () {
+              _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+                'opentexturesmodal',
+                _this.state.value,
+                function (image) {
+                  if (!image || !_this.canvas.current) return;
+                  if (image.type === 'asset') {
+                    _this.changeValue(image.value);
+                    return;
+                  }
+                  var assets = _toConsumableArray(
+                    _this.props.entity.sceneEl.querySelectorAll('a-assets img')
+                  );
+                  var existing = assets.find(function (asset) {
+                    return asset.src === image.src;
+                  });
+                  if (existing) {
+                    _this.changeValue('#' + existing.id);
+                    return;
+                  }
+                  var base =
+                    'texture-' +
+                    (image.id || image.name || 'image').replace(/[^\w-]/g, '-');
+                  var id = base;
+                  var suffix = 2;
+                  while (document.getElementById(id))
+                    id = base + '-' + suffix++;
+                  (0,
+                  _lib_assetsUtils__WEBPACK_IMPORTED_MODULE_2__.insertNewAsset)(
+                    'img',
+                    id,
+                    image.src,
+                    true,
+                    function () {
+                      if (_this.canvas.current) _this.changeValue('#' + id);
+                    }
+                  );
+                }
+              );
+            });
+            return _this;
+          }
+          _inherits(TextureWidget, _React$Component);
+          return _createClass(TextureWidget, [
+            {
+              key: 'componentDidMount',
+              value: function componentDidMount() {
+                this.paintPreview();
+              }
+            },
+            {
+              key: 'componentDidUpdate',
+              value: function componentDidUpdate(prevProps, prevState) {
+                var value = normalize(this.props.value);
+                // A-Frame may resolve '#id' to an image; compare canonical strings.
+                if (
+                  value !== normalize(prevProps.value) ||
+                  this.props.entity !== prevProps.entity
+                ) {
+                  if (value !== this.state.value) {
+                    this.setState({
+                      value: value
+                    });
+                    return;
+                  }
+                  this.paintPreview();
+                } else if (prevState.value !== this.state.value) {
+                  this.paintPreview();
+                }
+              }
+            },
+            {
+              key: 'componentWillUnmount',
+              value: function componentWillUnmount() {
+                var _this$cancelImage;
+                this.previewVersion++;
+                (_this$cancelImage = this.cancelImage) === null ||
+                  _this$cancelImage === void 0 ||
+                  _this$cancelImage.call(this);
+              }
+            },
+            {
+              key: 'paintPreview',
+              value: function paintPreview() {
+                var _this$cancelImage2,
+                  _this2 = this;
+                var canvas = this.canvas.current;
+                if (!canvas) return;
+                (_this$cancelImage2 = this.cancelImage) === null ||
+                  _this$cancelImage2 === void 0 ||
+                  _this$cancelImage2.call(this);
+                var version = ++this.previewVersion;
+                var context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                var value = this.state.value;
+                var asset = value.startsWith('#')
+                  ? document.getElementById(value.slice(1))
+                  : null;
+                if (asset instanceof HTMLVideoElement || !value) return;
+                var url =
+                  (asset === null || asset === void 0 ? void 0 : asset.src) ||
+                  (value.startsWith('#')
+                    ? ''
+                    : AFRAME.utils.srcLoader.parseUrl(value));
+                if (!url) return;
+                var image = new Image();
+                var clear = function clear() {
+                  image.onload = image.onerror = null;
+                };
+                this.cancelImage = clear;
+                image.onload = function () {
+                  if (
+                    version === _this2.previewVersion &&
+                    _this2.canvas.current &&
+                    image.naturalWidth
+                  ) {
+                    var ratio = Math.min(
+                      canvas.width / image.naturalWidth,
+                      canvas.height / image.naturalHeight
+                    );
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.drawImage(
+                      image,
+                      0,
+                      0,
+                      image.naturalWidth * ratio,
+                      image.naturalHeight * ratio
+                    );
+                  }
+                  clear();
+                };
+                image.onerror = clear;
+                image.src = url;
+              }
+            },
+            {
+              key: 'render',
+              value: function render() {
+                var _this3 = this;
+                var label = this.props.label || this.props.name;
+                return /*#__PURE__*/ (0,
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)('span', {
+                  className: 'texture',
+                  children: [
+                    /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                      'input',
+                      {
+                        id: this.props.id,
+                        'aria-label': label,
+                        className: 'map_value string',
+                        type: 'text',
+                        value: this.state.value,
+                        onChange: function onChange(event) {
+                          return _this3.changeValue(event.target.value);
+                        }
+                      }
+                    ),
+                    /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'texture-picker',
+                        onClick: this.openDialog,
+                        'aria-label': 'Choose '.concat(label, ' texture'),
+                        title: 'Choose texture',
+                        children: /*#__PURE__*/ (0,
+                        react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                          'canvas',
+                          {
+                            ref: this.canvas,
+                            width: '32',
+                            height: '16',
+                            'aria-hidden': 'true'
+                          }
+                        )
+                      }
+                    )
+                  ]
+                });
+              }
+            }
+          ]);
+        })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
+        _defineProperty(TextureWidget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
+          componentname:
+            prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
+          entity: prop_types__WEBPACK_IMPORTED_MODULE_4___default().object,
+          name: prop_types__WEBPACK_IMPORTED_MODULE_4___default().string
+            .isRequired,
+          onChange: prop_types__WEBPACK_IMPORTED_MODULE_4___default().func,
+          value: prop_types__WEBPACK_IMPORTED_MODULE_4___default().oneOfType([
+            prop_types__WEBPACK_IMPORTED_MODULE_4___default().object,
+            prop_types__WEBPACK_IMPORTED_MODULE_4___default().string
+          ])
+        });
+
+        /***/
+      },
+
+    /***/ './src/components/widgets/Vec2Widget.js':
+      /*!**********************************************!*\
+  !*** ./src/components/widgets/Vec2Widget.js ***!
+  \**********************************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ default: () => /* binding */ Vec2Widget
+          /* harmony export */
+        });
+        /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(/*! react */ './node_modules/react/index.js');
+        /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default =
+          /*#__PURE__*/ __webpack_require__.n(
+            react__WEBPACK_IMPORTED_MODULE_0__
+          );
         /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
@@ -112417,8 +110876,10 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             prop_types__WEBPACK_IMPORTED_MODULE_3__
           );
-        /* harmony import */ var _lib_Events__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(/*! ../../lib/Events */ './src/lib/Events.js');
+        /* harmony import */ var _NumberWidget__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(
+            /*! ./NumberWidget */ './src/components/widgets/NumberWidget.js'
+          );
         /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
@@ -112559,596 +111020,70 @@ object-assign
           return ('string' === r ? String : Number)(t);
         }
 
-        function getUrlFromId(assetId) {
-          return (
-            assetId.length > 1 &&
-            document.querySelector(assetId) &&
-            document.querySelector(assetId).getAttribute('src')
-          );
-        }
-        function GetFilename(url) {
-          if (url) {
-            var m = url.toString().match(/.*\/(.+?)\./);
-            if (m && m.length > 1) {
-              return m[1];
-            }
-          }
-          return '';
-        }
-        function insertNewAsset(type, id, src) {
-          var element = null;
-          switch (type) {
-            case 'img':
-              {
-                element = document.createElement('img');
-                element.id = id;
-                element.src = src;
-              }
-              break;
-          }
-          if (element) {
-            document.getElementsByTagName('a-assets')[0].appendChild(element);
-          }
-        }
-        function insertOrGetImageAsset(src) {
-          var id = GetFilename(src);
-          // Search for already loaded asset by src
-          var element = document.querySelector(
-            "a-assets > img[src='" + src + "']"
-          );
-          if (element) {
-            id = element.id;
-          } else {
-            // Check if first char of the ID is a number (Non a valid ID)
-            // In that case a 'i' preffix will be added
-            if (!isNaN(parseInt(id[0], 10))) {
-              id = 'i' + id;
-            }
-            if (document.getElementById(id)) {
-              var i = 1;
-              while (document.getElementById(id + '_' + i)) {
-                i++;
-              }
-              id += '_' + i;
-            }
-            insertNewAsset('img', id, src);
-          }
-          return id;
-        }
-        var TextureWidget = /*#__PURE__*/ (function (_React$Component) {
-          function TextureWidget(props) {
-            var _this;
-            _classCallCheck(this, TextureWidget);
-            _this = _callSuper(this, TextureWidget, [props]);
-            _defineProperty(_this, 'notifyChanged', function (value) {
-              if (_this.props.onChange) {
-                _this.props.onChange(_this.props.name, value);
-              }
-              _this.setState({
-                value: value
-              });
-            });
-            _defineProperty(_this, 'onChange', function (e) {
-              var value = e.target.value;
-              _this.setState({
-                value: value
-              });
-              _this.notifyChanged(value);
-            });
-            _defineProperty(_this, 'removeMap', function () {
-              _this.setValue('');
-              _this.notifyChanged('');
-            });
-            _defineProperty(_this, 'openDialog', function () {
-              _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
-                'opentexturesmodal',
-                _this.state.value,
-                function (image) {
-                  if (!image) {
-                    return;
-                  }
-                  var value = image.value;
-                  if (image.type !== 'asset') {
-                    var assetId = insertOrGetImageAsset(image.src);
-                    value = '#' + assetId;
-                  }
-
-                  // Only call onChange - it will update the entity which triggers
-                  // componentDidUpdate to sync our state. Don't call setValue here
-                  // as that would cause duplicate state updates and potential loops.
-                  if (_this.props.onChange) {
-                    _this.props.onChange(_this.props.name, value);
-                  }
-
-                  // Update local state directly without triggering the full setValue flow
-                  // to update the preview immediately
-                  _this.setState({
-                    value: value
-                  });
-                }
-              );
-            });
-            _this.state = {
-              value: _this.props.value || ''
-            };
-            _this.canvas =
-              /*#__PURE__*/ react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-            return _this;
-          }
-          _inherits(TextureWidget, _React$Component);
-          return _createClass(TextureWidget, [
-            {
-              key: 'componentDidMount',
-              value: function componentDidMount() {
-                this.setValue(this.props.value || '');
-              }
-            },
-            {
-              key: 'componentDidUpdate',
-              value: function componentDidUpdate(prevProps) {
-                var _component$attrValue;
-                var component =
-                  this.props.entity.components[this.props.componentname];
-                if (!component) {
-                  return;
-                }
-                // component.attrValue may be undefined if component is from a mixin
-                var newValue =
-                  (_component$attrValue = component.attrValue) === null ||
-                  _component$attrValue === void 0
-                    ? void 0
-                    : _component$attrValue[this.props.name];
-
-                // Only update if the new value differs from our current state
-                // This prevents infinite loops when setValue triggers re-renders
-                if (newValue && newValue !== this.state.value) {
-                  this.setValue(newValue);
-                }
-              }
-            },
-            {
-              key: 'setValue',
-              value: function setValue(value) {
-                var canvas = this.canvas.current;
-                var context = canvas.getContext('2d');
-                function paintPreviewWithImage(image) {
-                  var filename = image.src.replace(/^.*[\\/]/, '');
-                  if (image !== undefined && image.width > 0) {
-                    canvas.title = filename;
-                    var scale = canvas.width / image.width;
-                    context.drawImage(
-                      image,
-                      0,
-                      0,
-                      image.width * scale,
-                      image.height * scale
-                    );
-                    // self.setState({dataURL: canvas.toDataURL()});
-                  } else {
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                  }
-                }
-                function paintPreview(texture) {
-                  var image = texture.image;
-                  paintPreviewWithImage(image);
-                }
-                function getTextureFromSrc(src) {
-                  for (var hash in AFRAME.INSPECTOR.sceneEl.systems.material
-                    .textureCache) {
-                    // The key in textureCache is not always a json.
-                    // For example <a-videosphere src="#video"> gives a "video" key in textureCache.
-                    // So we check for '{' before using JSON.parse here.
-                    if (hash[0] === '{' && JSON.parse(hash).src === src) {
-                      return AFRAME.INSPECTOR.sceneEl.systems.material
-                        .textureCache[hash];
-                    }
-                  }
-                  return null;
-                }
-                var url;
-                var isAssetHash = value[0] === '#';
-                var isAssetImg = value instanceof HTMLImageElement;
-                var isAssetVideo = value instanceof HTMLVideoElement;
-                var isAssetImgOrVideo = isAssetImg || isAssetVideo;
-                if (isAssetImgOrVideo) {
-                  url = value.src;
-                } else if (isAssetHash) {
-                  url = getUrlFromId(value);
-                } else {
-                  url = AFRAME.utils.srcLoader.parseUrl(value);
-                }
-                var texture = getTextureFromSrc(value);
-                var valueType = null;
-                valueType = isAssetImgOrVideo || isAssetHash ? 'asset' : 'url';
-                if (!isAssetVideo && texture) {
-                  texture.then(paintPreview);
-                } else if (!isAssetVideo && url) {
-                  // The image still didn't load
-                  var image = new Image();
-                  image.addEventListener(
-                    'load',
-                    function () {
-                      paintPreviewWithImage(image);
-                    },
-                    false
-                  );
-                  image.src = url;
-                } else {
-                  context.clearRect(0, 0, canvas.width, canvas.height);
-                }
-                this.setState({
-                  value: isAssetImgOrVideo ? '#' + value.id : value,
-                  valueType: valueType,
-                  url: url
-                });
-              }
-            },
-            {
-              key: 'render',
-              value: function render() {
-                var hint = '';
-                if (this.state.value) {
-                  if (this.state.valueType === 'asset') {
-                    hint =
-                      'Asset ID: ' +
-                      this.state.value +
-                      '\nURL: ' +
-                      this.state.url;
-                  } else {
-                    hint = 'URL: ' + this.state.value;
-                  }
-                }
-                return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)('span', {
-                  className: 'texture',
-                  children: [
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
-                      'input',
-                      {
-                        className: 'map_value string',
-                        type: 'text',
-                        title: hint,
-                        value: this.state.value,
-                        onChange: this.onChange
-                      }
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
-                      'canvas',
-                      {
-                        ref: this.canvas,
-                        width: '32',
-                        height: '16',
-                        title: hint,
-                        onClick: this.openDialog
-                      }
-                    )
-                  ]
-                });
-              }
-            }
-          ]);
-        })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
-        _defineProperty(TextureWidget, 'propTypes', {
-          componentname:
-            prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
-          entity: prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
-          mapName: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
-          name: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string
-            .isRequired,
-          onChange: prop_types__WEBPACK_IMPORTED_MODULE_3___default().func,
-          value: prop_types__WEBPACK_IMPORTED_MODULE_3___default().oneOfType([
-            prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
-            prop_types__WEBPACK_IMPORTED_MODULE_3___default().string
-          ])
-        });
-        _defineProperty(TextureWidget, 'defaultProps', {
-          value: '',
-          mapName: 'nomap',
-          dataURL: ''
-        });
-
-        /***/
-      },
-
-    /***/ './src/components/widgets/Vec2Widget.js':
-      /*!**********************************************!*\
-  !*** ./src/components/widgets/Vec2Widget.js ***!
-  \**********************************************/
-      /***/ (
-        __unused_webpack_module,
-        __webpack_exports__,
-        __webpack_require__
-      ) => {
-        'use strict';
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-          /* harmony export */ default: () => /* binding */ Vec2Widget
-          /* harmony export */
-        });
-        /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ =
-          __webpack_require__(/*! react */ './node_modules/react/index.js');
-        /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default =
-          /*#__PURE__*/ __webpack_require__.n(
-            react__WEBPACK_IMPORTED_MODULE_0__
-          );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ =
-          __webpack_require__(
-            /*! prop-types */ './node_modules/prop-types/index.js'
-          );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default =
-          /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_4__
-          );
-        /* harmony import */ var _NumberWidget__WEBPACK_IMPORTED_MODULE_1__ =
-          __webpack_require__(
-            /*! ./NumberWidget */ './src/components/widgets/NumberWidget.js'
-          );
-        /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ =
-          __webpack_require__(/*! ../../lib/utils */ './src/lib/utils.js');
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ =
-          __webpack_require__(
-            /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
-          );
-        function _typeof(o) {
-          '@babel/helpers - typeof';
-          return (
-            (_typeof =
-              'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
-                ? function (o) {
-                    return typeof o;
-                  }
-                : function (o) {
-                    return o &&
-                      'function' == typeof Symbol &&
-                      o.constructor === Symbol &&
-                      o !== Symbol.prototype
-                      ? 'symbol'
-                      : typeof o;
-                  }),
-            _typeof(o)
-          );
-        }
-        function ownKeys(e, r) {
-          var t = Object.keys(e);
-          if (Object.getOwnPropertySymbols) {
-            var o = Object.getOwnPropertySymbols(e);
-            r &&
-              (o = o.filter(function (r) {
-                return Object.getOwnPropertyDescriptor(e, r).enumerable;
-              })),
-              t.push.apply(t, o);
-          }
-          return t;
-        }
-        function _objectSpread(e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = null != arguments[r] ? arguments[r] : {};
-            r % 2
-              ? ownKeys(Object(t), !0).forEach(function (r) {
-                  _defineProperty(e, r, t[r]);
-                })
-              : Object.getOwnPropertyDescriptors
-                ? Object.defineProperties(
-                    e,
-                    Object.getOwnPropertyDescriptors(t)
-                  )
-                : ownKeys(Object(t)).forEach(function (r) {
-                    Object.defineProperty(
-                      e,
-                      r,
-                      Object.getOwnPropertyDescriptor(t, r)
-                    );
-                  });
-          }
-          return e;
-        }
-        function _classCallCheck(a, n) {
-          if (!(a instanceof n))
-            throw new TypeError('Cannot call a class as a function');
-        }
-        function _defineProperties(e, r) {
-          for (var t = 0; t < r.length; t++) {
-            var o = r[t];
-            (o.enumerable = o.enumerable || !1),
-              (o.configurable = !0),
-              'value' in o && (o.writable = !0),
-              Object.defineProperty(e, _toPropertyKey(o.key), o);
-          }
-        }
-        function _createClass(e, r, t) {
-          return (
-            r && _defineProperties(e.prototype, r),
-            t && _defineProperties(e, t),
-            Object.defineProperty(e, 'prototype', { writable: !1 }),
-            e
-          );
-        }
-        function _callSuper(t, o, e) {
-          return (
-            (o = _getPrototypeOf(o)),
-            _possibleConstructorReturn(
-              t,
-              _isNativeReflectConstruct()
-                ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor)
-                : o.apply(t, e)
-            )
-          );
-        }
-        function _possibleConstructorReturn(t, e) {
-          if (e && ('object' == _typeof(e) || 'function' == typeof e)) return e;
-          if (void 0 !== e)
-            throw new TypeError(
-              'Derived constructors may only return object or undefined'
-            );
-          return _assertThisInitialized(t);
-        }
-        function _assertThisInitialized(e) {
-          if (void 0 === e)
-            throw new ReferenceError(
-              "this hasn't been initialised - super() hasn't been called"
-            );
-          return e;
-        }
-        function _isNativeReflectConstruct() {
-          try {
-            var t = !Boolean.prototype.valueOf.call(
-              Reflect.construct(Boolean, [], function () {})
-            );
-          } catch (t) {}
-          return (_isNativeReflectConstruct =
-            function _isNativeReflectConstruct() {
-              return !!t;
-            })();
-        }
-        function _getPrototypeOf(t) {
-          return (
-            (_getPrototypeOf = Object.setPrototypeOf
-              ? Object.getPrototypeOf.bind()
-              : function (t) {
-                  return t.__proto__ || Object.getPrototypeOf(t);
-                }),
-            _getPrototypeOf(t)
-          );
-        }
-        function _inherits(t, e) {
-          if ('function' != typeof e && null !== e)
-            throw new TypeError(
-              'Super expression must either be null or a function'
-            );
-          (t.prototype = Object.create(e && e.prototype, {
-            constructor: { value: t, writable: !0, configurable: !0 }
-          })),
-            Object.defineProperty(t, 'prototype', { writable: !1 }),
-            e && _setPrototypeOf(t, e);
-        }
-        function _setPrototypeOf(t, e) {
-          return (
-            (_setPrototypeOf = Object.setPrototypeOf
-              ? Object.setPrototypeOf.bind()
-              : function (t, e) {
-                  return (t.__proto__ = e), t;
-                }),
-            _setPrototypeOf(t, e)
-          );
-        }
-        function _defineProperty(e, r, t) {
-          return (
-            (r = _toPropertyKey(r)) in e
-              ? Object.defineProperty(e, r, {
-                  value: t,
-                  enumerable: !0,
-                  configurable: !0,
-                  writable: !0
-                })
-              : (e[r] = t),
-            e
-          );
-        }
-        function _toPropertyKey(t) {
-          var i = _toPrimitive(t, 'string');
-          return 'symbol' == _typeof(i) ? i : i + '';
-        }
-        function _toPrimitive(t, r) {
-          if ('object' != _typeof(t) || !t) return t;
-          var e = t[Symbol.toPrimitive];
-          if (void 0 !== e) {
-            var i = e.call(t, r || 'default');
-            if ('object' != _typeof(i)) return i;
-            throw new TypeError('@@toPrimitive must return a primitive value.');
-          }
-          return ('string' === r ? String : Number)(t);
-        }
-
         var Vec2Widget = /*#__PURE__*/ (function (_React$Component) {
-          function Vec2Widget(props) {
+          function Vec2Widget() {
             var _this;
             _classCallCheck(this, Vec2Widget);
-            _this = _callSuper(this, Vec2Widget, [props]);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Vec2Widget, [].concat(args));
             _defineProperty(_this, 'onChange', function (name, value) {
-              _this.setState(
-                _defineProperty({}, name, parseFloat(value.toFixed(5))),
-                function () {
-                  if (_this.props.onChange) {
-                    _this.props.onChange(name, _this.state);
-                  }
-                }
-              );
+              var _this$props$onChange, _this$props;
+              var vector = {};
+              ['x', 'y'].forEach(function (axis) {
+                vector[axis] = axis === name ? value : _this.props.value[axis];
+              });
+              (_this$props$onChange = (_this$props = _this.props).onChange) ===
+                null ||
+                _this$props$onChange === void 0 ||
+                _this$props$onChange.call(_this$props, name, vector);
             });
-            _this.state = {
-              x: props.value.x,
-              y: props.value.y
-            };
             return _this;
           }
           _inherits(Vec2Widget, _React$Component);
           return _createClass(Vec2Widget, [
             {
-              key: 'componentDidUpdate',
-              value: function componentDidUpdate(prevProps) {
-                // Only update state if props.value actually changed from parent
-                // Comparing to this.state would cause infinite loops when value objects are recreated
-                if (
-                  !(0, _lib_utils__WEBPACK_IMPORTED_MODULE_2__.areVectorsEqual)(
-                    this.props.value,
-                    prevProps.value
-                  )
-                ) {
-                  this.setState({
-                    x: this.props.value.x,
-                    y: this.props.value.y
-                  });
-                }
-              }
-            },
-            {
               key: 'render',
               value: function render() {
-                var widgetProps = {
-                  componentname: this.props.componentname,
-                  entity: this.props.entity,
-                  onChange: this.onChange
-                };
+                var _this2 = this;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)('div', {
+                  role: 'group',
+                  'aria-label': this.props.label,
                   className: 'vec2',
-                  children: [
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                  children: ['x', 'y'].map(function (axis) {
+                    return /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
                       _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'x',
-                          value: this.state.x
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'y',
-                          value: this.state.y
-                        },
-                        widgetProps
-                      )
-                    )
-                  ]
+                      {
+                        id: _this2.props.id + '-' + axis,
+                        label: _this2.props.label + ' ' + axis.toUpperCase(),
+                        name: axis,
+                        value: _this2.props.value[axis],
+                        onChange: _this2.onChange
+                      },
+                      axis
+                    );
+                  })
                 });
               }
             }
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Vec2Widget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           componentname:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
-          entity: prop_types__WEBPACK_IMPORTED_MODULE_4___default().object,
-          onChange: prop_types__WEBPACK_IMPORTED_MODULE_4___default().func,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          entity: prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
+          onChange: prop_types__WEBPACK_IMPORTED_MODULE_3___default().func,
           value:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().object.isRequired
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().object.isRequired
         });
 
         /***/
@@ -113175,21 +111110,19 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_4__
+            prop_types__WEBPACK_IMPORTED_MODULE_3__
           );
         /* harmony import */ var _NumberWidget__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(
             /*! ./NumberWidget */ './src/components/widgets/NumberWidget.js'
           );
-        /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ =
-          __webpack_require__(/*! ../../lib/utils */ './src/lib/utils.js');
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -113211,40 +111144,6 @@ object-assign
                   }),
             _typeof(o)
           );
-        }
-        function ownKeys(e, r) {
-          var t = Object.keys(e);
-          if (Object.getOwnPropertySymbols) {
-            var o = Object.getOwnPropertySymbols(e);
-            r &&
-              (o = o.filter(function (r) {
-                return Object.getOwnPropertyDescriptor(e, r).enumerable;
-              })),
-              t.push.apply(t, o);
-          }
-          return t;
-        }
-        function _objectSpread(e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = null != arguments[r] ? arguments[r] : {};
-            r % 2
-              ? ownKeys(Object(t), !0).forEach(function (r) {
-                  _defineProperty(e, r, t[r]);
-                })
-              : Object.getOwnPropertyDescriptors
-                ? Object.defineProperties(
-                    e,
-                    Object.getOwnPropertyDescriptors(t)
-                  )
-                : ownKeys(Object(t)).forEach(function (r) {
-                    Object.defineProperty(
-                      e,
-                      r,
-                      Object.getOwnPropertyDescriptor(t, r)
-                    );
-                  });
-          }
-          return e;
         }
         function _classCallCheck(a, n) {
           if (!(a instanceof n))
@@ -113364,106 +111263,69 @@ object-assign
         }
 
         var Vec3Widget = /*#__PURE__*/ (function (_React$Component) {
-          function Vec3Widget(props) {
+          function Vec3Widget() {
             var _this;
             _classCallCheck(this, Vec3Widget);
-            _this = _callSuper(this, Vec3Widget, [props]);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Vec3Widget, [].concat(args));
             _defineProperty(_this, 'onChange', function (name, value) {
-              _this.setState(
-                _defineProperty({}, name, parseFloat(value.toFixed(5))),
-                function () {
-                  if (_this.props.onChange) {
-                    _this.props.onChange(name, _this.state);
-                  }
-                }
-              );
+              var _this$props$onChange, _this$props;
+              var vector = {};
+              ['x', 'y', 'z'].forEach(function (axis) {
+                vector[axis] = axis === name ? value : _this.props.value[axis];
+              });
+              (_this$props$onChange = (_this$props = _this.props).onChange) ===
+                null ||
+                _this$props$onChange === void 0 ||
+                _this$props$onChange.call(_this$props, name, vector);
             });
-            _this.state = {
-              x: props.value.x,
-              y: props.value.y,
-              z: props.value.z
-            };
             return _this;
           }
           _inherits(Vec3Widget, _React$Component);
           return _createClass(Vec3Widget, [
             {
-              key: 'componentDidUpdate',
-              value: function componentDidUpdate(prevProps) {
-                // Only update state if props.value actually changed from parent
-                // Comparing to this.state would cause infinite loops when value objects are recreated
-                if (
-                  !(0, _lib_utils__WEBPACK_IMPORTED_MODULE_2__.areVectorsEqual)(
-                    this.props.value,
-                    prevProps.value
-                  )
-                ) {
-                  this.setState({
-                    x: this.props.value.x,
-                    y: this.props.value.y,
-                    z: this.props.value.z
-                  });
-                }
-              }
-            },
-            {
               key: 'render',
               value: function render() {
-                var widgetProps = {
-                  componentname: this.props.componentname,
-                  entity: this.props.entity,
-                  onChange: this.onChange
-                };
+                var _this2 = this;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)('div', {
+                  role: 'group',
+                  'aria-label': this.props.label,
                   className: 'vec3',
-                  children: [
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                  children: ['x', 'y', 'z'].map(function (axis) {
+                    return /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
                       _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'x',
-                          value: this.state.x
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'y',
-                          value: this.state.y
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'z',
-                          value: this.state.z
-                        },
-                        widgetProps
-                      )
-                    )
-                  ]
+                      {
+                        id: _this2.props.id + '-' + axis,
+                        label: _this2.props.label + ' ' + axis.toUpperCase(),
+                        name: axis,
+                        value: _this2.props.value[axis],
+                        onChange: _this2.onChange
+                      },
+                      axis
+                    );
+                  })
                 });
               }
             }
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Vec3Widget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           componentname:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
-          entity: prop_types__WEBPACK_IMPORTED_MODULE_4___default().object,
-          onChange: prop_types__WEBPACK_IMPORTED_MODULE_4___default().func,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          entity: prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
+          onChange: prop_types__WEBPACK_IMPORTED_MODULE_3___default().func,
           value:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().object.isRequired
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().object.isRequired
         });
 
         /***/
@@ -113490,21 +111352,19 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             react__WEBPACK_IMPORTED_MODULE_0__
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ =
           __webpack_require__(
             /*! prop-types */ './node_modules/prop-types/index.js'
           );
-        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default =
+        /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default =
           /*#__PURE__*/ __webpack_require__.n(
-            prop_types__WEBPACK_IMPORTED_MODULE_4__
+            prop_types__WEBPACK_IMPORTED_MODULE_3__
           );
         /* harmony import */ var _NumberWidget__WEBPACK_IMPORTED_MODULE_1__ =
           __webpack_require__(
             /*! ./NumberWidget */ './src/components/widgets/NumberWidget.js'
           );
-        /* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ =
-          __webpack_require__(/*! ../../lib/utils */ './src/lib/utils.js');
-        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ =
+        /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ =
           __webpack_require__(
             /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
           );
@@ -113526,40 +111386,6 @@ object-assign
                   }),
             _typeof(o)
           );
-        }
-        function ownKeys(e, r) {
-          var t = Object.keys(e);
-          if (Object.getOwnPropertySymbols) {
-            var o = Object.getOwnPropertySymbols(e);
-            r &&
-              (o = o.filter(function (r) {
-                return Object.getOwnPropertyDescriptor(e, r).enumerable;
-              })),
-              t.push.apply(t, o);
-          }
-          return t;
-        }
-        function _objectSpread(e) {
-          for (var r = 1; r < arguments.length; r++) {
-            var t = null != arguments[r] ? arguments[r] : {};
-            r % 2
-              ? ownKeys(Object(t), !0).forEach(function (r) {
-                  _defineProperty(e, r, t[r]);
-                })
-              : Object.getOwnPropertyDescriptors
-                ? Object.defineProperties(
-                    e,
-                    Object.getOwnPropertyDescriptors(t)
-                  )
-                : ownKeys(Object(t)).forEach(function (r) {
-                    Object.defineProperty(
-                      e,
-                      r,
-                      Object.getOwnPropertyDescriptor(t, r)
-                    );
-                  });
-          }
-          return e;
         }
         function _classCallCheck(a, n) {
           if (!(a instanceof n))
@@ -113679,119 +111505,69 @@ object-assign
         }
 
         var Vec4Widget = /*#__PURE__*/ (function (_React$Component) {
-          function Vec4Widget(props) {
+          function Vec4Widget() {
             var _this;
             _classCallCheck(this, Vec4Widget);
-            _this = _callSuper(this, Vec4Widget, [props]);
+            for (
+              var _len = arguments.length, args = new Array(_len), _key = 0;
+              _key < _len;
+              _key++
+            ) {
+              args[_key] = arguments[_key];
+            }
+            _this = _callSuper(this, Vec4Widget, [].concat(args));
             _defineProperty(_this, 'onChange', function (name, value) {
-              _this.setState(
-                _defineProperty({}, name, parseFloat(value.toFixed(5))),
-                function () {
-                  if (_this.props.onChange) {
-                    _this.props.onChange(name, _this.state);
-                  }
-                }
-              );
+              var _this$props$onChange, _this$props;
+              var vector = {};
+              ['x', 'y', 'z', 'w'].forEach(function (axis) {
+                vector[axis] = axis === name ? value : _this.props.value[axis];
+              });
+              (_this$props$onChange = (_this$props = _this.props).onChange) ===
+                null ||
+                _this$props$onChange === void 0 ||
+                _this$props$onChange.call(_this$props, name, vector);
             });
-            _this.state = {
-              x: props.value.x,
-              y: props.value.y,
-              z: props.value.z,
-              w: props.value.w
-            };
             return _this;
           }
           _inherits(Vec4Widget, _React$Component);
           return _createClass(Vec4Widget, [
             {
-              key: 'componentDidUpdate',
-              value: function componentDidUpdate(prevProps) {
-                // Only update state if props.value actually changed from parent
-                // Comparing to this.state would cause infinite loops when value objects are recreated
-                if (
-                  !(0, _lib_utils__WEBPACK_IMPORTED_MODULE_2__.areVectorsEqual)(
-                    this.props.value,
-                    prevProps.value
-                  )
-                ) {
-                  this.setState({
-                    x: this.props.value.x,
-                    y: this.props.value.y,
-                    z: this.props.value.z,
-                    w: this.props.value.w
-                  });
-                }
-              }
-            },
-            {
               key: 'render',
               value: function render() {
-                var widgetProps = {
-                  componentname: this.props.componentname,
-                  entity: this.props.entity,
-                  onChange: this.onChange
-                };
+                var _this2 = this;
                 return /*#__PURE__*/ (0,
-                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)('div', {
+                react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)('div', {
+                  role: 'group',
+                  'aria-label': this.props.label,
                   className: 'vec4',
-                  children: [
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
+                  children: ['x', 'y', 'z', 'w'].map(function (axis) {
+                    return /*#__PURE__*/ (0,
+                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(
                       _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'x',
-                          value: this.state.x
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'y',
-                          value: this.state.y
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'z',
-                          value: this.state.z
-                        },
-                        widgetProps
-                      )
-                    ),
-                    /*#__PURE__*/ (0,
-                    react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(
-                      _NumberWidget__WEBPACK_IMPORTED_MODULE_1__['default'],
-                      _objectSpread(
-                        {
-                          name: 'w',
-                          value: this.state.w
-                        },
-                        widgetProps
-                      )
-                    )
-                  ]
+                      {
+                        id: _this2.props.id + '-' + axis,
+                        label: _this2.props.label + ' ' + axis.toUpperCase(),
+                        name: axis,
+                        value: _this2.props.value[axis],
+                        onChange: _this2.onChange
+                      },
+                      axis
+                    );
+                  })
                 });
               }
             }
           ]);
         })(react__WEBPACK_IMPORTED_MODULE_0___default().Component);
         _defineProperty(Vec4Widget, 'propTypes', {
+          id: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          label: prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
           componentname:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().string,
-          entity: prop_types__WEBPACK_IMPORTED_MODULE_4___default().object,
-          onChange: prop_types__WEBPACK_IMPORTED_MODULE_4___default().func,
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().string,
+          entity: prop_types__WEBPACK_IMPORTED_MODULE_3___default().object,
+          onChange: prop_types__WEBPACK_IMPORTED_MODULE_3___default().func,
           value:
-            prop_types__WEBPACK_IMPORTED_MODULE_4___default().object.isRequired
+            prop_types__WEBPACK_IMPORTED_MODULE_3___default().object.isRequired
         });
 
         /***/
@@ -114226,6 +112002,8 @@ object-assign
         'use strict';
         __webpack_require__.r(__webpack_exports__);
         /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ createEventScope: () =>
+            /* binding */ createEventScope,
           /* harmony export */ default: () => __WEBPACK_DEFAULT_EXPORT__
           /* harmony export */
         });
@@ -114235,9 +112013,104 @@ object-assign
           /*#__PURE__*/ __webpack_require__.n(
             events__WEBPACK_IMPORTED_MODULE_0__
           );
+        function _slicedToArray(r, e) {
+          return (
+            _arrayWithHoles(r) ||
+            _iterableToArrayLimit(r, e) ||
+            _unsupportedIterableToArray(r, e) ||
+            _nonIterableRest()
+          );
+        }
+        function _nonIterableRest() {
+          throw new TypeError(
+            'Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+          );
+        }
+        function _unsupportedIterableToArray(r, a) {
+          if (r) {
+            if ('string' == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return (
+              'Object' === t && r.constructor && (t = r.constructor.name),
+              'Map' === t || 'Set' === t
+                ? Array.from(r)
+                : 'Arguments' === t ||
+                    /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+                  ? _arrayLikeToArray(r, a)
+                  : void 0
+            );
+          }
+        }
+        function _arrayLikeToArray(r, a) {
+          (null == a || a > r.length) && (a = r.length);
+          for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+          return n;
+        }
+        function _iterableToArrayLimit(r, l) {
+          var t =
+            null == r
+              ? null
+              : ('undefined' != typeof Symbol && r[Symbol.iterator]) ||
+                r['@@iterator'];
+          if (null != t) {
+            var e,
+              n,
+              i,
+              u,
+              a = [],
+              f = !0,
+              o = !1;
+            try {
+              if (((i = (t = t.call(r)).next), 0 === l)) {
+                if (Object(t) !== t) return;
+                f = !1;
+              } else
+                for (
+                  ;
+                  !(f = (e = i.call(t)).done) &&
+                  (a.push(e.value), a.length !== l);
+                  f = !0
+                );
+            } catch (r) {
+              (o = !0), (n = r);
+            } finally {
+              try {
+                if (
+                  !f &&
+                  null != t['return'] &&
+                  ((u = t['return']()), Object(u) !== u)
+                )
+                  return;
+              } finally {
+                if (o) throw n;
+              }
+            }
+            return a;
+          }
+        }
+        function _arrayWithHoles(r) {
+          if (Array.isArray(r)) return r;
+        }
 
         var Events = new (events__WEBPACK_IMPORTED_MODULE_0___default())();
-        Events.setMaxListeners(0);
+        Events.setMaxListeners(100);
+        function createEventScope() {
+          var subscriptions = [];
+          return {
+            on: function on(name, handler) {
+              Events.on(name, handler);
+              subscriptions.push([name, handler]);
+            },
+            dispose: function dispose() {
+              subscriptions.splice(0).forEach(function (_ref) {
+                var _ref2 = _slicedToArray(_ref, 2),
+                  name = _ref2[0],
+                  handler = _ref2[1];
+                return Events.off(name, handler);
+              });
+            }
+          };
+        }
         /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = Events;
 
         /***/
@@ -115865,116 +113738,183 @@ object-assign
         });
         /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ =
           __webpack_require__(/*! ./Events */ './src/lib/Events.js');
+        function _typeof(o) {
+          '@babel/helpers - typeof';
+          return (
+            (_typeof =
+              'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+                ? function (o) {
+                    return typeof o;
+                  }
+                : function (o) {
+                    return o &&
+                      'function' == typeof Symbol &&
+                      o.constructor === Symbol &&
+                      o !== Symbol.prototype
+                      ? 'symbol'
+                      : typeof o;
+                  }),
+            _typeof(o)
+          );
+        }
+        function ownKeys(e, r) {
+          var t = Object.keys(e);
+          if (Object.getOwnPropertySymbols) {
+            var o = Object.getOwnPropertySymbols(e);
+            r &&
+              (o = o.filter(function (r) {
+                return Object.getOwnPropertyDescriptor(e, r).enumerable;
+              })),
+              t.push.apply(t, o);
+          }
+          return t;
+        }
+        function _objectSpread(e) {
+          for (var r = 1; r < arguments.length; r++) {
+            var t = null != arguments[r] ? arguments[r] : {};
+            r % 2
+              ? ownKeys(Object(t), !0).forEach(function (r) {
+                  _defineProperty(e, r, t[r]);
+                })
+              : Object.getOwnPropertyDescriptors
+                ? Object.defineProperties(
+                    e,
+                    Object.getOwnPropertyDescriptors(t)
+                  )
+                : ownKeys(Object(t)).forEach(function (r) {
+                    Object.defineProperty(
+                      e,
+                      r,
+                      Object.getOwnPropertyDescriptor(t, r)
+                    );
+                  });
+          }
+          return e;
+        }
+        function _defineProperty(e, r, t) {
+          return (
+            (r = _toPropertyKey(r)) in e
+              ? Object.defineProperty(e, r, {
+                  value: t,
+                  enumerable: !0,
+                  configurable: !0,
+                  writable: !0
+                })
+              : (e[r] = t),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
+        }
 
         var assetsBaseUrl =
           window.AFRAME_SAMPLE_ASSETS_ROOT ||
           'https://aframe.io/sample-assets/';
-        var assetsRelativeUrl = {
-          images: 'dist/images.json'
-        };
-        var collectionAssetsRoot = window.COLLECTION_ASSETS_ROOT;
-
-        /**
-         * Asynchronously load and register components from the registry.
-         */
         function AssetsLoader() {
           this.images = [];
           this.hasLoaded = false;
+          this.isLoading = false;
+          this.error = '';
         }
         AssetsLoader.prototype = {
-          /**
-           * XHR the assets JSON.
-           */
           load: function load() {
             var _this = this;
-            if (collectionAssetsRoot) {
-              this.loadCollection();
-              return;
-            }
-            var xhr = new XMLHttpRequest();
-            var url = assetsBaseUrl + assetsRelativeUrl.images;
-
-            // @todo Remove the sync call and use a callback
-            xhr.open('GET', url);
-            xhr.onload = function () {
-              var data = JSON.parse(xhr.responseText);
-              _this.images = data.images;
-              _this.images.forEach(function (image) {
-                image.fullPath =
-                  assetsBaseUrl + data.basepath.images + image.path;
-                image.fullThumbPath =
-                  assetsBaseUrl +
-                  data.basepath.images_thumbnails +
-                  image.thumbnail;
-              });
+            if (this.isLoading) return;
+            var collection = window.COLLECTION_ASSETS_ROOT;
+            var xhr = (this.xhr = new XMLHttpRequest());
+            this.isLoading = true;
+            this.error = '';
+            _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+              'assetsimagesloading'
+            );
+            var fail = function fail() {
+              _this.isLoading = false;
+              _this.hasLoaded = false;
+              _this.error =
+                'The texture library could not be loaded. Check your connection and retry.';
               _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
-                'assetsimagesload',
-                _this.images
+                'assetsimageserror',
+                _this.error
               );
             };
-            xhr.onerror = function () {
-              console.error('Error loading registry file.');
-            };
-            xhr.send();
-            this.hasLoaded = true;
-          },
-          /**
-           * XHR the collection assets JSON.
-           */
-          loadCollection: function loadCollection() {
-            var _this2 = this;
-            if (!collectionAssetsRoot) return;
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', collectionAssetsRoot);
+            xhr.open('GET', collection || assetsBaseUrl + 'dist/images.json');
+            xhr.timeout = 15000;
+            xhr.onerror = xhr.ontimeout = fail;
             xhr.onload = function () {
               try {
+                if (xhr.status < 200 || xhr.status >= 300)
+                  throw new Error('HTTP ' + xhr.status);
                 var data = JSON.parse(xhr.responseText);
-                if (Array.isArray(data)) {
-                  // Clear all existing assets including those loaded from load()
-                  _this2.images = [];
-                  data.forEach(function (item) {
-                    // Extract filename from URL to use as ID
-                    var filename = item.src.split('/').pop() || '';
-                    var id =
-                      filename
-                        .split('.')
-                        .shift()
-                        .replace(/\s/, '-')
-                        .replace(/^\d+\s*/, '')
-                        .replace(/[\W]/, '')
-                        .toLowerCase() ||
-                      'img' + Math.floor(Math.random() * 10000);
-                    var isDuplicate = _this2.images.some(
-                      function (existingImage) {
-                        return (
-                          existingImage.id === id ||
-                          existingImage.fullPath === item.src
-                        );
+                if (collection) {
+                  if (!Array.isArray(data))
+                    throw new Error('Invalid collection');
+                  _this.images = data
+                    .filter(function (item) {
+                      return item && typeof item.src === 'string';
+                    })
+                    .map(function (item, index) {
+                      return {
+                        id: item.id || 'image-' + index,
+                        fullPath: item.src,
+                        // Without a supplied thumbnail, defer the full image until selection.
+                        fullThumbPath: item.thumbnail || item.thumb || '',
+                        width: item.width,
+                        height: item.height,
+                        tags: item.tags || []
+                      };
+                    });
+                } else {
+                  if (!Array.isArray(data.images))
+                    throw new Error('Invalid catalog');
+                  _this.images = data.images.map(function (image) {
+                    return _objectSpread(
+                      _objectSpread({}, image),
+                      {},
+                      {
+                        fullPath:
+                          assetsBaseUrl + data.basepath.images + image.path,
+                        fullThumbPath: image.thumbnail
+                          ? assetsBaseUrl +
+                            data.basepath.images_thumbnails +
+                            image.thumbnail
+                          : ''
                       }
                     );
-                    if (!isDuplicate) {
-                      _this2.images.push({
-                        id: id,
-                        fullPath: item.src,
-                        fullThumbPath: item.src,
-                        tags: []
-                      });
-                    }
                   });
-                  _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
-                    'assetsimagesload',
-                    _this2.images
-                  );
                 }
-              } catch (e) {
-                console.error('Error parsing collection file.', e);
+                _this.isLoading = false;
+                _this.hasLoaded = true;
+                _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+                  'assetsimagesload',
+                  _this.images
+                );
+              } catch (error) {
+                fail();
               }
             };
-            xhr.onerror = function () {
-              console.error('Error loading collection file.');
-            };
             xhr.send();
-            this.hasLoaded = true;
+          },
+          loadCollection: function loadCollection() {
+            this.load();
+          },
+          dispose: function dispose() {
+            var _this$xhr;
+            (_this$xhr = this.xhr) === null ||
+              _this$xhr === void 0 ||
+              _this$xhr.abort();
+            this.isLoading = false;
           }
         };
 
@@ -115997,6 +113937,9 @@ object-assign
             /* binding */ insertNewAsset
           /* harmony export */
         });
+        /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(/*! ./Events */ './src/lib/Events.js');
+
         function insertNewAsset(
           type,
           id,
@@ -116005,46 +113948,57 @@ object-assign
           onLoadedCallback,
           onErrorCallback
         ) {
-          var element = null;
-          switch (type) {
-            case 'img':
-              {
-                element = document.createElement('img');
-                element.id = id;
-                element.src = src;
-                if (anonymousCrossOrigin) {
-                  element.crossOrigin = 'anonymous';
-                }
-              }
-              break;
+          var _AFRAME$INSPECTOR;
+          if (type !== 'img') return;
+          var scene =
+            ((_AFRAME$INSPECTOR = AFRAME.INSPECTOR) === null ||
+            _AFRAME$INSPECTOR === void 0
+              ? void 0
+              : _AFRAME$INSPECTOR.sceneEl) || document.querySelector('a-scene');
+          if (!scene) {
+            onErrorCallback === null ||
+              onErrorCallback === void 0 ||
+              onErrorCallback(new Error('No scene is available.'));
+            return;
           }
-          if (element) {
-            element.onload = function () {
-              if (onLoadedCallback) {
-                onLoadedCallback();
-              }
-            };
-            element.onerror = function (error) {
-              console.warn('Failed to load asset: '.concat(src), error);
-              if (onErrorCallback) {
-                onErrorCallback(error);
-              }
-            };
-
-            // Get or create the a-assets container
-            var assetsContainer = document.querySelector('a-assets');
-            if (!assetsContainer) {
-              assetsContainer = document.createElement('a-assets');
-              var scene = document.querySelector('a-scene');
-              if (scene) {
-                scene.insertBefore(assetsContainer, scene.firstChild);
-              } else {
-                console.warn('No a-scene found to insert a-assets');
-                return;
-              }
-            }
-            assetsContainer.appendChild(element);
+          var element = document.createElement('img');
+          element.id = id;
+          if (anonymousCrossOrigin) element.crossOrigin = 'anonymous';
+          var timer;
+          var finish = function finish() {
+            clearTimeout(timer);
+            element.onload = element.onerror = null;
+          };
+          var fail = function fail() {
+            finish();
+            element.remove();
+            onErrorCallback === null ||
+              onErrorCallback === void 0 ||
+              onErrorCallback(
+                new Error(
+                  'The image could not be loaded. Check its URL and cross-origin permissions.'
+                )
+              );
+          };
+          element.onload = function () {
+            finish();
+            _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+              'scenechanged'
+            );
+            onLoadedCallback === null ||
+              onLoadedCallback === void 0 ||
+              onLoadedCallback(element);
+          };
+          element.onerror = fail;
+          timer = setTimeout(fail, 15000);
+          var assets = scene.querySelector('a-assets');
+          if (!assets) {
+            assets = document.createElement('a-assets');
+            scene.insertBefore(assets, scene.firstChild);
           }
+          assets.appendChild(element);
+          element.src = src;
+          return element;
         }
 
         /***/
@@ -116101,6 +114055,12 @@ object-assign
          * Initialize various cameras, store original one.
          */
         function initCameras(inspector) {
+          var _inspector$disposeCam;
+          (_inspector$disposeCam = inspector.disposeCameras) === null ||
+            _inspector$disposeCam === void 0 ||
+            _inspector$disposeCam.call(inspector);
+          var events = (0,
+          _Events__WEBPACK_IMPORTED_MODULE_0__.createEventScope)();
           var sceneEl = inspector.sceneEl;
           var originalCamera = (inspector.currentCameraEl = sceneEl.camera.el);
           inspector.currentCameraEl.setAttribute(
@@ -116148,47 +114108,53 @@ object-assign
           });
 
           // Command to switch to perspective.
-          _Events__WEBPACK_IMPORTED_MODULE_0__['default'].on(
-            'cameraperspectivetoggle',
-            function () {
-              saveOrthoCamera(inspector.camera, currentOrthoDir);
-              sceneEl.camera = inspector.camera = cameras.perspective;
-              _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
-                'cameratoggle',
-                {
-                  camera: inspector.camera,
-                  value: 'perspective'
-                }
-              );
-            }
-          );
+          events.on('cameraperspectivetoggle', function () {
+            saveOrthoCamera(inspector.camera, currentOrthoDir);
+            sceneEl.camera = inspector.camera = cameras.perspective;
+            _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+              'cameratoggle',
+              {
+                camera: inspector.camera,
+                value: 'perspective'
+              }
+            );
+          });
 
           // Command to switch to ortographic.
-          _Events__WEBPACK_IMPORTED_MODULE_0__['default'].on(
-            'cameraorthographictoggle',
-            function (dir) {
-              saveOrthoCamera(inspector.camera, currentOrthoDir);
-              sceneEl.camera = inspector.camera = cameras.ortho;
-              currentOrthoDir = dir;
-              setOrthoCamera(cameras.ortho, dir, ratio);
+          events.on('cameraorthographictoggle', function (dir) {
+            saveOrthoCamera(inspector.camera, currentOrthoDir);
+            sceneEl.camera = inspector.camera = cameras.ortho;
+            currentOrthoDir = dir;
+            setOrthoCamera(cameras.ortho, dir, ratio);
 
-              // Set initial rotation for the respective orthographic camera.
-              if (
-                cameras.ortho.rotation.x === 0 &&
-                cameras.ortho.rotation.y === 0 &&
-                cameras.ortho.rotation.z === 0
-              ) {
-                cameras.ortho.lookAt(0, 0, 0);
-              }
-              _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
-                'cameratoggle',
-                {
-                  camera: inspector.camera,
-                  value: 'ortho'.concat(dir)
-                }
-              );
+            // Set initial rotation for the respective orthographic camera.
+            if (
+              cameras.ortho.rotation.x === 0 &&
+              cameras.ortho.rotation.y === 0 &&
+              cameras.ortho.rotation.z === 0
+            ) {
+              cameras.ortho.lookAt(0, 0, 0);
             }
-          );
+            _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+              'cameratoggle',
+              {
+                camera: inspector.camera,
+                value: 'ortho'.concat(dir)
+              }
+            );
+          });
+          inspector.disposeCameras = function () {
+            events.dispose();
+            sceneEl.object3D.remove(perspectiveCamera, orthoCamera);
+            if (
+              sceneEl.camera === perspectiveCamera ||
+              sceneEl.camera === orthoCamera
+            ) {
+              originalCamera.setAttribute('camera', 'active', true);
+              sceneEl.camera = originalCamera.getObject3D('camera');
+            }
+            inspector.disposeCameras = null;
+          };
           return inspector.cameras;
         }
         function saveOrthoCamera(camera, dir) {
@@ -116212,6 +114178,127 @@ object-assign
           camera.position.copy(info.position);
           camera.rotation.copy(info.rotation);
         }
+
+        /***/
+      },
+
+    /***/ './src/lib/editorViewport.js':
+      /*!***********************************!*\
+  !*** ./src/lib/editorViewport.js ***!
+  \***********************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ EditorViewport: () =>
+            /* binding */ EditorViewport
+          /* harmony export */
+        });
+        function _typeof(o) {
+          '@babel/helpers - typeof';
+          return (
+            (_typeof =
+              'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+                ? function (o) {
+                    return typeof o;
+                  }
+                : function (o) {
+                    return o &&
+                      'function' == typeof Symbol &&
+                      o.constructor === Symbol &&
+                      o !== Symbol.prototype
+                      ? 'symbol'
+                      : typeof o;
+                  }),
+            _typeof(o)
+          );
+        }
+        function _classCallCheck(a, n) {
+          if (!(a instanceof n))
+            throw new TypeError('Cannot call a class as a function');
+        }
+        function _defineProperties(e, r) {
+          for (var t = 0; t < r.length; t++) {
+            var o = r[t];
+            (o.enumerable = o.enumerable || !1),
+              (o.configurable = !0),
+              'value' in o && (o.writable = !0),
+              Object.defineProperty(e, _toPropertyKey(o.key), o);
+          }
+        }
+        function _createClass(e, r, t) {
+          return (
+            r && _defineProperties(e.prototype, r),
+            t && _defineProperties(e, t),
+            Object.defineProperty(e, 'prototype', { writable: !1 }),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
+        }
+        // Move only the canvas: moving the A-Frame scene itself would reinitialize it.
+        var EditorViewport = /*#__PURE__*/ (function () {
+          function EditorViewport(scene) {
+            _classCallCheck(this, EditorViewport);
+            this.canvas = scene.canvas;
+            this.parent = this.canvas.parentNode;
+            this.next = this.canvas.nextSibling;
+            this.portal = document.createElement('div');
+            this.portal.id = 'aframeInspectorViewport';
+            this.portal.setAttribute('data-aframe-inspector', 'viewport');
+            Object.assign(this.portal.style, {
+              position: 'fixed',
+              inset: '0',
+              width: '100vw',
+              height: '100vh',
+              overflow: 'hidden',
+              zIndex: '2147483000'
+            });
+            // A host may zoom its body; the editor uses viewport coordinates.
+            var zoom = [document.body, document.documentElement].reduce(
+              function (value, node) {
+                return value * (parseFloat(getComputedStyle(node).zoom) || 1);
+              },
+              1
+            );
+            this.portal.style.zoom = String(1 / zoom);
+            document.body.appendChild(this.portal);
+            this.portal.appendChild(this.canvas);
+          }
+          return _createClass(EditorViewport, [
+            {
+              key: 'dispose',
+              value: function dispose() {
+                var _this$next;
+                this.parent.insertBefore(
+                  this.canvas,
+                  ((_this$next = this.next) === null || _this$next === void 0
+                    ? void 0
+                    : _this$next.parentNode) === this.parent
+                    ? this.next
+                    : null
+                );
+                this.portal.remove();
+              }
+            }
+          ]);
+        })();
 
         /***/
       },
@@ -116390,6 +114477,7 @@ object-assign
          * @param  {Element} entity Entity to clone
          */
         function cloneEntity(entity) {
+          if (!entity) return;
           entity.flushToDOM();
           var clone = prepareForSerialization(entity);
           clone.addEventListener(
@@ -116911,6 +114999,934 @@ object-assign
         /***/
       },
 
+    /***/ './src/lib/persistence.js':
+      /*!********************************!*\
+  !*** ./src/lib/persistence.js ***!
+  \********************************/
+      /***/ (
+        __unused_webpack_module,
+        __webpack_exports__,
+        __webpack_require__
+      ) => {
+        'use strict';
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ ScenePersistence: () =>
+            /* binding */ ScenePersistence
+          /* harmony export */
+        });
+        /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ =
+          __webpack_require__(/*! ./Events */ './src/lib/Events.js');
+        /* harmony import */ var _entity__WEBPACK_IMPORTED_MODULE_1__ =
+          __webpack_require__(/*! ./entity */ './src/lib/entity.js');
+        /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ =
+          __webpack_require__(/*! ./utils */ './src/lib/utils.js');
+        function _typeof(o) {
+          '@babel/helpers - typeof';
+          return (
+            (_typeof =
+              'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+                ? function (o) {
+                    return typeof o;
+                  }
+                : function (o) {
+                    return o &&
+                      'function' == typeof Symbol &&
+                      o.constructor === Symbol &&
+                      o !== Symbol.prototype
+                      ? 'symbol'
+                      : typeof o;
+                  }),
+            _typeof(o)
+          );
+        }
+        function _regeneratorRuntime() {
+          'use strict';
+          /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ _regeneratorRuntime =
+            function _regeneratorRuntime() {
+              return r;
+            };
+          var t,
+            r = {},
+            e = Object.prototype,
+            n = e.hasOwnProperty,
+            o = 'function' == typeof Symbol ? Symbol : {},
+            i = o.iterator || '@@iterator',
+            a = o.asyncIterator || '@@asyncIterator',
+            u = o.toStringTag || '@@toStringTag';
+          function c(t, r, e, n) {
+            return Object.defineProperty(t, r, {
+              value: e,
+              enumerable: !n,
+              configurable: !n,
+              writable: !n
+            });
+          }
+          try {
+            c({}, '');
+          } catch (t) {
+            c = function c(t, r, e) {
+              return (t[r] = e);
+            };
+          }
+          function h(r, e, n, o) {
+            var i = e && e.prototype instanceof Generator ? e : Generator,
+              a = Object.create(i.prototype);
+            return (
+              c(
+                a,
+                '_invoke',
+                (function (r, e, n) {
+                  var o = 1;
+                  return function (i, a) {
+                    if (3 === o) throw Error('Generator is already running');
+                    if (4 === o) {
+                      if ('throw' === i) throw a;
+                      return { value: t, done: !0 };
+                    }
+                    for (n.method = i, n.arg = a; ; ) {
+                      var u = n.delegate;
+                      if (u) {
+                        var c = d(u, n);
+                        if (c) {
+                          if (c === f) continue;
+                          return c;
+                        }
+                      }
+                      if ('next' === n.method) n.sent = n._sent = n.arg;
+                      else if ('throw' === n.method) {
+                        if (1 === o) throw ((o = 4), n.arg);
+                        n.dispatchException(n.arg);
+                      } else 'return' === n.method && n.abrupt('return', n.arg);
+                      o = 3;
+                      var h = s(r, e, n);
+                      if ('normal' === h.type) {
+                        if (((o = n.done ? 4 : 2), h.arg === f)) continue;
+                        return { value: h.arg, done: n.done };
+                      }
+                      'throw' === h.type &&
+                        ((o = 4), (n.method = 'throw'), (n.arg = h.arg));
+                    }
+                  };
+                })(r, n, new Context(o || [])),
+                !0
+              ),
+              a
+            );
+          }
+          function s(t, r, e) {
+            try {
+              return { type: 'normal', arg: t.call(r, e) };
+            } catch (t) {
+              return { type: 'throw', arg: t };
+            }
+          }
+          r.wrap = h;
+          var f = {};
+          function Generator() {}
+          function GeneratorFunction() {}
+          function GeneratorFunctionPrototype() {}
+          var l = {};
+          c(l, i, function () {
+            return this;
+          });
+          var p = Object.getPrototypeOf,
+            y = p && p(p(x([])));
+          y && y !== e && n.call(y, i) && (l = y);
+          var v =
+            (GeneratorFunctionPrototype.prototype =
+            Generator.prototype =
+              Object.create(l));
+          function g(t) {
+            ['next', 'throw', 'return'].forEach(function (r) {
+              c(t, r, function (t) {
+                return this._invoke(r, t);
+              });
+            });
+          }
+          function AsyncIterator(t, r) {
+            function e(o, i, a, u) {
+              var c = s(t[o], t, i);
+              if ('throw' !== c.type) {
+                var h = c.arg,
+                  f = h.value;
+                return f && 'object' == _typeof(f) && n.call(f, '__await')
+                  ? r.resolve(f.__await).then(
+                      function (t) {
+                        e('next', t, a, u);
+                      },
+                      function (t) {
+                        e('throw', t, a, u);
+                      }
+                    )
+                  : r.resolve(f).then(
+                      function (t) {
+                        (h.value = t), a(h);
+                      },
+                      function (t) {
+                        return e('throw', t, a, u);
+                      }
+                    );
+              }
+              u(c.arg);
+            }
+            var o;
+            c(
+              this,
+              '_invoke',
+              function (t, n) {
+                function i() {
+                  return new r(function (r, o) {
+                    e(t, n, r, o);
+                  });
+                }
+                return (o = o ? o.then(i, i) : i());
+              },
+              !0
+            );
+          }
+          function d(r, e) {
+            var n = e.method,
+              o = r.i[n];
+            if (o === t)
+              return (
+                (e.delegate = null),
+                ('throw' === n &&
+                  r.i['return'] &&
+                  ((e.method = 'return'),
+                  (e.arg = t),
+                  d(r, e),
+                  'throw' === e.method)) ||
+                  ('return' !== n &&
+                    ((e.method = 'throw'),
+                    (e.arg = new TypeError(
+                      "The iterator does not provide a '" + n + "' method"
+                    )))),
+                f
+              );
+            var i = s(o, r.i, e.arg);
+            if ('throw' === i.type)
+              return (
+                (e.method = 'throw'), (e.arg = i.arg), (e.delegate = null), f
+              );
+            var a = i.arg;
+            return a
+              ? a.done
+                ? ((e[r.r] = a.value),
+                  (e.next = r.n),
+                  'return' !== e.method && ((e.method = 'next'), (e.arg = t)),
+                  (e.delegate = null),
+                  f)
+                : a
+              : ((e.method = 'throw'),
+                (e.arg = new TypeError('iterator result is not an object')),
+                (e.delegate = null),
+                f);
+          }
+          function w(t) {
+            this.tryEntries.push(t);
+          }
+          function m(r) {
+            var e = r[4] || {};
+            (e.type = 'normal'), (e.arg = t), (r[4] = e);
+          }
+          function Context(t) {
+            (this.tryEntries = [[-1]]), t.forEach(w, this), this.reset(!0);
+          }
+          function x(r) {
+            if (null != r) {
+              var e = r[i];
+              if (e) return e.call(r);
+              if ('function' == typeof r.next) return r;
+              if (!isNaN(r.length)) {
+                var o = -1,
+                  a = function e() {
+                    for (; ++o < r.length; )
+                      if (n.call(r, o))
+                        return (e.value = r[o]), (e.done = !1), e;
+                    return (e.value = t), (e.done = !0), e;
+                  };
+                return (a.next = a);
+              }
+            }
+            throw new TypeError(_typeof(r) + ' is not iterable');
+          }
+          return (
+            (GeneratorFunction.prototype = GeneratorFunctionPrototype),
+            c(v, 'constructor', GeneratorFunctionPrototype),
+            c(GeneratorFunctionPrototype, 'constructor', GeneratorFunction),
+            (GeneratorFunction.displayName = c(
+              GeneratorFunctionPrototype,
+              u,
+              'GeneratorFunction'
+            )),
+            (r.isGeneratorFunction = function (t) {
+              var r = 'function' == typeof t && t.constructor;
+              return (
+                !!r &&
+                (r === GeneratorFunction ||
+                  'GeneratorFunction' === (r.displayName || r.name))
+              );
+            }),
+            (r.mark = function (t) {
+              return (
+                Object.setPrototypeOf
+                  ? Object.setPrototypeOf(t, GeneratorFunctionPrototype)
+                  : ((t.__proto__ = GeneratorFunctionPrototype),
+                    c(t, u, 'GeneratorFunction')),
+                (t.prototype = Object.create(v)),
+                t
+              );
+            }),
+            (r.awrap = function (t) {
+              return { __await: t };
+            }),
+            g(AsyncIterator.prototype),
+            c(AsyncIterator.prototype, a, function () {
+              return this;
+            }),
+            (r.AsyncIterator = AsyncIterator),
+            (r.async = function (t, e, n, o, i) {
+              void 0 === i && (i = Promise);
+              var a = new AsyncIterator(h(t, e, n, o), i);
+              return r.isGeneratorFunction(e)
+                ? a
+                : a.next().then(function (t) {
+                    return t.done ? t.value : a.next();
+                  });
+            }),
+            g(v),
+            c(v, u, 'Generator'),
+            c(v, i, function () {
+              return this;
+            }),
+            c(v, 'toString', function () {
+              return '[object Generator]';
+            }),
+            (r.keys = function (t) {
+              var r = Object(t),
+                e = [];
+              for (var n in r) e.unshift(n);
+              return function t() {
+                for (; e.length; )
+                  if ((n = e.pop()) in r)
+                    return (t.value = n), (t.done = !1), t;
+                return (t.done = !0), t;
+              };
+            }),
+            (r.values = x),
+            (Context.prototype = {
+              constructor: Context,
+              reset: function reset(r) {
+                if (
+                  ((this.prev = this.next = 0),
+                  (this.sent = this._sent = t),
+                  (this.done = !1),
+                  (this.delegate = null),
+                  (this.method = 'next'),
+                  (this.arg = t),
+                  this.tryEntries.forEach(m),
+                  !r)
+                )
+                  for (var e in this)
+                    't' === e.charAt(0) &&
+                      n.call(this, e) &&
+                      !isNaN(+e.slice(1)) &&
+                      (this[e] = t);
+              },
+              stop: function stop() {
+                this.done = !0;
+                var t = this.tryEntries[0][4];
+                if ('throw' === t.type) throw t.arg;
+                return this.rval;
+              },
+              dispatchException: function dispatchException(r) {
+                if (this.done) throw r;
+                var e = this;
+                function n(t) {
+                  (a.type = 'throw'), (a.arg = r), (e.next = t);
+                }
+                for (var o = e.tryEntries.length - 1; o >= 0; --o) {
+                  var i = this.tryEntries[o],
+                    a = i[4],
+                    u = this.prev,
+                    c = i[1],
+                    h = i[2];
+                  if (-1 === i[0]) return n('end'), !1;
+                  if (!c && !h)
+                    throw Error('try statement without catch or finally');
+                  if (null != i[0] && i[0] <= u) {
+                    if (u < c)
+                      return (this.method = 'next'), (this.arg = t), n(c), !0;
+                    if (u < h) return n(h), !1;
+                  }
+                }
+              },
+              abrupt: function abrupt(t, r) {
+                for (var e = this.tryEntries.length - 1; e >= 0; --e) {
+                  var n = this.tryEntries[e];
+                  if (n[0] > -1 && n[0] <= this.prev && this.prev < n[2]) {
+                    var o = n;
+                    break;
+                  }
+                }
+                o &&
+                  ('break' === t || 'continue' === t) &&
+                  o[0] <= r &&
+                  r <= o[2] &&
+                  (o = null);
+                var i = o ? o[4] : {};
+                return (
+                  (i.type = t),
+                  (i.arg = r),
+                  o
+                    ? ((this.method = 'next'), (this.next = o[2]), f)
+                    : this.complete(i)
+                );
+              },
+              complete: function complete(t, r) {
+                if ('throw' === t.type) throw t.arg;
+                return (
+                  'break' === t.type || 'continue' === t.type
+                    ? (this.next = t.arg)
+                    : 'return' === t.type
+                      ? ((this.rval = this.arg = t.arg),
+                        (this.method = 'return'),
+                        (this.next = 'end'))
+                      : 'normal' === t.type && r && (this.next = r),
+                  f
+                );
+              },
+              finish: function finish(t) {
+                for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+                  var e = this.tryEntries[r];
+                  if (e[2] === t) return this.complete(e[4], e[3]), m(e), f;
+                }
+              },
+              catch: function _catch(t) {
+                for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+                  var e = this.tryEntries[r];
+                  if (e[0] === t) {
+                    var n = e[4];
+                    if ('throw' === n.type) {
+                      var o = n.arg;
+                      m(e);
+                    }
+                    return o;
+                  }
+                }
+                throw Error('illegal catch attempt');
+              },
+              delegateYield: function delegateYield(r, e, n) {
+                return (
+                  (this.delegate = { i: x(r), r: e, n: n }),
+                  'next' === this.method && (this.arg = t),
+                  f
+                );
+              }
+            }),
+            r
+          );
+        }
+        function asyncGeneratorStep(n, t, e, r, o, a, c) {
+          try {
+            var i = n[a](c),
+              u = i.value;
+          } catch (n) {
+            return void e(n);
+          }
+          i.done ? t(u) : Promise.resolve(u).then(r, o);
+        }
+        function _asyncToGenerator(n) {
+          return function () {
+            var t = this,
+              e = arguments;
+            return new Promise(function (r, o) {
+              var a = n.apply(t, e);
+              function _next(n) {
+                asyncGeneratorStep(a, r, o, _next, _throw, 'next', n);
+              }
+              function _throw(n) {
+                asyncGeneratorStep(a, r, o, _next, _throw, 'throw', n);
+              }
+              _next(void 0);
+            });
+          };
+        }
+        function _toConsumableArray(r) {
+          return (
+            _arrayWithoutHoles(r) ||
+            _iterableToArray(r) ||
+            _unsupportedIterableToArray(r) ||
+            _nonIterableSpread()
+          );
+        }
+        function _nonIterableSpread() {
+          throw new TypeError(
+            'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.'
+          );
+        }
+        function _unsupportedIterableToArray(r, a) {
+          if (r) {
+            if ('string' == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return (
+              'Object' === t && r.constructor && (t = r.constructor.name),
+              'Map' === t || 'Set' === t
+                ? Array.from(r)
+                : 'Arguments' === t ||
+                    /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+                  ? _arrayLikeToArray(r, a)
+                  : void 0
+            );
+          }
+        }
+        function _iterableToArray(r) {
+          if (
+            ('undefined' != typeof Symbol && null != r[Symbol.iterator]) ||
+            null != r['@@iterator']
+          )
+            return Array.from(r);
+        }
+        function _arrayWithoutHoles(r) {
+          if (Array.isArray(r)) return _arrayLikeToArray(r);
+        }
+        function _arrayLikeToArray(r, a) {
+          (null == a || a > r.length) && (a = r.length);
+          for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+          return n;
+        }
+        function _classCallCheck(a, n) {
+          if (!(a instanceof n))
+            throw new TypeError('Cannot call a class as a function');
+        }
+        function _defineProperties(e, r) {
+          for (var t = 0; t < r.length; t++) {
+            var o = r[t];
+            (o.enumerable = o.enumerable || !1),
+              (o.configurable = !0),
+              'value' in o && (o.writable = !0),
+              Object.defineProperty(e, _toPropertyKey(o.key), o);
+          }
+        }
+        function _createClass(e, r, t) {
+          return (
+            r && _defineProperties(e.prototype, r),
+            t && _defineProperties(e, t),
+            Object.defineProperty(e, 'prototype', { writable: !1 }),
+            e
+          );
+        }
+        function _defineProperty(e, r, t) {
+          return (
+            (r = _toPropertyKey(r)) in e
+              ? Object.defineProperty(e, r, {
+                  value: t,
+                  enumerable: !0,
+                  configurable: !0,
+                  writable: !0
+                })
+              : (e[r] = t),
+            e
+          );
+        }
+        function _toPropertyKey(t) {
+          var i = _toPrimitive(t, 'string');
+          return 'symbol' == _typeof(i) ? i : i + '';
+        }
+        function _toPrimitive(t, r) {
+          if ('object' != _typeof(t) || !t) return t;
+          var e = t[Symbol.toPrimitive];
+          if (void 0 !== e) {
+            var i = e.call(t, r || 'default');
+            if ('object' != _typeof(i)) return i;
+            throw new TypeError('@@toPrimitive must return a primitive value.');
+          }
+          return ('string' === r ? String : Number)(t);
+        }
+
+        var ScenePersistence = /*#__PURE__*/ (function () {
+          function ScenePersistence(inspector) {
+            var _this = this;
+            _classCallCheck(this, ScenePersistence);
+            _defineProperty(this, 'onChildChange', function (event) {
+              var _element$closest, _element$hasAttribute;
+              var element = event.detail.el;
+              if (
+                !element ||
+                ((_element$closest = element.closest) !== null &&
+                  _element$closest !== void 0 &&
+                  _element$closest.call(element, '[data-aframe-inspector]')) ||
+                ((_element$hasAttribute = element.hasAttribute) !== null &&
+                  _element$hasAttribute !== void 0 &&
+                  _element$hasAttribute.call(element, 'aframe-injected'))
+              )
+                return;
+              _this.markDirty();
+            });
+            _defineProperty(this, 'markDirty', function () {
+              if (_this.suspended || !_this.scene) return;
+              if (!_this.dirty) {
+                _this.dirty = true;
+                _this.message = '';
+                _this.publish();
+              }
+            });
+            _defineProperty(this, 'beforeUnload', function (event) {
+              if (!_this.dirty) return;
+              event.preventDefault();
+              event.returnValue = '';
+            });
+            this.inspector = inspector;
+            this.events = (0,
+            _Events__WEBPACK_IMPORTED_MODULE_0__.createEventScope)();
+            this.dirty = false;
+            this.error = '';
+            this.message = '';
+            this.savedAt = null;
+            [
+              'entityupdate',
+              'entityidchange',
+              'entitycreated',
+              'entityclone',
+              'componentadd',
+              'componentremove',
+              'scenechanged'
+            ].forEach(function (name) {
+              _this.events.on(name, _this.markDirty);
+            });
+            this.events.on('scenesave', function () {
+              return _this.saveDraft();
+            });
+            this.events.on('scenedownload', function () {
+              return _this.download();
+            });
+            window.addEventListener('beforeunload', this.beforeUnload);
+            this.bindScene(inspector.sceneEl);
+          }
+          return _createClass(ScenePersistence, [
+            {
+              key: 'key',
+              value: function key() {
+                var _this$scene;
+                return (
+                  'senangwebs-scene-draft:' +
+                  location.pathname +
+                  ':' +
+                  (((_this$scene = this.scene) === null ||
+                  _this$scene === void 0
+                    ? void 0
+                    : _this$scene.id) || 'scene')
+                );
+              }
+            },
+            {
+              key: 'bindScene',
+              value: function bindScene(scene) {
+                var _this2 = this;
+                ['child-attached', 'child-detached'].forEach(function (name) {
+                  var _this2$scene;
+                  (_this2$scene = _this2.scene) === null ||
+                    _this2$scene === void 0 ||
+                    _this2$scene.removeEventListener(
+                      name,
+                      _this2.onChildChange
+                    );
+                  scene === null ||
+                    scene === void 0 ||
+                    scene.addEventListener(name, _this2.onChildChange);
+                });
+                this.scene = scene;
+                this.publish();
+              }
+            },
+            {
+              key: 'readDraft',
+              value: function readDraft() {
+                try {
+                  var value = JSON.parse(
+                    localStorage.getItem(this.key()) || 'null'
+                  );
+                  return (value === null || value === void 0
+                    ? void 0
+                    : value.version) === 1 && typeof value.scene === 'string'
+                    ? value
+                    : null;
+                } catch (error) {
+                  return null;
+                }
+              }
+            },
+            {
+              key: 'getState',
+              value: function getState() {
+                return {
+                  dirty: this.dirty,
+                  error: this.error,
+                  message: this.message,
+                  savedAt: this.savedAt,
+                  hasDraft: !!this.readDraft()
+                };
+              }
+            },
+            {
+              key: 'publish',
+              value: function publish() {
+                _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+                  'scenesavestate',
+                  this.getState()
+                );
+              }
+            },
+            {
+              key: 'serialize',
+              value: function serialize() {
+                [this.scene]
+                  .concat(_toConsumableArray(this.scene.querySelectorAll('*')))
+                  .forEach(function (element) {
+                    var _element$flushToDOM;
+                    return (_element$flushToDOM = element.flushToDOM) ===
+                      null || _element$flushToDOM === void 0
+                      ? void 0
+                      : _element$flushToDOM.call(element);
+                  });
+                var template = document.createElement('template');
+                template.innerHTML = (0,
+                _entity__WEBPACK_IMPORTED_MODULE_1__.getEntityClipboardRepresentation)(
+                  this.scene
+                );
+                var copy = template.content.querySelector('a-scene');
+                copy
+                  .querySelectorAll(
+                    '[data-aframe-inspector], [data-aframe-canvas], [aframe-injected]'
+                  )
+                  .forEach(function (element) {
+                    return element.remove();
+                  });
+                // The editor deactivates the user's camera only for the duration of editing.
+                copy
+                  .querySelectorAll('[data-aframe-inspector-original-camera]')
+                  .forEach(function (camera) {
+                    var current = camera.getAttribute('camera') || '';
+                    camera.setAttribute(
+                      'camera',
+                      current.replace(/active\s*:\s*false/g, 'active: true') +
+                        '; active: true'
+                    );
+                    camera.removeAttribute(
+                      'data-aframe-inspector-original-camera'
+                    );
+                  });
+                if (copy.hasAttribute('aframe-inspector-removed-embedded'))
+                  copy.setAttribute('embedded', '');
+                copy.removeAttribute('aframe-inspector-removed-embedded');
+                return copy.outerHTML;
+              }
+            },
+            {
+              key: 'saveDraft',
+              value: function saveDraft() {
+                try {
+                  var savedAt = new Date().toISOString();
+                  localStorage.setItem(
+                    this.key(),
+                    JSON.stringify({
+                      version: 1,
+                      savedAt: savedAt,
+                      scene: this.serialize()
+                    })
+                  );
+                  this.dirty = false;
+                  this.savedAt = savedAt;
+                  this.error = '';
+                  this.message = 'Draft saved in this browser.';
+                  this.publish();
+                  return true;
+                } catch (error) {
+                  this.error =
+                    'The draft could not be saved in this browser. Download the scene HTML to keep your work.';
+                  this.publish();
+                  return false;
+                }
+              }
+            },
+            {
+              key: 'restoreDraft',
+              value: (function () {
+                var _restoreDraft = _asyncToGenerator(
+                  /*#__PURE__*/ _regeneratorRuntime().mark(function _callee() {
+                    var draft,
+                      parsed,
+                      savedScene,
+                      previous,
+                      replacement,
+                      wasDirty;
+                    return _regeneratorRuntime().wrap(
+                      function _callee$(_context) {
+                        while (1)
+                          switch ((_context.prev = _context.next)) {
+                            case 0:
+                              draft = this.readDraft();
+                              if (draft) {
+                                _context.next = 3;
+                                break;
+                              }
+                              return _context.abrupt('return', false);
+                            case 3:
+                              parsed = new DOMParser().parseFromString(
+                                draft.scene,
+                                'text/html'
+                              );
+                              savedScene = parsed.querySelector('a-scene');
+                              if (savedScene) {
+                                _context.next = 9;
+                                break;
+                              }
+                              this.error =
+                                'This draft is invalid. Your current scene has been kept.';
+                              this.publish();
+                              return _context.abrupt('return', false);
+                            case 9:
+                              this.suspended = true;
+                              previous = this.scene;
+                              replacement = document.importNode(
+                                savedScene,
+                                true
+                              );
+                              wasDirty = this.dirty;
+                              this.bindScene(null);
+                              _context.prev = 14;
+                              previous.replaceWith(replacement);
+                              _context.next = 18;
+                              return this.inspector.reload();
+                            case 18:
+                              if (_context.sent) {
+                                _context.next = 20;
+                                break;
+                              }
+                              throw new Error('Scene did not initialize');
+                            case 20:
+                              this.bindScene(replacement);
+                              this.dirty = false;
+                              this.savedAt = draft.savedAt;
+                              this.error = '';
+                              this.message = 'Saved draft restored.';
+                              return _context.abrupt('return', true);
+                            case 28:
+                              _context.prev = 28;
+                              _context.t0 = _context['catch'](14);
+                              replacement.replaceWith(previous);
+                              _context.next = 33;
+                              return this.inspector.reload();
+                            case 33:
+                              this.bindScene(previous);
+                              this.dirty = wasDirty;
+                              this.error =
+                                'The draft could not be opened. Your previous scene has been restored.';
+                              return _context.abrupt('return', false);
+                            case 37:
+                              _context.prev = 37;
+                              this.suspended = false;
+                              this.publish();
+                              return _context.finish(37);
+                            case 41:
+                            case 'end':
+                              return _context.stop();
+                          }
+                      },
+                      _callee,
+                      this,
+                      [[14, 28, 37, 41]]
+                    );
+                  })
+                );
+                function restoreDraft() {
+                  return _restoreDraft.apply(this, arguments);
+                }
+                return restoreDraft;
+              })()
+            },
+            {
+              key: 'download',
+              value: function download() {
+                var _this3 = this;
+                try {
+                  var output = document.implementation.createHTMLDocument(
+                    document.title || 'A-Frame scene'
+                  );
+                  var charset = output.createElement('meta');
+                  charset.setAttribute('charset', 'utf-8');
+                  output.head.prepend(charset);
+                  var base = output.createElement('base');
+                  base.href = document.baseURI;
+                  output.head.appendChild(base);
+                  var afterScene = [];
+                  // Preserve script order relative to the scene as well as dependency URLs.
+                  document
+                    .querySelectorAll(
+                      'script:not([data-webpack]), link[rel="stylesheet"]'
+                    )
+                    .forEach(function (element) {
+                      if (
+                        element.closest(
+                          '#aframeInspector, [data-aframe-inspector]'
+                        )
+                      )
+                        return;
+                      var copy = output.importNode(element, true);
+                      if (element.src) copy.src = element.src;
+                      if (element.href) copy.href = element.href;
+                      if (document.head.contains(element))
+                        output.head.appendChild(copy);
+                      else if (
+                        element.compareDocumentPosition(_this3.scene) &
+                        Node.DOCUMENT_POSITION_FOLLOWING
+                      )
+                        output.body.appendChild(copy);
+                      else afterScene.push(copy);
+                    });
+                  var scene = new DOMParser()
+                    .parseFromString(this.serialize(), 'text/html')
+                    .querySelector('a-scene');
+                  output.body.appendChild(output.importNode(scene, true));
+                  afterScene.forEach(function (element) {
+                    return output.body.appendChild(element);
+                  });
+                  var name = (this.scene.id || 'scene').replace(
+                    /[^a-z0-9_-]/gi,
+                    '-'
+                  );
+                  (0, _utils__WEBPACK_IMPORTED_MODULE_2__.saveString)(
+                    '<!doctype html>\n' + output.documentElement.outerHTML,
+                    name + '.html',
+                    'text/html'
+                  );
+                  this.error = '';
+                  this.message =
+                    'HTML download started. External assets must remain accessible.';
+                  // Download initiation is not proof that the user saved the file.
+                  this.publish();
+                } catch (error) {
+                  this.error =
+                    'The scene could not be downloaded. Try saving a browser draft instead.';
+                  this.publish();
+                }
+              }
+            },
+            {
+              key: 'dispose',
+              value: function dispose() {
+                this.events.dispose();
+                window.removeEventListener('beforeunload', this.beforeUnload);
+                this.bindScene(null);
+              }
+            }
+          ]);
+        })();
+
+        /***/
+      },
+
     /***/ './src/lib/raycaster.js':
       /*!******************************!*\
   !*** ./src/lib/raycaster.js ***!
@@ -116930,6 +115946,7 @@ object-assign
           __webpack_require__(/*! ./Events */ './src/lib/Events.js');
 
         function initRaycaster(inspector) {
+          var canvas = inspector.container;
           // Use cursor="rayOrigin: mouse".
           var mouseCursor = document.createElement('a-entity');
           mouseCursor.setAttribute('id', 'aframeInspectorMouseCursor');
@@ -116962,17 +115979,20 @@ object-assign
           mouseCursor.addEventListener('click', handleClick);
           mouseCursor.addEventListener('mouseenter', onMouseEnter);
           mouseCursor.addEventListener('mouseleave', onMouseLeave);
-          inspector.container.addEventListener('mousedown', onMouseDown);
-          inspector.container.addEventListener('mouseup', onMouseUp);
-          inspector.container.addEventListener('dblclick', onDoubleClick);
-          inspector.sceneEl.canvas.addEventListener('mouseleave', function () {
-            setTimeout(function () {
-              _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+          canvas.addEventListener('mousedown', onMouseDown);
+          canvas.addEventListener('mouseup', onMouseUp);
+          canvas.addEventListener('dblclick', onDoubleClick);
+          var leaveTimer;
+          var onCanvasLeave = function onCanvasLeave() {
+            clearTimeout(leaveTimer);
+            leaveTimer = setTimeout(function () {
+              return _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
                 'raycastermouseleave',
                 null
               );
             });
-          });
+          };
+          canvas.addEventListener('mouseleave', onCanvasLeave);
           var onDownPosition = new THREE.Vector2();
           var onUpPosition = new THREE.Vector2();
           function onMouseEnter() {
@@ -117035,29 +116055,25 @@ object-assign
             el: mouseCursor,
             enable: function enable() {
               mouseCursor.setAttribute('raycaster', 'enabled', true);
-              inspector.container.addEventListener('mousedown', onMouseDown);
-              inspector.container.addEventListener('mouseup', onMouseUp);
-              inspector.container.addEventListener('dblclick', onDoubleClick);
+              canvas.addEventListener('mousedown', onMouseDown);
+              canvas.addEventListener('mouseup', onMouseUp);
+              canvas.addEventListener('dblclick', onDoubleClick);
             },
             disable: function disable() {
               mouseCursor.setAttribute('raycaster', 'enabled', false);
-              inspector.container.removeEventListener('mousedown', onMouseDown);
-              inspector.container.removeEventListener('mouseup', onMouseUp);
-              inspector.container.removeEventListener(
-                'dblclick',
-                onDoubleClick
-              );
+              canvas.removeEventListener('mousedown', onMouseDown);
+              canvas.removeEventListener('mouseup', onMouseUp);
+              canvas.removeEventListener('dblclick', onDoubleClick);
             },
             destroy: function destroy() {
+              clearTimeout(leaveTimer);
+              canvas.removeEventListener('mouseleave', onCanvasLeave);
               mouseCursor.removeEventListener('click', handleClick);
               mouseCursor.removeEventListener('mouseenter', onMouseEnter);
               mouseCursor.removeEventListener('mouseleave', onMouseLeave);
-              inspector.container.removeEventListener('mousedown', onMouseDown);
-              inspector.container.removeEventListener('mouseup', onMouseUp);
-              inspector.container.removeEventListener(
-                'dblclick',
-                onDoubleClick
-              );
+              canvas.removeEventListener('mousedown', onMouseDown);
+              canvas.removeEventListener('mouseup', onMouseUp);
+              canvas.removeEventListener('dblclick', onDoubleClick);
               if (mouseCursor.parentNode) {
                 mouseCursor.parentNode.removeChild(mouseCursor);
               }
@@ -117095,11 +116111,15 @@ object-assign
           __webpack_require__(/*! ./utils */ './src/lib/utils.js');
 
         var os = (0, _utils__WEBPACK_IMPORTED_MODULE_2__.getOS)();
+        function dialogOpen() {
+          return !!document.querySelector('[role="dialog"][aria-modal="true"]');
+        }
         function shouldCaptureKeyEvent(event) {
           return (
-            event.target.closest('#cameraToolbar') ||
-            (event.target.tagName !== 'INPUT' &&
-              event.target.tagName !== 'TEXTAREA')
+            !dialogOpen() &&
+            !event.target.closest(
+              'input, textarea, select, button, [contenteditable="true"], [role="combobox"]'
+            )
           );
         }
         var Shortcuts = {
@@ -117109,6 +116129,7 @@ object-assign
             modules: {}
           },
           onKeyUp: function onKeyUp(event) {
+            if (event.ctrlKey || event.metaKey || event.altKey) return;
             if (!shouldCaptureKeyEvent(event) || !AFRAME.INSPECTOR.opened) {
               return;
             }
@@ -117245,6 +116266,59 @@ object-assign
             }
           },
           onKeyDown: function onKeyDown(event) {
+            if (dialogOpen() || !AFRAME.INSPECTOR.opened) return;
+            var command = os === 'macos' ? event.metaKey : event.ctrlKey;
+            if (
+              command &&
+              event.altKey &&
+              (event.code === 'KeyR' || event.keyCode === 82)
+            ) {
+              var _document$activeEleme;
+              event.preventDefault();
+              event.stopPropagation();
+              (_document$activeEleme = document.activeElement) === null ||
+                _document$activeEleme === void 0 ||
+                _document$activeEleme.blur();
+              setTimeout(function () {
+                return _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+                  'scenerestore'
+                );
+              }, 0);
+              return;
+            }
+            if (command && event.key.toLowerCase() === 's') {
+              var _document$activeEleme2;
+              event.preventDefault();
+              event.stopPropagation();
+              (_document$activeEleme2 = document.activeElement) === null ||
+                _document$activeEleme2 === void 0 ||
+                _document$activeEleme2.blur();
+              setTimeout(function () {
+                return _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+                  event.shiftKey ? 'scenedownload' : 'scenesave'
+                );
+              }, 0);
+              return;
+            }
+            if (command && event.key.toLowerCase() === 'f') {
+              event.preventDefault();
+              _Events__WEBPACK_IMPORTED_MODULE_0__['default'].emit(
+                'togglesidebar',
+                {
+                  which: 'scenegraph',
+                  show: true
+                }
+              );
+              requestAnimationFrame(function () {
+                var _document$getElementB;
+                return (_document$getElementB =
+                  document.getElementById('filter')) === null ||
+                  _document$getElementB === void 0
+                  ? void 0
+                  : _document$getElementB.focus();
+              });
+              return;
+            }
             if (!shouldCaptureKeyEvent(event) || !AFRAME.INSPECTOR.opened) {
               return;
             }
@@ -117256,6 +116330,7 @@ object-assign
                 AFRAME.INSPECTOR.selectedEntity &&
                 document.activeElement.tagName !== 'INPUT'
               ) {
+                var _AFRAME$INSPECTOR$ent;
                 // c: copy selected entity
                 if (event.keyCode === 67) {
                   AFRAME.INSPECTOR.entityToCopy =
@@ -117263,18 +116338,18 @@ object-assign
                 }
 
                 // v: paste copied entity
-                if (event.keyCode === 86) {
+                if (
+                  event.keyCode === 86 &&
+                  (_AFRAME$INSPECTOR$ent = AFRAME.INSPECTOR.entityToCopy) !==
+                    null &&
+                  _AFRAME$INSPECTOR$ent !== void 0 &&
+                  _AFRAME$INSPECTOR$ent.isConnected
+                ) {
+                  event.preventDefault();
                   (0, _entity__WEBPACK_IMPORTED_MODULE_1__.cloneEntity)(
                     AFRAME.INSPECTOR.entityToCopy
                   );
                 }
-              }
-
-              // s: focus search input
-              if (event.keyCode === 83) {
-                event.preventDefault();
-                event.stopPropagation();
-                document.getElementById('filter').focus();
               }
             }
 
@@ -117555,11 +116630,21 @@ object-assign
          * Transform controls stuff mostly.
          */
         function Viewport(inspector) {
+          var events = (0,
+          _Events__WEBPACK_IMPORTED_MODULE_3__.createEventScope)();
+          var removers = [];
+          var listen = function listen(target, name, handler) {
+            target.addEventListener(name, handler);
+            removers.push(function () {
+              return target.removeEventListener(name, handler);
+            });
+          };
           // Initialize raycaster and picking in differentpmodule.
           var mouseCursor = (0,
           _raycaster__WEBPACK_IMPORTED_MODULE_2__.initRaycaster)(inspector);
           var sceneEl = inspector.sceneEl;
-          sceneEl.addEventListener('camera-set-active', function (event) {
+          var cancelModelLoad = function cancelModelLoad() {};
+          listen(sceneEl, 'camera-set-active', function (event) {
             // If we're in edit mode, save the newly active camera and activate when exiting.
             if (inspector.opened) {
               inspector.cameras.original = event.detail.cameraEl;
@@ -117597,8 +116682,6 @@ object-assign
             if (object === undefined) {
               return;
             }
-            selectionBox.setFromObject(object);
-            updateHelpers(object);
 
             // Emit update event for watcher.
             var component;
@@ -117644,24 +116727,6 @@ object-assign
             controls.enabled = true;
           });
           sceneHelpers.add(transformControls);
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'entityupdate',
-            function (detail) {
-              var _inspector$selectedEn;
-              var object = detail.entity.object3D;
-              if (
-                inspector.selected === object &&
-                (_inspector$selectedEn = inspector.selectedEntity) !== null &&
-                _inspector$selectedEn !== void 0 &&
-                (_inspector$selectedEn = _inspector$selectedEn.object3DMap) !==
-                  null &&
-                _inspector$selectedEn !== void 0 &&
-                _inspector$selectedEn.mesh
-              ) {
-                selectionBox.setFromObject(inspector.selected);
-              }
-            }
-          );
 
           // Controls need to be added *after* main logic.
           var controls = new THREE.EditorControls(camera, inspector.container);
@@ -117675,14 +116740,11 @@ object-assign
               'camerachanged'
             );
           });
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'cameratoggle',
-            function (data) {
-              controls.setCamera(data.camera);
-              transformControls.setCamera(data.camera);
-              updateAspectRatio();
-            }
-          );
+          events.on('cameratoggle', function (data) {
+            controls.setCamera(data.camera);
+            transformControls.setCamera(data.camera);
+            updateAspectRatio();
+          });
           function disableControls() {
             mouseCursor.disable();
             transformControls.dispose();
@@ -117694,96 +116756,84 @@ object-assign
             controls.enabled = true;
           }
           enableControls();
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'inspectorcleared',
-            function () {
-              controls.center.set(0, 0, 0);
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'transformmodechange',
-            function (mode) {
-              transformControls.setMode(mode);
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'translationsnapchanged',
-            function (dist) {
-              transformControls.setTranslationSnap(dist);
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'rotationsnapchanged',
-            function (dist) {
-              transformControls.setRotationSnap(dist);
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'transformspacechanged',
-            function (space) {
-              transformControls.setSpace(space);
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'objectselect',
-            function (object) {
-              selectionBox.visible = false;
-              transformControls.detach();
-              if (object && object.el) {
-                if (object.el.getObject3D('mesh')) {
+          events.on('inspectorcleared', function () {
+            controls.center.set(0, 0, 0);
+          });
+          events.on('transformmodechange', function (mode) {
+            transformControls.setMode(mode);
+          });
+          events.on('translationsnapchanged', function (dist) {
+            transformControls.setTranslationSnap(dist);
+          });
+          events.on('rotationsnapchanged', function (dist) {
+            transformControls.setRotationSnap(dist);
+          });
+          events.on('transformspacechanged', function (space) {
+            transformControls.setSpace(space);
+          });
+          events.on('objectselect', function (object) {
+            cancelModelLoad();
+            selectionBox.visible = false;
+            transformControls.detach();
+            if (object && object.el) {
+              if (object.el.getObject3D('mesh')) {
+                selectionBox.setFromObject(object);
+                selectionBox.visible = true;
+              } else if (object.el.hasAttribute('gltf-model')) {
+                var listener = function listener(event) {
+                  if (event.target !== object.el) return; // we got an event for a child, ignore
                   selectionBox.setFromObject(object);
                   selectionBox.visible = true;
-                } else if (object.el.hasAttribute('gltf-model')) {
-                  var _listener = function listener(event) {
-                    if (event.target !== object.el) return; // we got an event for a child, ignore
-                    selectionBox.setFromObject(object);
-                    selectionBox.visible = true;
-                    object.el.removeEventListener('model-loaded', _listener);
-                  };
-                  object.el.addEventListener('model-loaded', _listener);
-                }
-                transformControls.attach(object);
+                  cancelModelLoad();
+                };
+                var element = object.el;
+                element.addEventListener('model-loaded', listener);
+                cancelModelLoad = function cancelModelLoad() {
+                  return element.removeEventListener('model-loaded', listener);
+                };
               }
+              transformControls.attach(object);
             }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'objectfocus',
-            function (object) {
-              controls.focus(object);
+          });
+          events.on('objectfocus', function (object) {
+            controls.focus(object);
+          });
+          events.on('geometrychanged', function (object) {
+            if (object !== null) {
+              selectionBox.setFromObject(object);
             }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'geometrychanged',
-            function (object) {
-              if (object !== null) {
-                selectionBox.setFromObject(object);
-              }
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'entityupdate',
-            function (detail) {
-              var object = detail.entity.object3D;
-              if (inspector.selected === object) {
-                // Hack because object3D always has geometry :(
-                if (
-                  object.geometry &&
+          });
+          events.on('entityupdate', function (detail) {
+            var _detail$entity;
+            var object =
+              (_detail$entity = detail.entity) === null ||
+              _detail$entity === void 0
+                ? void 0
+                : _detail$entity.object3D;
+            if (!object) return;
+            if (inspector.selected === object) {
+              var _object$el;
+              // Hack because object3D always has geometry :(
+              if (
+                ((_object$el = object.el) !== null &&
+                  _object$el !== void 0 &&
+                  _object$el.getObject3D('mesh')) ||
+                (object.geometry &&
                   ((object.geometry.vertices &&
                     object.geometry.vertices.length > 0) ||
                     (object.geometry.attributes &&
                       object.geometry.attributes.position &&
-                      object.geometry.attributes.position.array.length))
-                ) {
-                  selectionBox.setFromObject(object);
-                }
+                      object.geometry.attributes.position.array.length)))
+              ) {
+                selectionBox.setFromObject(object);
               }
-              transformControls.update();
-              if (object instanceof THREE.PerspectiveCamera) {
-                object.updateProjectionMatrix();
-              }
-              updateHelpers(object);
             }
-          );
+            transformControls.update();
+            if (object instanceof THREE.PerspectiveCamera) {
+              object.updateProjectionMatrix();
+            }
+            updateHelpers(object);
+          });
           function updateAspectRatio() {
             if (!inspector.opened) return;
             // Modifying aspect for perspective camera is done by aframe a-scene.resize function
@@ -117807,50 +116857,74 @@ object-assign
             var cameraHelper = inspector.helpers[camera.uuid];
             if (cameraHelper) cameraHelper.update();
           }
-          inspector.sceneEl.addEventListener(
-            'rendererresize',
-            updateAspectRatio
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'gridvisibilitychanged',
-            function (showGrid) {
-              grid.visible = showGrid;
+          listen(sceneEl, 'rendererresize', updateAspectRatio);
+          events.on('gridvisibilitychanged', function (showGrid) {
+            grid.visible = showGrid;
+          });
+          events.on('togglegrid', function () {
+            grid.visible = !grid.visible;
+          });
+          events.on('inspectortoggle', function (active) {
+            if (active) {
+              enableControls();
+              AFRAME.scenes[0].camera = inspector.camera;
+              Array.prototype.slice
+                .call(document.querySelectorAll('.a-enter-vr,.rs-base'))
+                .forEach(function (element) {
+                  element.style.display = 'none';
+                });
+            } else {
+              disableControls();
+              inspector.cameras.original.setAttribute(
+                'camera',
+                'active',
+                'true'
+              );
+              AFRAME.scenes[0].camera =
+                inspector.cameras.original.getObject3D('camera');
+              Array.prototype.slice
+                .call(document.querySelectorAll('.a-enter-vr,.rs-base'))
+                .forEach(function (element) {
+                  element.style.display = 'block';
+                });
             }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'togglegrid',
-            function () {
-              grid.visible = !grid.visible;
-            }
-          );
-          _Events__WEBPACK_IMPORTED_MODULE_3__['default'].on(
-            'inspectortoggle',
-            function (active) {
-              if (active) {
-                enableControls();
-                AFRAME.scenes[0].camera = inspector.camera;
-                Array.prototype.slice
-                  .call(document.querySelectorAll('.a-enter-vr,.rs-base'))
-                  .forEach(function (element) {
-                    element.style.display = 'none';
+          });
+          var disposed = false;
+          this.dispose = function () {
+            if (disposed) return;
+            disposed = true;
+            events.dispose();
+            cancelModelLoad();
+            removers.splice(0).forEach(function (remove) {
+              return remove();
+            });
+            mouseCursor.destroy();
+            controls.enabled = false;
+            controls.dispose();
+            transformControls.detach();
+            transformControls.dispose();
+            var geometries = new Set();
+            var materials = new Set();
+            [grid, selectionBox, transformControls].forEach(function (object) {
+              sceneHelpers.remove(object);
+              object.traverse(function (node) {
+                if (node.geometry) geometries.add(node.geometry);
+                if (node.material)
+                  (Array.isArray(node.material)
+                    ? node.material
+                    : [node.material]
+                  ).forEach(function (material) {
+                    return materials.add(material);
                   });
-              } else {
-                disableControls();
-                inspector.cameras.original.setAttribute(
-                  'camera',
-                  'active',
-                  'true'
-                );
-                AFRAME.scenes[0].camera =
-                  inspector.cameras.original.getObject3D('camera');
-                Array.prototype.slice
-                  .call(document.querySelectorAll('.a-enter-vr,.rs-base'))
-                  .forEach(function (element) {
-                    element.style.display = 'block';
-                  });
-              }
-            }
-          );
+              });
+            });
+            geometries.forEach(function (geometry) {
+              return geometry.dispose();
+            });
+            materials.forEach(function (material) {
+              return material.dispose();
+            });
+          };
         }
 
         /***/
@@ -118014,6 +117088,9 @@ object-assign
     /******/
   }
   /******/
+  /******/ // expose the modules object (__webpack_modules__)
+  /******/ __webpack_require__.m = __webpack_modules__;
+  /******/
   /************************************************************************/
   /******/ /* webpack/runtime/compat get default export */
   /******/ (() => {
@@ -118052,6 +117129,35 @@ object-assign
     /******/
   })();
   /******/
+  /******/ /* webpack/runtime/ensure chunk */
+  /******/ (() => {
+    /******/ __webpack_require__.f = {};
+    /******/ // This file contains only the entry chunk.
+    /******/ // The chunk loading function for additional chunks
+    /******/ __webpack_require__.e = (chunkId) => {
+      /******/ return Promise.all(
+        Object.keys(__webpack_require__.f).reduce((promises, key) => {
+          /******/ __webpack_require__.f[key](chunkId, promises);
+          /******/ return promises;
+          /******/
+        }, [])
+      );
+      /******/
+    };
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/get javascript chunk filename */
+  /******/ (() => {
+    /******/ // This function allow to reference async chunks
+    /******/ __webpack_require__.u = (chunkId) => {
+      /******/ // return url for filenames based on template
+      /******/ return '' + chunkId + '.sw-webverse.js';
+      /******/
+    };
+    /******/
+  })();
+  /******/
   /******/ /* webpack/runtime/global */
   /******/ (() => {
     /******/ __webpack_require__.g = (function () {
@@ -118072,6 +117178,74 @@ object-assign
   /******/ (() => {
     /******/ __webpack_require__.o = (obj, prop) =>
       Object.prototype.hasOwnProperty.call(obj, prop);
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/load script */
+  /******/ (() => {
+    /******/ var inProgress = {};
+    /******/ var dataWebpackPrefix = 'senangwebs-aframe-editor:';
+    /******/ // loadScript function to load a script via script tag
+    /******/ __webpack_require__.l = (url, done, key, chunkId) => {
+      /******/ if (inProgress[url]) {
+        inProgress[url].push(done);
+        return;
+      }
+      /******/ var script, needAttach;
+      /******/ if (key !== undefined) {
+        /******/ var scripts = document.getElementsByTagName('script');
+        /******/ for (var i = 0; i < scripts.length; i++) {
+          /******/ var s = scripts[i];
+          /******/ if (
+            s.getAttribute('src') == url ||
+            s.getAttribute('data-webpack') == dataWebpackPrefix + key
+          ) {
+            script = s;
+            break;
+          }
+          /******/
+        }
+        /******/
+      }
+      /******/ if (!script) {
+        /******/ needAttach = true;
+        /******/ script = document.createElement('script');
+        /******/
+        /******/ script.charset = 'utf-8';
+        /******/ script.timeout = 120;
+        /******/ if (__webpack_require__.nc) {
+          /******/ script.setAttribute('nonce', __webpack_require__.nc);
+          /******/
+        }
+        /******/ script.setAttribute('data-webpack', dataWebpackPrefix + key);
+        /******/
+        /******/ script.src = url;
+        /******/
+      }
+      /******/ inProgress[url] = [done];
+      /******/ var onScriptComplete = (prev, event) => {
+        /******/ // avoid mem leaks in IE.
+        /******/ script.onerror = script.onload = null;
+        /******/ clearTimeout(timeout);
+        /******/ var doneFns = inProgress[url];
+        /******/ delete inProgress[url];
+        /******/ script.parentNode && script.parentNode.removeChild(script);
+        /******/ doneFns && doneFns.forEach((fn) => fn(event));
+        /******/ if (prev) return prev(event);
+        /******/
+      };
+      /******/ var timeout = setTimeout(
+        onScriptComplete.bind(null, undefined, {
+          type: 'timeout',
+          target: script
+        }),
+        120000
+      );
+      /******/ script.onerror = onScriptComplete.bind(null, script.onerror);
+      /******/ script.onload = onScriptComplete.bind(null, script.onload);
+      /******/ needAttach && document.head.appendChild(script);
+      /******/
+    };
     /******/
   })();
   /******/
@@ -118099,6 +117273,155 @@ object-assign
       /******/ return module;
       /******/
     };
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/publicPath */
+  /******/ (() => {
+    /******/ __webpack_require__.p = '/dist/';
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/jsonp chunk loading */
+  /******/ (() => {
+    /******/ // no baseURI
+    /******/
+    /******/ // object to store loaded and loading chunks
+    /******/ // undefined = chunk not loaded, null = chunk preloaded/prefetched
+    /******/ // [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+    /******/ var installedChunks = {
+      /******/ main: 0
+      /******/
+    };
+    /******/
+    /******/ __webpack_require__.f.j = (chunkId, promises) => {
+      /******/ // JSONP chunk loading for javascript
+      /******/ var installedChunkData = __webpack_require__.o(
+        installedChunks,
+        chunkId
+      )
+        ? installedChunks[chunkId]
+        : undefined;
+      /******/ if (installedChunkData !== 0) {
+        // 0 means "already installed".
+        /******/
+        /******/ // a Promise means "currently loading".
+        /******/ if (installedChunkData) {
+          /******/ promises.push(installedChunkData[2]);
+          /******/
+        } else {
+          /******/ if (true) {
+            // all chunks have JS
+            /******/ // setup Promise in chunk cache
+            /******/ var promise = new Promise(
+              (resolve, reject) =>
+                (installedChunkData = installedChunks[chunkId] =
+                  [resolve, reject])
+            );
+            /******/ promises.push((installedChunkData[2] = promise));
+            /******/
+            /******/ // start chunk loading
+            /******/ var url =
+              __webpack_require__.p + __webpack_require__.u(chunkId);
+            /******/ // create error before stack unwound to get useful stacktrace later
+            /******/ var error = new Error();
+            /******/ var loadingEnded = (event) => {
+              /******/ if (__webpack_require__.o(installedChunks, chunkId)) {
+                /******/ installedChunkData = installedChunks[chunkId];
+                /******/ if (installedChunkData !== 0)
+                  installedChunks[chunkId] = undefined;
+                /******/ if (installedChunkData) {
+                  /******/ var errorType =
+                    event && (event.type === 'load' ? 'missing' : event.type);
+                  /******/ var realSrc =
+                    event && event.target && event.target.src;
+                  /******/ error.message =
+                    'Loading chunk ' +
+                    chunkId +
+                    ' failed.\n(' +
+                    errorType +
+                    ': ' +
+                    realSrc +
+                    ')';
+                  /******/ error.name = 'ChunkLoadError';
+                  /******/ error.type = errorType;
+                  /******/ error.request = realSrc;
+                  /******/ installedChunkData[1](error);
+                  /******/
+                }
+                /******/
+              }
+              /******/
+            };
+            /******/ __webpack_require__.l(
+              url,
+              loadingEnded,
+              'chunk-' + chunkId,
+              chunkId
+            );
+            /******/
+          }
+          /******/
+        }
+        /******/
+      }
+      /******/
+    };
+    /******/
+    /******/ // no prefetching
+    /******/
+    /******/ // no preloaded
+    /******/
+    /******/ // no HMR
+    /******/
+    /******/ // no HMR manifest
+    /******/
+    /******/ // no on chunks loaded
+    /******/
+    /******/ // install a JSONP callback for chunk loading
+    /******/ var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+      /******/ var [chunkIds, moreModules, runtime] = data;
+      /******/ // add "moreModules" to the modules object,
+      /******/ // then flag all "chunkIds" as loaded and fire callback
+      /******/ var moduleId,
+        chunkId,
+        i = 0;
+      /******/ if (chunkIds.some((id) => installedChunks[id] !== 0)) {
+        /******/ for (moduleId in moreModules) {
+          /******/ if (__webpack_require__.o(moreModules, moduleId)) {
+            /******/ __webpack_require__.m[moduleId] = moreModules[moduleId];
+            /******/
+          }
+          /******/
+        }
+        /******/ if (runtime) var result = runtime(__webpack_require__);
+        /******/
+      }
+      /******/ if (parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+      /******/ for (; i < chunkIds.length; i++) {
+        /******/ chunkId = chunkIds[i];
+        /******/ if (
+          __webpack_require__.o(installedChunks, chunkId) &&
+          installedChunks[chunkId]
+        ) {
+          /******/ installedChunks[chunkId][0]();
+          /******/
+        }
+        /******/ installedChunks[chunkId] = 0;
+        /******/
+      }
+      /******/
+      /******/
+    };
+    /******/
+    /******/ var chunkLoadingGlobal = (self[
+      'webpackChunksenangwebs_aframe_editor'
+    ] = self['webpackChunksenangwebs_aframe_editor'] || []);
+    /******/ chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+    /******/ chunkLoadingGlobal.push = webpackJsonpCallback.bind(
+      null,
+      chunkLoadingGlobal.push.bind(chunkLoadingGlobal)
+    );
     /******/
   })();
   /******/
@@ -118141,23 +117464,504 @@ object-assign
       __webpack_require__(/*! ./lib/cameras */ './src/lib/cameras.js');
     /* harmony import */ var _lib_entity__WEBPACK_IMPORTED_MODULE_8__ =
       __webpack_require__(/*! ./lib/entity */ './src/lib/entity.js');
-    /* harmony import */ var three_addons_exporters_GLTFExporter__WEBPACK_IMPORTED_MODULE_11__ =
+    /* harmony import */ var _lib_persistence__WEBPACK_IMPORTED_MODULE_9__ =
+      __webpack_require__(/*! ./lib/persistence */ './src/lib/persistence.js');
+    /* harmony import */ var _lib_editorViewport__WEBPACK_IMPORTED_MODULE_10__ =
       __webpack_require__(
-        /*! three/addons/exporters/GLTFExporter */ './node_modules/three/examples/jsm/exporters/GLTFExporter.js'
+        /*! ./lib/editorViewport */ './src/lib/editorViewport.js'
       );
-    /* harmony import */ var _style_index_styl__WEBPACK_IMPORTED_MODULE_9__ =
+    /* harmony import */ var _style_index_styl__WEBPACK_IMPORTED_MODULE_11__ =
       __webpack_require__(/*! ./style/index.styl */ './src/style/index.styl');
-    /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ =
+    /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ =
       __webpack_require__(
         /*! react/jsx-runtime */ './node_modules/react/jsx-runtime.js'
       );
+    function _typeof(o) {
+      '@babel/helpers - typeof';
+      return (
+        (_typeof =
+          'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+            ? function (o) {
+                return typeof o;
+              }
+            : function (o) {
+                return o &&
+                  'function' == typeof Symbol &&
+                  o.constructor === Symbol &&
+                  o !== Symbol.prototype
+                  ? 'symbol'
+                  : typeof o;
+              }),
+        _typeof(o)
+      );
+    }
+    var _document$currentScri;
+    function _regeneratorRuntime() {
+      'use strict';
+      /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ _regeneratorRuntime =
+        function _regeneratorRuntime() {
+          return r;
+        };
+      var t,
+        r = {},
+        e = Object.prototype,
+        n = e.hasOwnProperty,
+        o = 'function' == typeof Symbol ? Symbol : {},
+        i = o.iterator || '@@iterator',
+        a = o.asyncIterator || '@@asyncIterator',
+        u = o.toStringTag || '@@toStringTag';
+      function c(t, r, e, n) {
+        return Object.defineProperty(t, r, {
+          value: e,
+          enumerable: !n,
+          configurable: !n,
+          writable: !n
+        });
+      }
+      try {
+        c({}, '');
+      } catch (t) {
+        c = function c(t, r, e) {
+          return (t[r] = e);
+        };
+      }
+      function h(r, e, n, o) {
+        var i = e && e.prototype instanceof Generator ? e : Generator,
+          a = Object.create(i.prototype);
+        return (
+          c(
+            a,
+            '_invoke',
+            (function (r, e, n) {
+              var o = 1;
+              return function (i, a) {
+                if (3 === o) throw Error('Generator is already running');
+                if (4 === o) {
+                  if ('throw' === i) throw a;
+                  return { value: t, done: !0 };
+                }
+                for (n.method = i, n.arg = a; ; ) {
+                  var u = n.delegate;
+                  if (u) {
+                    var c = d(u, n);
+                    if (c) {
+                      if (c === f) continue;
+                      return c;
+                    }
+                  }
+                  if ('next' === n.method) n.sent = n._sent = n.arg;
+                  else if ('throw' === n.method) {
+                    if (1 === o) throw ((o = 4), n.arg);
+                    n.dispatchException(n.arg);
+                  } else 'return' === n.method && n.abrupt('return', n.arg);
+                  o = 3;
+                  var h = s(r, e, n);
+                  if ('normal' === h.type) {
+                    if (((o = n.done ? 4 : 2), h.arg === f)) continue;
+                    return { value: h.arg, done: n.done };
+                  }
+                  'throw' === h.type &&
+                    ((o = 4), (n.method = 'throw'), (n.arg = h.arg));
+                }
+              };
+            })(r, n, new Context(o || [])),
+            !0
+          ),
+          a
+        );
+      }
+      function s(t, r, e) {
+        try {
+          return { type: 'normal', arg: t.call(r, e) };
+        } catch (t) {
+          return { type: 'throw', arg: t };
+        }
+      }
+      r.wrap = h;
+      var f = {};
+      function Generator() {}
+      function GeneratorFunction() {}
+      function GeneratorFunctionPrototype() {}
+      var l = {};
+      c(l, i, function () {
+        return this;
+      });
+      var p = Object.getPrototypeOf,
+        y = p && p(p(x([])));
+      y && y !== e && n.call(y, i) && (l = y);
+      var v =
+        (GeneratorFunctionPrototype.prototype =
+        Generator.prototype =
+          Object.create(l));
+      function g(t) {
+        ['next', 'throw', 'return'].forEach(function (r) {
+          c(t, r, function (t) {
+            return this._invoke(r, t);
+          });
+        });
+      }
+      function AsyncIterator(t, r) {
+        function e(o, i, a, u) {
+          var c = s(t[o], t, i);
+          if ('throw' !== c.type) {
+            var h = c.arg,
+              f = h.value;
+            return f && 'object' == _typeof(f) && n.call(f, '__await')
+              ? r.resolve(f.__await).then(
+                  function (t) {
+                    e('next', t, a, u);
+                  },
+                  function (t) {
+                    e('throw', t, a, u);
+                  }
+                )
+              : r.resolve(f).then(
+                  function (t) {
+                    (h.value = t), a(h);
+                  },
+                  function (t) {
+                    return e('throw', t, a, u);
+                  }
+                );
+          }
+          u(c.arg);
+        }
+        var o;
+        c(
+          this,
+          '_invoke',
+          function (t, n) {
+            function i() {
+              return new r(function (r, o) {
+                e(t, n, r, o);
+              });
+            }
+            return (o = o ? o.then(i, i) : i());
+          },
+          !0
+        );
+      }
+      function d(r, e) {
+        var n = e.method,
+          o = r.i[n];
+        if (o === t)
+          return (
+            (e.delegate = null),
+            ('throw' === n &&
+              r.i['return'] &&
+              ((e.method = 'return'),
+              (e.arg = t),
+              d(r, e),
+              'throw' === e.method)) ||
+              ('return' !== n &&
+                ((e.method = 'throw'),
+                (e.arg = new TypeError(
+                  "The iterator does not provide a '" + n + "' method"
+                )))),
+            f
+          );
+        var i = s(o, r.i, e.arg);
+        if ('throw' === i.type)
+          return (e.method = 'throw'), (e.arg = i.arg), (e.delegate = null), f;
+        var a = i.arg;
+        return a
+          ? a.done
+            ? ((e[r.r] = a.value),
+              (e.next = r.n),
+              'return' !== e.method && ((e.method = 'next'), (e.arg = t)),
+              (e.delegate = null),
+              f)
+            : a
+          : ((e.method = 'throw'),
+            (e.arg = new TypeError('iterator result is not an object')),
+            (e.delegate = null),
+            f);
+      }
+      function w(t) {
+        this.tryEntries.push(t);
+      }
+      function m(r) {
+        var e = r[4] || {};
+        (e.type = 'normal'), (e.arg = t), (r[4] = e);
+      }
+      function Context(t) {
+        (this.tryEntries = [[-1]]), t.forEach(w, this), this.reset(!0);
+      }
+      function x(r) {
+        if (null != r) {
+          var e = r[i];
+          if (e) return e.call(r);
+          if ('function' == typeof r.next) return r;
+          if (!isNaN(r.length)) {
+            var o = -1,
+              a = function e() {
+                for (; ++o < r.length; )
+                  if (n.call(r, o)) return (e.value = r[o]), (e.done = !1), e;
+                return (e.value = t), (e.done = !0), e;
+              };
+            return (a.next = a);
+          }
+        }
+        throw new TypeError(_typeof(r) + ' is not iterable');
+      }
+      return (
+        (GeneratorFunction.prototype = GeneratorFunctionPrototype),
+        c(v, 'constructor', GeneratorFunctionPrototype),
+        c(GeneratorFunctionPrototype, 'constructor', GeneratorFunction),
+        (GeneratorFunction.displayName = c(
+          GeneratorFunctionPrototype,
+          u,
+          'GeneratorFunction'
+        )),
+        (r.isGeneratorFunction = function (t) {
+          var r = 'function' == typeof t && t.constructor;
+          return (
+            !!r &&
+            (r === GeneratorFunction ||
+              'GeneratorFunction' === (r.displayName || r.name))
+          );
+        }),
+        (r.mark = function (t) {
+          return (
+            Object.setPrototypeOf
+              ? Object.setPrototypeOf(t, GeneratorFunctionPrototype)
+              : ((t.__proto__ = GeneratorFunctionPrototype),
+                c(t, u, 'GeneratorFunction')),
+            (t.prototype = Object.create(v)),
+            t
+          );
+        }),
+        (r.awrap = function (t) {
+          return { __await: t };
+        }),
+        g(AsyncIterator.prototype),
+        c(AsyncIterator.prototype, a, function () {
+          return this;
+        }),
+        (r.AsyncIterator = AsyncIterator),
+        (r.async = function (t, e, n, o, i) {
+          void 0 === i && (i = Promise);
+          var a = new AsyncIterator(h(t, e, n, o), i);
+          return r.isGeneratorFunction(e)
+            ? a
+            : a.next().then(function (t) {
+                return t.done ? t.value : a.next();
+              });
+        }),
+        g(v),
+        c(v, u, 'Generator'),
+        c(v, i, function () {
+          return this;
+        }),
+        c(v, 'toString', function () {
+          return '[object Generator]';
+        }),
+        (r.keys = function (t) {
+          var r = Object(t),
+            e = [];
+          for (var n in r) e.unshift(n);
+          return function t() {
+            for (; e.length; )
+              if ((n = e.pop()) in r) return (t.value = n), (t.done = !1), t;
+            return (t.done = !0), t;
+          };
+        }),
+        (r.values = x),
+        (Context.prototype = {
+          constructor: Context,
+          reset: function reset(r) {
+            if (
+              ((this.prev = this.next = 0),
+              (this.sent = this._sent = t),
+              (this.done = !1),
+              (this.delegate = null),
+              (this.method = 'next'),
+              (this.arg = t),
+              this.tryEntries.forEach(m),
+              !r)
+            )
+              for (var e in this)
+                't' === e.charAt(0) &&
+                  n.call(this, e) &&
+                  !isNaN(+e.slice(1)) &&
+                  (this[e] = t);
+          },
+          stop: function stop() {
+            this.done = !0;
+            var t = this.tryEntries[0][4];
+            if ('throw' === t.type) throw t.arg;
+            return this.rval;
+          },
+          dispatchException: function dispatchException(r) {
+            if (this.done) throw r;
+            var e = this;
+            function n(t) {
+              (a.type = 'throw'), (a.arg = r), (e.next = t);
+            }
+            for (var o = e.tryEntries.length - 1; o >= 0; --o) {
+              var i = this.tryEntries[o],
+                a = i[4],
+                u = this.prev,
+                c = i[1],
+                h = i[2];
+              if (-1 === i[0]) return n('end'), !1;
+              if (!c && !h)
+                throw Error('try statement without catch or finally');
+              if (null != i[0] && i[0] <= u) {
+                if (u < c)
+                  return (this.method = 'next'), (this.arg = t), n(c), !0;
+                if (u < h) return n(h), !1;
+              }
+            }
+          },
+          abrupt: function abrupt(t, r) {
+            for (var e = this.tryEntries.length - 1; e >= 0; --e) {
+              var n = this.tryEntries[e];
+              if (n[0] > -1 && n[0] <= this.prev && this.prev < n[2]) {
+                var o = n;
+                break;
+              }
+            }
+            o &&
+              ('break' === t || 'continue' === t) &&
+              o[0] <= r &&
+              r <= o[2] &&
+              (o = null);
+            var i = o ? o[4] : {};
+            return (
+              (i.type = t),
+              (i.arg = r),
+              o
+                ? ((this.method = 'next'), (this.next = o[2]), f)
+                : this.complete(i)
+            );
+          },
+          complete: function complete(t, r) {
+            if ('throw' === t.type) throw t.arg;
+            return (
+              'break' === t.type || 'continue' === t.type
+                ? (this.next = t.arg)
+                : 'return' === t.type
+                  ? ((this.rval = this.arg = t.arg),
+                    (this.method = 'return'),
+                    (this.next = 'end'))
+                  : 'normal' === t.type && r && (this.next = r),
+              f
+            );
+          },
+          finish: function finish(t) {
+            for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+              var e = this.tryEntries[r];
+              if (e[2] === t) return this.complete(e[4], e[3]), m(e), f;
+            }
+          },
+          catch: function _catch(t) {
+            for (var r = this.tryEntries.length - 1; r >= 0; --r) {
+              var e = this.tryEntries[r];
+              if (e[0] === t) {
+                var n = e[4];
+                if ('throw' === n.type) {
+                  var o = n.arg;
+                  m(e);
+                }
+                return o;
+              }
+            }
+            throw Error('illegal catch attempt');
+          },
+          delegateYield: function delegateYield(r, e, n) {
+            return (
+              (this.delegate = { i: x(r), r: e, n: n }),
+              'next' === this.method && (this.arg = t),
+              f
+            );
+          }
+        }),
+        r
+      );
+    }
+    function asyncGeneratorStep(n, t, e, r, o, a, c) {
+      try {
+        var i = n[a](c),
+          u = i.value;
+      } catch (n) {
+        return void e(n);
+      }
+      i.done ? t(u) : Promise.resolve(u).then(r, o);
+    }
+    function _asyncToGenerator(n) {
+      return function () {
+        var t = this,
+          e = arguments;
+        return new Promise(function (r, o) {
+          var a = n.apply(t, e);
+          function _next(n) {
+            asyncGeneratorStep(a, r, o, _next, _throw, 'next', n);
+          }
+          function _throw(n) {
+            asyncGeneratorStep(a, r, o, _next, _throw, 'throw', n);
+          }
+          _next(void 0);
+        });
+      };
+    }
 
+    /* global __webpack_public_path__: writable */
+
+    if (
+      (_document$currentScri = document.currentScript) !== null &&
+      _document$currentScri !== void 0 &&
+      _document$currentScri.src
+    ) {
+      var _document$currentScri2;
+      __webpack_require__.p =
+        (_document$currentScri2 = document.currentScript) !== null &&
+        _document$currentScri2 !== void 0 &&
+        _document$currentScri2.src
+          ? new URL('.', document.currentScript.src).href
+          : __webpack_require__.p;
+    }
+    var exporterPromise;
+    function loadExporter() {
+      if (!exporterPromise) {
+        exporterPromise = __webpack_require__
+          .e(/*! import() | gltf-exporter */ 'gltf-exporter')
+          .then(
+            __webpack_require__.bind(
+              __webpack_require__,
+              /*! three/addons/exporters/GLTFExporter */ './node_modules/three/examples/jsm/exporters/GLTFExporter.js'
+            )
+          )
+          .then(function (_ref) {
+            var GLTFExporter = _ref.GLTFExporter;
+            return new GLTFExporter();
+          })
+          ['catch'](function (error) {
+            exporterPromise = null;
+            throw error;
+          });
+      }
+      return exporterPromise;
+    }
     function Inspector() {
       var _this = this;
       this.assetsLoader =
         new _lib_assetsLoader__WEBPACK_IMPORTED_MODULE_3__.AssetsLoader();
+      this.events = (0,
+      _lib_Events__WEBPACK_IMPORTED_MODULE_1__.createEventScope)();
       this.exporters = {
-        gltf: new three_addons_exporters_GLTFExporter__WEBPACK_IMPORTED_MODULE_11__.GLTFExporter()
+        gltf: {
+          parse: function parse(scene, onDone, onError, options) {
+            return loadExporter()
+              .then(function (exporter) {
+                return exporter.parse(scene, onDone, onError, options);
+              })
+              ['catch'](function (error) {
+                if (onError) onError(error);
+                else console.error(error);
+              });
+          }
+        }
       };
       this.history = __webpack_require__(
         /*! ./lib/history */ './src/lib/history.js'
@@ -118216,15 +118020,15 @@ object-assign
         div.id = 'aframeInspector';
         div.setAttribute('data-aframe-inspector', 'app');
         document.body.appendChild(div);
-        var root = (0,
-        react_dom_client__WEBPACK_IMPORTED_MODULE_0__.createRoot)(div);
+        var root = (this.root = (0,
+        react_dom_client__WEBPACK_IMPORTED_MODULE_0__.createRoot)(div));
         root.render(
           /*#__PURE__*/ (0,
-          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(
+          react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
             _components_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__['default'],
             {
               children: /*#__PURE__*/ (0,
-              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(
+              react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(
                 _components_Main__WEBPACK_IMPORTED_MODULE_6__['default'],
                 {}
               )
@@ -118244,6 +118048,10 @@ object-assign
           _this3.addHelper(node);
         });
         this.scene.add(this.sceneHelpers);
+        this.persistence =
+          new _lib_persistence__WEBPACK_IMPORTED_MODULE_9__.ScenePersistence(
+            this
+          );
         this.open();
       },
       removeObject: function removeObject(object) {
@@ -118303,7 +118111,7 @@ object-assign
         } else {
           this.select(null);
         }
-        if (entity && emit === undefined) {
+        if (emit === undefined) {
           _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
             'entityselect',
             entity
@@ -118327,7 +118135,9 @@ object-assign
       },
       initEvents: function initEvents() {
         var _this6 = this;
-        window.addEventListener('keydown', function (evt) {
+        this.onToggleKey = function (evt) {
+          if (document.querySelector('[role="dialog"][aria-modal="true"]'))
+            return;
           // Alt + Ctrl + i: Shorcut to toggle the inspector
           var shortcutPressed =
             evt.keyCode === 73 &&
@@ -118335,35 +118145,35 @@ object-assign
           if (shortcutPressed) {
             _this6.toggle();
           }
+        };
+        window.addEventListener('keydown', this.onToggleKey);
+        this.events.on('entityselect', function (entity) {
+          _this6.selectEntity(entity, false);
         });
-        _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].on(
-          'entityselect',
-          function (entity) {
-            _this6.selectEntity(entity, false);
-          }
-        );
-        _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].on(
-          'inspectortoggle',
-          function (active) {
-            _this6.inspectorActive = active;
-            _this6.sceneHelpers.visible = _this6.inspectorActive;
-          }
-        );
-        _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].on(
-          'entitycreate',
-          function (definition) {
-            (0, _lib_entity__WEBPACK_IMPORTED_MODULE_8__.createEntity)(
-              definition,
-              function (entity) {
-                _this6.selectEntity(entity);
-              }
-            );
-          }
-        );
-        document.addEventListener('child-detached', function (event) {
+        this.events.on('inspectortoggle', function (active) {
+          _this6.inspectorActive = active;
+          _this6.sceneHelpers.visible = _this6.inspectorActive;
+        });
+        this.events.on('entitycreate', function (definition) {
+          (0, _lib_entity__WEBPACK_IMPORTED_MODULE_8__.createEntity)(
+            definition,
+            function (entity) {
+              _this6.selectEntity(entity);
+            }
+          );
+        });
+        this.onChildDetached = function (event) {
           var entity = event.detail.el;
-          AFRAME.INSPECTOR.removeObject(entity.object3D);
-        });
+          if (
+            entity !== null &&
+            entity !== void 0 &&
+            entity.object3D &&
+            (event.target === _this6.sceneEl ||
+              event.target.sceneEl === _this6.sceneEl)
+          )
+            _this6.removeObject(entity.object3D);
+        };
+        document.addEventListener('child-detached', this.onChildDetached);
       },
       selectById: function selectById(id) {
         if (id === this.camera.id) {
@@ -118412,6 +118222,11 @@ object-assign
           this.sceneEl.removeAttribute('embedded');
           this.sceneEl.setAttribute('aframe-inspector-removed-embedded');
         }
+        if (!this.editorViewport)
+          this.editorViewport =
+            new _lib_editorViewport__WEBPACK_IMPORTED_MODULE_10__.EditorViewport(
+              this.sceneEl
+            );
         document.body.classList.add('aframe-inspector-opened');
         this.sceneEl.resize();
         this.sceneEl.pause();
@@ -118444,120 +118259,185 @@ object-assign
        * Reload the inspector UI to reflect current scene HTML.
        * Call this after programmatically modifying the scene DOM.
        */
-      reload: function reload() {
-        var _this7 = this;
-        // Deselect current entity.
-        this.selectEntity(null);
-
-        // Clear all existing helpers.
-        for (var id in this.helpers) {
-          var helper = this.helpers[id];
-          this.sceneHelpers.remove(helper);
-          if (helper.dispose) {
-            helper.dispose();
-          }
-        }
-        this.helpers = {};
-
-        // Remove old sceneHelpers from old scene.
-        if (this.scene && this.sceneHelpers.parent) {
-          this.scene.remove(this.sceneHelpers);
-        }
-
-        // Poll for new scene to register in AFRAME.scenes.
-        var _waitForScene = function waitForScene() {
-          var newSceneEl = AFRAME.scenes[0];
-          if (!newSceneEl) {
-            setTimeout(_waitForScene, 100);
-            return;
-          }
-          _this7.sceneEl = newSceneEl;
-          var _onReady = function onReady() {
-            // Wait for camera too.
-            if (!_this7.sceneEl.camera) {
-              _this7.sceneEl.addEventListener(
-                'camera-set-active',
-                function () {
-                  return _onReady();
-                },
-                {
-                  once: true
-                }
-              );
-              return;
-            }
-
-            // Re-acquire container (new scene creates new canvas).
-            _this7.container = document.querySelector('.a-canvas');
-
-            // Re-init cameras for new scene.
-            (0, _lib_cameras__WEBPACK_IMPORTED_MODULE_7__.initCameras)(_this7);
-
-            // Refresh scene object3D reference.
-            _this7.scene = _this7.sceneEl.object3D;
-
-            // Re-create sceneHelpers in new scene.
-            _this7.sceneHelpers = new THREE.Scene();
-            _this7.sceneHelpers.userData.source = 'INSPECTOR';
-            _this7.sceneHelpers.visible = true;
-            _this7.scene.add(_this7.sceneHelpers);
-
-            // Re-init viewport (transform controls, editor controls, raycaster).
-            _this7.viewport =
-              new _lib_viewport__WEBPACK_IMPORTED_MODULE_2__.Viewport(_this7);
-
-            // Rebuild helpers from new entities.
-            _this7.sceneEl.object3D.traverse(function (node) {
-              _this7.addHelper(node);
-            });
-
-            // Notify React components to update scene reference.
-            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
-              'scenereload',
-              _this7.sceneEl
-            );
-
-            // Notify React components to rebuild scenegraph.
-            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
-              'entitycreated'
-            );
-
-            // Enter inspector edit mode on new scene.
-            _this7.opened = true;
-            _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
-              'inspectortoggle',
-              true
-            );
-            document.body.classList.add('aframe-inspector-opened');
-            _this7.sceneEl.resize();
-            _this7.sceneEl.pause();
-            _this7.sceneEl.isPlaying = true;
-            _this7.cursor.play();
-            _lib_shortcuts__WEBPACK_IMPORTED_MODULE_4__.Shortcuts.enable();
-          };
-          if (_this7.sceneEl.hasLoaded) {
-            _onReady();
-          } else {
-            _this7.sceneEl.addEventListener(
-              'loaded',
-              function () {
-                return _onReady();
+      reload: (function () {
+        var _reload = _asyncToGenerator(
+          /*#__PURE__*/ _regeneratorRuntime().mark(function _callee() {
+            var _this$cancelReload,
+              _this$editorViewport,
+              _this$viewport,
+              _this$disposeCameras,
+              _this$persistence,
+              _this$sceneHelpers$pa,
+              _this7 = this,
+              _this$persistence2;
+            var _i, _Object$values, _helper$dispose, helper, ready;
+            return _regeneratorRuntime().wrap(
+              function _callee$(_context) {
+                while (1)
+                  switch ((_context.prev = _context.next)) {
+                    case 0:
+                      (_this$cancelReload = this.cancelReload) === null ||
+                        _this$cancelReload === void 0 ||
+                        _this$cancelReload.call(this);
+                      this.selectEntity(null);
+                      (_this$editorViewport = this.editorViewport) === null ||
+                        _this$editorViewport === void 0 ||
+                        _this$editorViewport.dispose();
+                      this.editorViewport = null;
+                      (_this$viewport = this.viewport) === null ||
+                        _this$viewport === void 0 ||
+                        _this$viewport.dispose();
+                      (_this$disposeCameras = this.disposeCameras) === null ||
+                        _this$disposeCameras === void 0 ||
+                        _this$disposeCameras.call(this);
+                      (_this$persistence = this.persistence) === null ||
+                        _this$persistence === void 0 ||
+                        _this$persistence.bindScene(null);
+                      for (
+                        _i = 0, _Object$values = Object.values(this.helpers);
+                        _i < _Object$values.length;
+                        _i++
+                      ) {
+                        helper = _Object$values[_i];
+                        this.sceneHelpers.remove(helper);
+                        (_helper$dispose = helper.dispose) === null ||
+                          _helper$dispose === void 0 ||
+                          _helper$dispose.call(helper);
+                      }
+                      this.helpers = {};
+                      (_this$sceneHelpers$pa = this.sceneHelpers.parent) ===
+                        null ||
+                        _this$sceneHelpers$pa === void 0 ||
+                        _this$sceneHelpers$pa.remove(this.sceneHelpers);
+                      _context.next = 12;
+                      return new Promise(function (resolve) {
+                        var start = Date.now();
+                        var timer;
+                        var finish = function finish(value) {
+                          clearTimeout(timer);
+                          resolve(value);
+                        };
+                        _this7.cancelReload = function () {
+                          return finish(false);
+                        };
+                        var _poll = function poll() {
+                          var scene = AFRAME.scenes[0];
+                          if (
+                            scene !== null &&
+                            scene !== void 0 &&
+                            scene.hasLoaded &&
+                            scene.camera
+                          )
+                            return finish(scene);
+                          if (Date.now() - start > 15000) return finish(false);
+                          timer = setTimeout(_poll, 50);
+                        };
+                        _poll();
+                      });
+                    case 12:
+                      ready = _context.sent;
+                      if (ready) {
+                        _context.next = 15;
+                        break;
+                      }
+                      return _context.abrupt('return', false);
+                    case 15:
+                      this.cancelReload = null;
+                      this.sceneEl = ready;
+                      this.container = ready.canvas;
+                      (0,
+                      _lib_cameras__WEBPACK_IMPORTED_MODULE_7__.initCameras)(
+                        this
+                      );
+                      this.scene = ready.object3D;
+                      this.sceneHelpers = new THREE.Scene();
+                      this.sceneHelpers.userData.source = 'INSPECTOR';
+                      this.scene.add(this.sceneHelpers);
+                      this.viewport =
+                        new _lib_viewport__WEBPACK_IMPORTED_MODULE_2__.Viewport(
+                          this
+                        );
+                      this.scene.traverse(function (node) {
+                        if (node.userData.source !== 'INSPECTOR')
+                          _this7.addHelper(node);
+                      });
+                      (_this$persistence2 = this.persistence) === null ||
+                        _this$persistence2 === void 0 ||
+                        _this$persistence2.bindScene(ready);
+                      _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+                        'scenereload',
+                        ready
+                      );
+                      _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
+                        'entitycreated'
+                      );
+                      this.open();
+                      return _context.abrupt('return', true);
+                    case 30:
+                    case 'end':
+                      return _context.stop();
+                  }
               },
-              {
-                once: true
-              }
+              _callee,
+              this
             );
-          }
-        };
-
-        // Start polling (small delay to let DOM settle after replaceWith).
-        setTimeout(_waitForScene, 50);
+          })
+        );
+        function reload() {
+          return _reload.apply(this, arguments);
+        }
+        return reload;
+      })(),
+      destroy: function destroy() {
+        var _this$cancelReload2,
+          _this$viewport2,
+          _this$disposeCameras2,
+          _this$sceneHelpers$pa2,
+          _this$persistence3,
+          _this$root,
+          _document$getElementB;
+        (_this$cancelReload2 = this.cancelReload) === null ||
+          _this$cancelReload2 === void 0 ||
+          _this$cancelReload2.call(this);
+        if (this.opened) this.close();
+        (_this$viewport2 = this.viewport) === null ||
+          _this$viewport2 === void 0 ||
+          _this$viewport2.dispose();
+        (_this$disposeCameras2 = this.disposeCameras) === null ||
+          _this$disposeCameras2 === void 0 ||
+          _this$disposeCameras2.call(this);
+        Object.values(this.helpers).forEach(function (helper) {
+          var _helper$dispose2;
+          return (_helper$dispose2 = helper.dispose) === null ||
+            _helper$dispose2 === void 0
+            ? void 0
+            : _helper$dispose2.call(helper);
+        });
+        (_this$sceneHelpers$pa2 = this.sceneHelpers.parent) === null ||
+          _this$sceneHelpers$pa2 === void 0 ||
+          _this$sceneHelpers$pa2.remove(this.sceneHelpers);
+        (_this$persistence3 = this.persistence) === null ||
+          _this$persistence3 === void 0 ||
+          _this$persistence3.dispose();
+        this.assetsLoader.dispose();
+        this.events.dispose();
+        window.removeEventListener('keydown', this.onToggleKey);
+        document.removeEventListener('child-detached', this.onChildDetached);
+        (_this$root = this.root) === null ||
+          _this$root === void 0 ||
+          _this$root.unmount();
+        (_document$getElementB = document.getElementById('aframeInspector')) ===
+          null ||
+          _document$getElementB === void 0 ||
+          _document$getElementB.remove();
+        _lib_shortcuts__WEBPACK_IMPORTED_MODULE_4__.Shortcuts.disable();
       },
       /**
        * Closes the editor and gives the control back to the scene
        * @return {[type]} [description]
        */
       close: function close() {
+        var _this$editorViewport2;
         this.opened = false;
         _lib_Events__WEBPACK_IMPORTED_MODULE_1__['default'].emit(
           'inspectortoggle',
@@ -118572,6 +118452,10 @@ object-assign
           this.sceneEl.setAttribute('embedded', '');
           this.sceneEl.removeAttribute('aframe-inspector-removed-embedded');
         }
+        (_this$editorViewport2 = this.editorViewport) === null ||
+          _this$editorViewport2 === void 0 ||
+          _this$editorViewport2.dispose();
+        this.editorViewport = null;
         document.body.classList.remove('aframe-inspector-opened');
         this.sceneEl.resize();
         _lib_shortcuts__WEBPACK_IMPORTED_MODULE_4__.Shortcuts.disable();

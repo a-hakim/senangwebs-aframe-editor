@@ -14,6 +14,7 @@ export default class AddComponent extends React.Component {
    * If component is instanced, generate an ID.
    */
   addComponent = (value) => {
+    if (!value) return;
     let componentName = value.value;
     const entity = this.props.entity;
 
@@ -90,6 +91,7 @@ export default class AddComponent extends React.Component {
       <div id="addComponentContainer">
         <p id="addComponentHeader">COMPONENTS</p>
         <Select
+          aria-label="Add component"
           id="addComponent"
           className="addComponent"
           classNamePrefix="select"

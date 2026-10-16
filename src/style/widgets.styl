@@ -69,3 +69,34 @@
   display flex
   justify-content space-between
   align-items center
+
+.texture
+  display flex
+  align-items center
+  flex-wrap wrap
+  gap 6px
+
+  input.map_value
+    flex 1
+    min-width 100px
+    margin 0
+
+  .texture-picker
+    padding 3px
+    display flex
+
+  canvas
+    border 0
+
+.field-error,
+.form-error
+  color #ffb4ad
+  line-height 1.5
+
+input[aria-invalid=true]
+  border 1px solid #ffb4ad !important
+
+.vec2,
+.vec3,
+.vec4
+  flex-wrap wrap

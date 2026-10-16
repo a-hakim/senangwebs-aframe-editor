@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 export default class InputWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string,
     entity: PropTypes.object,
     name: PropTypes.string.isRequired,
@@ -32,6 +34,8 @@ export default class InputWidget extends React.Component {
   render() {
     return (
       <input
+        id={this.props.id}
+        aria-label={this.props.label || this.props.name}
         type="text"
         className="string"
         value={this.state.value || ''}

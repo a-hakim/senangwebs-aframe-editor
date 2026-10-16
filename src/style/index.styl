@@ -16,6 +16,12 @@ body.aframe-inspector-opened
   overflow hidden
 
 #aframeInspector
+  // Keep editor controls separate from host-page styling and layout.
+  position fixed
+  inset 0
+  z-index 2147483001
+  pointer-events none
+
   @import './scenegraph';
   @import './components';
   @import './entity';
@@ -105,6 +111,34 @@ body.aframe-inspector-opened
 
   button
     position relative
+    appearance none
+    background $bgdark
+    border 1px solid $grayalt
+    border-radius 6px
+    color #eee
+    cursor pointer
+    font inherit
+    padding 6px 10px
+
+    &:hover
+      color $primary
+      border-color $primary
+
+    &:disabled
+      opacity .55
+      cursor not-allowed
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible
+    outline 2px solid $primary !important
+    outline-offset -2px
+
+  [hidden]
+    display none !important
 
   code
     font-family Consolas, Andale Mono, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace
@@ -167,6 +201,9 @@ body.aframe-inspector-opened
     display flex
 
   .toggle-edit
+    pointer-events auto
+    border 0
+    padding 0
     background-color $bg
     box-sizing content-box
     color white
@@ -257,6 +294,7 @@ body.aframe-inspector-opened
     border 1px solid #a00
 
   #sidebar
+    min-height 0
     background $bg
     width 100%
     flex-grow 1
@@ -303,6 +341,7 @@ body.aframe-inspector-opened
 
   .hidden
     visibility hidden
+    display none !important
 
   a.button
     color #A3A3A3
@@ -332,8 +371,26 @@ body.aframe-inspector-opened
     display flex
     flex-direction column
     height calc(100vh - 48px)
+    margin-left auto
+
+  #leftPanel,
+  #rightPanel
+    width 320px
+    max-width calc(100vw - 24px)
+    height calc(100vh - 48px)
+    height calc(100dvh - 48px)
+    min-height 0
+    min-width 0
+    overflow hidden
+    background $bg
+    position relative
+    top auto
 
   #actionBar
+    display flex
+    align-items center
+    box-sizing border-box
+    padding-left 48px
     width 100vw
     height 48px
     background $bg
@@ -351,11 +408,17 @@ body.aframe-inspector-opened
       margin-left auto
       color $lightgray
 
+  .save-feedback
+    padding 0 12px
+    color $lightgray
+    font-size 11px
+
   #inspectorContainer
     display flex
     justify-content space-between
     left 0
-    height 100%
+    height 100vh
+    height 100dvh
     pointer-events none
     position fixed
     top 0
@@ -374,11 +437,19 @@ body.aframe-inspector-opened
     z-index 9999
 
   .toggle-sidebar
+    pointer-events auto
     align-items center
     display flex
     height 100%
     position absolute
     z-index 40
+
+    button
+      background #262626
+      color #a3a3a3
+      padding 5px
+      border 0
+      border-radius 0
 
     a
       background-color #262626
@@ -397,6 +468,10 @@ body.aframe-inspector-opened
   .toggle-sidebar.right
     top 0
     right 0
+
+  @media (max-width: 620px)
+    #sw-info
+      display none
 
 #rightPanel ::-webkit-scrollbar
 #leftPanel ::-webkit-scrollbar {
@@ -422,6 +497,7 @@ body.aframe-inspector-opened
 
 .swal2-container
   background-color rgba(0, 0, 0, 0) !important
+  z-index 2147483002 !important
 
   .swal2-popup
     background #18181B !important
@@ -492,5 +568,3 @@ body.aframe-inspector-opened
     &:focus
       border-color $primary !important
       box-shadow none !important
-
-

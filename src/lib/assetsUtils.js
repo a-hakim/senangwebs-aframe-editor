@@ -1,3 +1,5 @@
+import Events from './Events';
+
 export function insertNewAsset(
   type,
   id,
@@ -6,46 +8,42 @@ export function insertNewAsset(
   onLoadedCallback,
   onErrorCallback
 ) {
-  var element = null;
-  switch (type) {
-    case 'img':
-      {
-        element = document.createElement('img');
-        element.id = id;
-        element.src = src;
-        if (anonymousCrossOrigin) {
-          element.crossOrigin = 'anonymous';
-        }
-      }
-      break;
+  if (type !== 'img') return;
+  const scene = AFRAME.INSPECTOR?.sceneEl || document.querySelector('a-scene');
+  if (!scene) {
+    onErrorCallback?.(new Error('No scene is available.'));
+    return;
   }
-
-  if (element) {
-    element.onload = function () {
-      if (onLoadedCallback) {
-        onLoadedCallback();
-      }
-    };
-
-    element.onerror = function (error) {
-      console.warn(`Failed to load asset: ${src}`, error);
-      if (onErrorCallback) {
-        onErrorCallback(error);
-      }
-    };
-
-    // Get or create the a-assets container
-    let assetsContainer = document.querySelector('a-assets');
-    if (!assetsContainer) {
-      assetsContainer = document.createElement('a-assets');
-      const scene = document.querySelector('a-scene');
-      if (scene) {
-        scene.insertBefore(assetsContainer, scene.firstChild);
-      } else {
-        console.warn('No a-scene found to insert a-assets');
-        return;
-      }
-    }
-    assetsContainer.appendChild(element);
+  const element = document.createElement('img');
+  element.id = id;
+  if (anonymousCrossOrigin) element.crossOrigin = 'anonymous';
+  let timer;
+  const finish = () => {
+    clearTimeout(timer);
+    element.onload = element.onerror = null;
+  };
+  const fail = () => {
+    finish();
+    element.remove();
+    onErrorCallback?.(
+      new Error(
+        'The image could not be loaded. Check its URL and cross-origin permissions.'
+      )
+    );
+  };
+  element.onload = () => {
+    finish();
+    Events.emit('scenechanged');
+    onLoadedCallback?.(element);
+  };
+  element.onerror = fail;
+  timer = setTimeout(fail, 15000);
+  let assets = scene.querySelector('a-assets');
+  if (!assets) {
+    assets = document.createElement('a-assets');
+    scene.insertBefore(assets, scene.firstChild);
   }
+  assets.appendChild(element);
+  element.src = src;
+  return element;
 }

@@ -1,4 +1,5 @@
 .modal
+  pointer-events auto
   animation animateopacity 0.2s ease-out
   display flex
   height 100%
@@ -7,9 +8,32 @@
   position fixed
   top 0
   width 100%
-  z-index 9999999999
+  z-index 100
   backdrop-filter blur(4px)
   background-color rgba(0, 0, 0, .5)
+
+  .modal-content
+    max-height calc(100dvh - 32px)
+    max-width calc(100vw - 32px)
+    display flex
+    flex-direction column
+
+  .modal-header
+    display flex
+    justify-content space-between
+    align-items center
+    flex-shrink 0
+
+    .close
+      background transparent
+      font-size 24px
+      line-height 1
+      padding 6px
+
+  .modal-body
+    min-height 0
+    height auto
+    overflow auto
 
 .modal h3
   font-size 16px
@@ -17,8 +41,10 @@
   margin 0.6em 0
 
 #textureModal .modal-content
-  height calc(100% - 96px)
-  max-width calc(100% - 96px)
+  height calc(100dvh - 32px)
+  max-height 800px
+  max-width calc(100vw - 32px)
+  width 1200px
   border-radius 8px
 
 .modal-content
@@ -86,9 +112,8 @@
   gap 12px
   padding 2px
 
-.newimage .gallery
-
 /* Toolbar */
+.newimage .gallery,
 .texture-toolbar
   display flex
   align-items center
@@ -96,11 +121,21 @@
   margin-bottom 12px
   max-height 65vh
 
+.texture-toolbar
+  flex-wrap wrap
+  max-height none
+
 .url-input-group
+  min-width 220px
   flex 1
   display flex
   gap 8px
   align-items center
+
+  input
+    min-width 0
+    flex 1
+    padding 8px
 
 .url-input-group .imageUrl
   flex 1
@@ -138,6 +173,24 @@
   width 155px
   transition box-shadow 0.15s ease
 
+.modal .gallery-item
+  padding 0
+  text-align left
+  line-height 1.4
+  display flex
+  flex-direction column
+  flex-shrink 0
+  border 1px solid $grayalt
+  font-weight normal
+
+  img
+    object-fit cover
+
+  .detail
+    display block
+    box-sizing border-box
+    width 100%
+
 .gallery-item.selected,
 .gallery-item:hover
   box-shadow 0 0 0 2px #00ff99
@@ -150,6 +203,7 @@
 
 .preview
   width 250px
+  flex-shrink 0
 
 .preview label
   color #888
@@ -280,8 +334,8 @@
   gap 24px
   font-size 14px
   justify-content space-between
-  overflow auto
-  max-height 74vh
+  overflow visible
+  max-height none
 
 .newimage input
   color #00ff99
@@ -314,6 +368,14 @@
 
 .new_asset_options
   width 100%
+  min-width 0
+  flex 1
+
+  > input
+    width 100%
+    box-sizing border-box
+    min-height 32px
+    margin-bottom 12px
 
 .new_asset_options > ul
   margin-left 10px
@@ -332,3 +394,10 @@
   border 1px solid rgba(255, 255, 255, .15)
   border-radius 8px
   cursor pointer
+
+@media (max-width: 620px)
+  .newimage
+    flex-direction column
+
+  .preview
+    width 100%

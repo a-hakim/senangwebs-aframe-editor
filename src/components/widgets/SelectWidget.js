@@ -4,6 +4,8 @@ import Select from 'react-select';
 
 export default class SelectWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string.isRequired,
     entity: PropTypes.object,
     name: PropTypes.string.isRequired,
@@ -19,6 +21,7 @@ export default class SelectWidget extends React.Component {
   }
 
   onChange = (value) => {
+    if (!value) return;
     this.setState({ value: value }, () => {
       if (this.props.onChange) {
         this.props.onChange(this.props.name, value.value);
@@ -42,11 +45,13 @@ export default class SelectWidget extends React.Component {
 
     return (
       <Select
+        inputId={this.props.id}
+        aria-label={this.props.label || this.props.name}
         className="select-widget"
         classNamePrefix="select"
         options={options}
         simpleValue
-        clearable={true}
+        isClearable={false}
         placeholder=""
         value={this.state.value}
         noResultsText="No value found"

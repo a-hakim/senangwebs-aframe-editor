@@ -4,7 +4,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import PropertyRow from './PropertyRow';
 import Collapsible from '../Collapsible';
-import Events from '../../lib/Events';
+import Events, { createEventScope } from '../../lib/Events';
 import Swal from 'sweetalert2';
 
 const isSingleProperty = AFRAME.schema.isSingleProperty;
@@ -13,6 +13,12 @@ const isSingleProperty = AFRAME.schema.isSingleProperty;
  * Single component.
  */
 export default class Component extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   static propTypes = {
     component: PropTypes.any,
     entity: PropTypes.object,
@@ -29,7 +35,7 @@ export default class Component extends React.Component {
   }
 
   componentDidMount() {
-    Events.on('entityupdate', (detail) => {
+    this.events.on('entityupdate', (detail) => {
       if (detail.entity !== this.props.entity) {
         return;
       }
@@ -117,7 +123,7 @@ export default class Component extends React.Component {
     }
 
     return (
-      <Collapsible collapsed={this.props.isCollapsed}>
+      <Collapsible collapsed={this.props.isCollapsed} label={this.props.name}>
         <div className="componentHeader collapsible-header">
           <span
             className="componentTitle"
@@ -126,7 +132,7 @@ export default class Component extends React.Component {
             <span>{subComponentName || componentName}</span>
           </span>
           <div className="componentHeaderActions">
-            {/* <a
+            {/* <button type="button"
               title="Copy to clipboard"
               className="button"
               onClick={(event) => {
@@ -141,14 +147,15 @@ export default class Component extends React.Component {
               }}
             >
               <AwesomeIcon icon={faClipboard} />
-            </a> */}
-            <a
+            </button> */}
+            <button
+              type="button"
               title="Remove component"
               className="button"
               onClick={this.removeComponent}
             >
               <AwesomeIcon icon={faTrashAlt} />
-            </a>
+            </button>
           </div>
         </div>
         <div className="collapsible-content">{this.renderPropertyRows()}</div>

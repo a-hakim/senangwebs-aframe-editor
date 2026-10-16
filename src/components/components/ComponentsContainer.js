@@ -4,15 +4,21 @@ import AddComponent from './AddComponent';
 import Component from './Component';
 import CommonComponents from './CommonComponents';
 import DEFAULT_COMPONENTS from './DefaultComponents';
-import Events from '../../lib/Events';
+import { createEventScope } from '../../lib/Events';
 
 export default class ComponentsContainer extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   static propTypes = {
     entity: PropTypes.object
   };
 
   componentDidMount() {
-    Events.on('entityupdate', (detail) => {
+    this.events.on('entityupdate', (detail) => {
       if (detail.entity !== this.props.entity) {
         return;
       }
@@ -32,7 +38,7 @@ export default class ComponentsContainer extends React.Component {
     const renderedComponents = definedComponents.sort().map(function (key) {
       return (
         <Component
-          isCollapsed={definedComponents.length > 2}
+          isCollapsed={definedComponents.length > 2 || key === 'material'}
           component={components[key]}
           entity={entity}
           key={key}

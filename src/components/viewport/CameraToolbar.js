@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import Events from '../../lib/Events';
+import Events, { createEventScope } from '../../lib/Events';
 
 // Import custom SVG icons
 import PerspectiveIcon from '../icons/PerspectiveIcon';
@@ -64,6 +64,12 @@ const options = [
 ];
 
 export default class CameraToolbar extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -73,7 +79,10 @@ export default class CameraToolbar extends React.Component {
   }
 
   componentDidMount() {
-    Events.on('cameratoggle', (data) => {
+    this.events.on('scenereload', () =>
+      this.setState({ selectedCamera: 'perspective' })
+    );
+    this.events.on('cameratoggle', (data) => {
       if (this.justChangedCamera) {
         // Prevent recursion.
         this.justChangedCamera = false;
@@ -88,7 +97,6 @@ export default class CameraToolbar extends React.Component {
   }
 
   onChange(option) {
-    console.log('Selected Camera Option:', option);
     this.justChangedCamera = true;
     this.setState({ selectedCamera: option.value });
     Events.emit(option.event, option.payload);
@@ -106,6 +114,7 @@ export default class CameraToolbar extends React.Component {
     return (
       <div id="cameraToolbar">
         <Select
+          aria-label="Camera view"
           id="cameraSelect"
           classNamePrefix="select"
           options={options}

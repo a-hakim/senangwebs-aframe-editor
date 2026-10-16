@@ -1,4 +1,4 @@
-import Events from './Events';
+import Events, { createEventScope } from './Events';
 
 // Save ortho camera FOV / position before switching to restore later.
 let currentOrthoDir = '';
@@ -18,6 +18,8 @@ const orthoCameraMemory = {
  * Initialize various cameras, store original one.
  */
 export function initCameras(inspector) {
+  inspector.disposeCameras?.();
+  const events = createEventScope();
   const sceneEl = inspector.sceneEl;
 
   const originalCamera = (inspector.currentCameraEl = sceneEl.camera.el);
@@ -64,7 +66,7 @@ export function initCameras(inspector) {
   });
 
   // Command to switch to perspective.
-  Events.on('cameraperspectivetoggle', () => {
+  events.on('cameraperspectivetoggle', () => {
     saveOrthoCamera(inspector.camera, currentOrthoDir);
     sceneEl.camera = inspector.camera = cameras.perspective;
     Events.emit('cameratoggle', {
@@ -74,7 +76,7 @@ export function initCameras(inspector) {
   });
 
   // Command to switch to ortographic.
-  Events.on('cameraorthographictoggle', (dir) => {
+  events.on('cameraorthographictoggle', (dir) => {
     saveOrthoCamera(inspector.camera, currentOrthoDir);
     sceneEl.camera = inspector.camera = cameras.ortho;
     currentOrthoDir = dir;
@@ -94,6 +96,18 @@ export function initCameras(inspector) {
     });
   });
 
+  inspector.disposeCameras = () => {
+    events.dispose();
+    sceneEl.object3D.remove(perspectiveCamera, orthoCamera);
+    if (
+      sceneEl.camera === perspectiveCamera ||
+      sceneEl.camera === orthoCamera
+    ) {
+      originalCamera.setAttribute('camera', 'active', true);
+      sceneEl.camera = originalCamera.getObject3D('camera');
+    }
+    inspector.disposeCameras = null;
+  };
   return inspector.cameras;
 }
 

@@ -15,6 +15,17 @@ To use the master branch of the editor:
 </a-scene>
 ```
 
+## Keeping your work
+
+- **Ctrl/Cmd+S** stores the current scene in this browser, scoped to the page and scene ID. It does not update your source files or sync to another device. Browser storage can be cleared or unavailable.
+- **Ctrl/Cmd+Alt+R** reopens that saved scene. Replacing unsaved edits requires confirmation.
+- **Ctrl/Cmd+Shift+S** exports an editable scene. Scripts, styles, and assets retain their original URLs; the download is not an offline asset archive. Keep those dependencies accessible when reopening the file.
+- The status bar identifies unsaved changes, and navigating away warns when edits have not been saved as a draft.
+
+Use Ctrl/Cmd+F to search the scene tree. Its arrow keys, Home, and End move selection; Left/Right collapse or expand entities. Dialogs support Tab, Shift+Tab, and Escape. Press 0 to toggle panels; select an entity to show its properties. The existing plus icon reopens the scene tree when hidden. Press H for shortcut help. Saving, restoring, and downloading use keyboard shortcuts to preserve the original toolbar layout.
+
+When self-hosting, deploy **all JavaScript files in `dist/` together**. The glTF exporter loads its sibling chunk only when export is requested.
+
 ## Acknowledgement & Credit
 
 This project is a fork of the incredible **[A-Frame Inspector](https://github.com/aframevr/aframe-inspector)** by the A-Frame team. We extend our sincere appreciation to the original authors and contributors for creating such a foundational and robust tool for the WebXR community. Our goal is to build upon their excellent work to tailor it for specific use cases within SenangWebs.
@@ -47,7 +58,7 @@ scene already. If we want, we can specify a specific build of the Inspector to
 inject by passing a URL. For debugging:
 
 ```html
-<a-scene inspector="url: http://localhost:3333/dist/aframe-inspector.js">
+<a-scene inspector="url: http://localhost:3333/dist/sw-webverse.js">
   <!-- Scene... -->
 </a-scene>
 ```

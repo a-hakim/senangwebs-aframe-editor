@@ -3,17 +3,24 @@ import TransformControls from './TransformControls.js';
 import EditorControls from './EditorControls.js';
 
 import { initRaycaster } from './raycaster';
-import Events from './Events';
+import Events, { createEventScope } from './Events';
 
 /**
  * Transform controls stuff mostly.
  */
 export function Viewport(inspector) {
+  const events = createEventScope();
+  const removers = [];
+  const listen = (target, name, handler) => {
+    target.addEventListener(name, handler);
+    removers.push(() => target.removeEventListener(name, handler));
+  };
   // Initialize raycaster and picking in differentpmodule.
   const mouseCursor = initRaycaster(inspector);
   const sceneEl = inspector.sceneEl;
+  let cancelModelLoad = () => {};
 
-  sceneEl.addEventListener('camera-set-active', (event) => {
+  listen(sceneEl, 'camera-set-active', (event) => {
     // If we're in edit mode, save the newly active camera and activate when exiting.
     if (inspector.opened) {
       inspector.cameras.original = event.detail.cameraEl;
@@ -51,10 +58,6 @@ export function Viewport(inspector) {
     if (object === undefined) {
       return;
     }
-
-    selectionBox.setFromObject(object);
-
-    updateHelpers(object);
 
     // Emit update event for watcher.
     let component;
@@ -95,16 +98,6 @@ export function Viewport(inspector) {
 
   sceneHelpers.add(transformControls);
 
-  Events.on('entityupdate', (detail) => {
-    const object = detail.entity.object3D;
-    if (
-      inspector.selected === object &&
-      inspector.selectedEntity?.object3DMap?.mesh
-    ) {
-      selectionBox.setFromObject(inspector.selected);
-    }
-  });
-
   // Controls need to be added *after* main logic.
   const controls = new THREE.EditorControls(camera, inspector.container);
   controls.center.set(0, 1.6, 0);
@@ -116,7 +109,7 @@ export function Viewport(inspector) {
     Events.emit('camerachanged');
   });
 
-  Events.on('cameratoggle', (data) => {
+  events.on('cameratoggle', (data) => {
     controls.setCamera(data.camera);
     transformControls.setCamera(data.camera);
     updateAspectRatio();
@@ -135,27 +128,28 @@ export function Viewport(inspector) {
   }
   enableControls();
 
-  Events.on('inspectorcleared', () => {
+  events.on('inspectorcleared', () => {
     controls.center.set(0, 0, 0);
   });
 
-  Events.on('transformmodechange', (mode) => {
+  events.on('transformmodechange', (mode) => {
     transformControls.setMode(mode);
   });
 
-  Events.on('translationsnapchanged', (dist) => {
+  events.on('translationsnapchanged', (dist) => {
     transformControls.setTranslationSnap(dist);
   });
 
-  Events.on('rotationsnapchanged', (dist) => {
+  events.on('rotationsnapchanged', (dist) => {
     transformControls.setRotationSnap(dist);
   });
 
-  Events.on('transformspacechanged', (space) => {
+  events.on('transformspacechanged', (space) => {
     transformControls.setSpace(space);
   });
 
-  Events.on('objectselect', (object) => {
+  events.on('objectselect', (object) => {
+    cancelModelLoad();
     selectionBox.visible = false;
     transformControls.detach();
     if (object && object.el) {
@@ -167,35 +161,40 @@ export function Viewport(inspector) {
           if (event.target !== object.el) return; // we got an event for a child, ignore
           selectionBox.setFromObject(object);
           selectionBox.visible = true;
-          object.el.removeEventListener('model-loaded', listener);
+          cancelModelLoad();
         };
-        object.el.addEventListener('model-loaded', listener);
+        const element = object.el;
+        element.addEventListener('model-loaded', listener);
+        cancelModelLoad = () =>
+          element.removeEventListener('model-loaded', listener);
       }
 
       transformControls.attach(object);
     }
   });
 
-  Events.on('objectfocus', (object) => {
+  events.on('objectfocus', (object) => {
     controls.focus(object);
   });
 
-  Events.on('geometrychanged', (object) => {
+  events.on('geometrychanged', (object) => {
     if (object !== null) {
       selectionBox.setFromObject(object);
     }
   });
 
-  Events.on('entityupdate', (detail) => {
-    const object = detail.entity.object3D;
+  events.on('entityupdate', (detail) => {
+    const object = detail.entity?.object3D;
+    if (!object) return;
     if (inspector.selected === object) {
       // Hack because object3D always has geometry :(
       if (
-        object.geometry &&
-        ((object.geometry.vertices && object.geometry.vertices.length > 0) ||
-          (object.geometry.attributes &&
-            object.geometry.attributes.position &&
-            object.geometry.attributes.position.array.length))
+        object.el?.getObject3D('mesh') ||
+        (object.geometry &&
+          ((object.geometry.vertices && object.geometry.vertices.length > 0) ||
+            (object.geometry.attributes &&
+              object.geometry.attributes.position &&
+              object.geometry.attributes.position.array.length)))
       ) {
         selectionBox.setFromObject(object);
       }
@@ -234,17 +233,17 @@ export function Viewport(inspector) {
     if (cameraHelper) cameraHelper.update();
   }
 
-  inspector.sceneEl.addEventListener('rendererresize', updateAspectRatio);
+  listen(sceneEl, 'rendererresize', updateAspectRatio);
 
-  Events.on('gridvisibilitychanged', (showGrid) => {
+  events.on('gridvisibilitychanged', (showGrid) => {
     grid.visible = showGrid;
   });
 
-  Events.on('togglegrid', () => {
+  events.on('togglegrid', () => {
     grid.visible = !grid.visible;
   });
 
-  Events.on('inspectortoggle', (active) => {
+  events.on('inspectortoggle', (active) => {
     if (active) {
       enableControls();
       AFRAME.scenes[0].camera = inspector.camera;
@@ -265,4 +264,32 @@ export function Viewport(inspector) {
         });
     }
   });
+  let disposed = false;
+  this.dispose = () => {
+    if (disposed) return;
+    disposed = true;
+    events.dispose();
+    cancelModelLoad();
+    removers.splice(0).forEach((remove) => remove());
+    mouseCursor.destroy();
+    controls.enabled = false;
+    controls.dispose();
+    transformControls.detach();
+    transformControls.dispose();
+    const geometries = new Set();
+    const materials = new Set();
+    [grid, selectionBox, transformControls].forEach((object) => {
+      sceneHelpers.remove(object);
+      object.traverse((node) => {
+        if (node.geometry) geometries.add(node.geometry);
+        if (node.material)
+          (Array.isArray(node.material)
+            ? node.material
+            : [node.material]
+          ).forEach((material) => materials.add(material));
+      });
+    });
+    geometries.forEach((geometry) => geometry.dispose());
+    materials.forEach((material) => material.dispose());
+  };
 }

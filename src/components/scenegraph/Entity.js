@@ -17,6 +17,7 @@ import Events from '../../lib/Events';
 
 export default class Entity extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
     depth: PropTypes.number,
     entity: PropTypes.object,
     isExpanded: PropTypes.bool,
@@ -37,13 +38,21 @@ export default class Entity extends React.Component {
 
   onDoubleClick = () => Events.emit('objectfocus', this.props.entity.object3D);
 
-  toggleVisibility = () => {
+  toggleVisibility = (event) => {
+    event.stopPropagation();
     const entity = this.props.entity;
     const visible =
       entity.tagName.toLowerCase() === 'a-scene'
         ? entity.object3D.visible
         : entity.getAttribute('visible');
     entity.setAttribute('visible', !visible);
+    Events.emit('entityupdate', {
+      entity,
+      component: 'visible',
+      property: '',
+      value: !visible
+    });
+    this.forceUpdate();
   };
 
   onDragStart = (e) => {
@@ -94,17 +103,22 @@ export default class Entity extends React.Component {
     // Clone and remove buttons if not a-scene.
     const cloneButton =
       tagName === 'a-scene' ? null : (
-        <a
-          onClick={() => cloneEntity(entity)}
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            cloneEntity(entity);
+          }}
           title="Clone entity"
           className="button"
         >
           <AwesomeIcon icon={faClone} />
-        </a>
+        </button>
       );
     const removeButton =
       tagName === 'a-scene' ? null : (
-        <a
+        <button
+          type="button"
           onClick={(event) => {
             event.stopPropagation();
             removeEntity(entity);
@@ -113,16 +127,22 @@ export default class Entity extends React.Component {
           className="button"
         >
           <AwesomeIcon icon={faTrashAlt} />
-        </a>
+        </button>
       );
 
     // Add spaces depending on depth.
-    const pad = '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(this.props.depth);
+    const label = entity.id || tagName;
     let collapse;
     if (entity.children.length > 0 && !isFiltering) {
       collapse = (
-        <span
-          onClick={() => this.props.toggleExpandedCollapsed(entity)}
+        <button
+          type="button"
+          tabIndex={this.props.isSelected ? 0 : -1}
+          aria-label={(isExpanded ? 'Collapse ' : 'Expand ') + label}
+          onClick={(event) => {
+            event.stopPropagation();
+            this.props.toggleExpandedCollapsed(entity);
+          }}
           className="collapsespace"
         >
           {isExpanded ? (
@@ -130,7 +150,7 @@ export default class Entity extends React.Component {
           ) : (
             <AwesomeIcon icon={faCaretRight} />
           )}
-        </span>
+        </button>
       );
     } else {
       collapse = <span className="collapsespace" />;
@@ -142,13 +162,21 @@ export default class Entity extends React.Component {
         ? entity.object3D.visible
         : entity.getAttribute('visible');
     const visibilityButton = (
-      <i title="Toggle entity visibility" onClick={this.toggleVisibility}>
+      <button
+        type="button"
+        className="visibility-button"
+        tabIndex={this.props.isSelected ? 0 : -1}
+        aria-label={(visible ? 'Hide ' : 'Show ') + label}
+        aria-pressed={!!visible}
+        title="Toggle entity visibility"
+        onClick={this.toggleVisibility}
+      >
         {visible ? (
           <AwesomeIcon icon={faEye} />
         ) : (
           <AwesomeIcon icon={faEyeSlash} />
         )}
-      </i>
+      </button>
     );
 
     // Class name.
@@ -164,6 +192,14 @@ export default class Entity extends React.Component {
 
     return (
       <div
+        id={this.props.id}
+        role="treeitem"
+        aria-label={label}
+        aria-level={this.props.depth + 1}
+        aria-selected={this.props.isSelected}
+        aria-expanded={
+          entity.children.length && !isFiltering ? isExpanded : undefined
+        }
         className={className}
         onClick={this.onClick}
         draggable={tagName !== 'a-scene'}
@@ -172,12 +208,11 @@ export default class Entity extends React.Component {
         onDragLeave={this.onDragLeave}
         onDrop={this.onDrop}
       >
-        <span>
+        <span
+          className="entity-label"
+          style={{ paddingLeft: this.props.depth * 12 }}
+        >
           {visibilityButton}
-          <span
-            className="entityChildPadding"
-            dangerouslySetInnerHTML={{ __html: pad }}
-          />
           {collapse}
           <EntityRepresentation
             entity={entity}

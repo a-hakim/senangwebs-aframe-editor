@@ -1,68 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { AwesomeIcon } from '../AwesomeIcon';
-import Events from '../../lib/Events';
+import { createEventScope } from '../../lib/Events';
 import Modal from './Modal';
 import { insertNewAsset } from '../../lib/assetsUtils';
 
-// Regex compiled once for performance
-const VALID_ID_REGEX = /^[A-Za-z]+[\w-]*$/;
-
-const getFilename = (url, converted = false) => {
-  const filename = url.split('/').pop();
-  return converted ? getValidId(filename) : filename;
-};
-
-const isValidId = (id) => VALID_ID_REGEX.test(id);
-
-const getValidId = (name) =>
-  name
-    .split('.')
-    .shift()
-    .replace(/\s/, '-')
-    .replace(/^\d+\s*/, '')
-    .replace(/[\W]/, '')
-    .toLowerCase();
-
-// Default preview state - reusable constant
-const DEFAULT_PREVIEW = {
+const validId = (id) => /^[A-Za-z][\w-]*$/.test(id);
+function filename(src) {
+  try {
+    return decodeURIComponent(
+      new URL(src, document.baseURI).pathname.split('/').pop()
+    );
+  } catch (error) {
+    return '';
+  }
+}
+function assetName(src) {
+  return (
+    filename(src)
+      .replace(/\.[^.]*$/, '')
+      .replace(/[^\w-]/g, '-')
+      .replace(/^[^A-Za-z]+/, '') || 'texture'
+  );
+}
+const emptyPreview = () => ({
+  src: '',
+  name: '',
   width: 0,
   height: 0,
-  src: 'https://use.senangwebs.com/img/app_icon.png',
-  id: '',
-  name: '',
-  filename: '',
-  type: '',
-  value: '',
   loaded: false
-};
+});
 
-// Reusable ImageItem component to prevent repeated JSX
-const ImageItem = React.memo(({ image, onClick, isSelected }) => (
-  <div
-    onClick={onClick}
-    className={`gallery-item${isSelected ? ' selected' : ''}`}
-  >
-    <img width="155px" height="155px" src={image.src} alt={image.name} />
-    <div className="detail">
-      <span className="title">{image.name}</span>
-      <span>{getFilename(image.src)}</span>
-      <span>
-        {image.width} x {image.height}
+function ImageItem({ image, onClick, isSelected }) {
+  const src = image.type === 'registry' ? image.thumbnail : image.src;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`Select ${image.name}`}
+      aria-pressed={!!isSelected}
+      className={`gallery-item${isSelected ? ' selected' : ''}`}
+    >
+      {src && (
+        <img
+          width="155"
+          height="155"
+          loading="lazy"
+          decoding="async"
+          src={src}
+          alt=""
+        />
+      )}
+      <span className="detail">
+        <span className="title">{image.name}</span>
+        <span>{filename(image.src)}</span>
+        {image.width > 0 && (
+          <span>
+            {image.width} x {image.height}
+          </span>
+        )}
       </span>
-    </div>
-  </div>
-));
-
-ImageItem.displayName = 'ImageItem';
+    </button>
+  );
+}
 ImageItem.propTypes = {
-  image: PropTypes.shape({
-    src: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    width: PropTypes.number,
-    height: PropTypes.number
-  }).isRequired,
+  image: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
   isSelected: PropTypes.bool
 };
@@ -73,7 +74,6 @@ export default class ModalTextures extends React.Component {
     onClose: PropTypes.func,
     selectedTexture: PropTypes.string
   };
-
   state = {
     filterText: '',
     assetsImages: [],
@@ -81,371 +81,440 @@ export default class ModalTextures extends React.Component {
     addNewDialogOpened: false,
     newUrl: '',
     isLoading: false,
+    isPreviewLoading: false,
     isGalleryLoading: false,
-    preview: { ...DEFAULT_PREVIEW }
+    error: '',
+    registryError: '',
+    assetError: '',
+    preview: emptyPreview()
   };
 
   imageName = React.createRef();
-  previewImg = React.createRef();
+  events = createEventScope();
+  previewVersion = 0;
+  assetWatchers = [];
 
   componentDidMount() {
-    Events.on('assetsimagesload', this.handleAssetsImagesLoad);
-    this.generateFromAssets();
-  }
-
-  componentWillUnmount() {
-    Events.off('assetsimagesload', this.handleAssetsImagesLoad);
+    this.mounted = true;
+    this.events.on('assetsimagesload', this.generateFromRegistry);
+    this.events.on('assetsimagesloading', () =>
+      this.setState({ isGalleryLoading: true, registryError: '' })
+    );
+    this.events.on('assetsimageserror', (registryError) =>
+      this.setState({ isGalleryLoading: false, registryError })
+    );
+    if (this.props.isOpen) this.generateFromAssets();
   }
 
   componentDidUpdate(prevProps) {
-    const { isOpen } = this.props;
-    if (isOpen && !AFRAME.INSPECTOR.assetsLoader.hasLoaded) {
-      AFRAME.INSPECTOR.assetsLoader.load();
-    }
-    if (isOpen && isOpen !== prevProps.isOpen) {
+    if (this.props.isOpen && !prevProps.isOpen) {
+      this.setState({
+        addNewDialogOpened: false,
+        error: '',
+        preview: emptyPreview(),
+        isLoading: false,
+        isPreviewLoading: false
+      });
       this.generateFromAssets();
+    }
+    if (!this.props.isOpen && prevProps.isOpen) {
+      this.cancelPreview?.();
+      this.clearAssetWatchers();
     }
   }
 
-  handleAssetsImagesLoad = () => {
-    this.generateFromRegistry();
-  };
+  componentWillUnmount() {
+    this.mounted = false;
+    this.cancelPreview?.();
+    this.clearAssetWatchers();
+    this.events.dispose();
+  }
 
-  onClose = () => {
-    this.props.onClose?.();
-  };
-
-  selectTexture = (image) => {
-    this.props.onClose?.(image);
-  };
-
-  generateFromRegistry = () => {
-    const images = AFRAME.INSPECTOR.assetsLoader.images;
-    const newImages = [];
-    let loadedCount = 0;
-
-    if (images.length === 0) {
-      this.setState({ registryImages: [], isGalleryLoading: false });
-      return;
-    }
-
-    this.setState({ isGalleryLoading: true });
-
-    const checkAllLoaded = () => {
-      loadedCount++;
-      // Update state when all images are processed (loaded or errored)
-      if (loadedCount === images.length) {
-        this.setState({ registryImages: newImages, isGalleryLoading: false });
-      }
-    };
-
-    images.forEach((imageData) => {
-      const image = new Image();
-      image.onload = () => {
-        newImages.push({
-          id: imageData.id,
-          src: imageData.fullPath,
-          width: imageData.width,
-          height: imageData.height,
-          name: imageData.id,
-          type: 'registry',
-          tags: imageData.tags,
-          value: `url(${imageData.fullPath})`
-        });
-        checkAllLoaded();
-      };
-      image.onerror = () => {
-        console.warn(
-          `Failed to load registry image: ${imageData.fullThumbPath}`
-        );
-        checkAllLoaded();
-      };
-      image.src = imageData.fullThumbPath;
-    });
+  clearAssetWatchers = () => {
+    this.assetWatchers.splice(0).forEach((remove) => remove());
+    clearTimeout(this.assetTimer);
   };
 
   generateFromAssets = () => {
-    const assets = Array.from(document.querySelectorAll('a-assets img'));
-    const newImages = [];
-    const seenIds = new Set();
-    let loadedCount = 0;
-
-    if (assets.length === 0) {
-      this.setState({ assetsImages: [] });
-      return;
-    }
-
-    assets.forEach((asset) => {
-      const image = new Image();
-      image.onload = () => {
-        // Prevent duplicates
-        if (!seenIds.has(asset.id)) {
-          seenIds.add(asset.id);
-          newImages.push({
-            id: asset.id,
-            src: image.src,
-            width: image.width,
-            height: image.height,
-            name: asset.id,
-            type: 'asset',
-            value: '#' + asset.id
+    this.clearAssetWatchers();
+    const assets = [
+      ...AFRAME.INSPECTOR.sceneEl.querySelectorAll('a-assets img')
+    ];
+    const ready = assets.filter(
+      (asset) => asset.complete && asset.naturalWidth > 0 && asset.id
+    );
+    const pending = assets.filter((asset) => !asset.complete);
+    const broken = assets.some(
+      (asset) => asset.complete && !asset.naturalWidth
+    );
+    this.setState({
+      assetsImages: ready.map((asset) => ({
+        id: asset.id,
+        src: asset.src,
+        name: asset.id,
+        width: asset.naturalWidth,
+        height: asset.naturalHeight,
+        type: 'asset',
+        value: '#' + asset.id
+      })),
+      assetError: broken
+        ? 'Some project images could not be loaded. Check their URLs, then retry.'
+        : ''
+    });
+    pending.forEach((asset) => {
+      asset.addEventListener('load', this.generateFromAssets);
+      asset.addEventListener('error', this.generateFromAssets);
+      this.assetWatchers.push(() => {
+        asset.removeEventListener('load', this.generateFromAssets);
+        asset.removeEventListener('error', this.generateFromAssets);
+      });
+    });
+    if (pending.length) {
+      this.assetTimer = setTimeout(() => {
+        if (this.mounted && this.props.isOpen)
+          this.setState({
+            assetError:
+              'Some project images are taking too long to load. Check their URLs, then retry.'
           });
-        }
-        loadedCount++;
-        // Batch update when all images are loaded
-        if (loadedCount === assets.length) {
-          this.setState({ assetsImages: newImages });
-        }
-      };
-      image.src = asset.src;
+      }, 15000);
+    }
+  };
+
+  generateFromRegistry = () => {
+    this.setState({
+      registryImages: AFRAME.INSPECTOR.assetsLoader.images.map((image) => ({
+        id: image.id,
+        src: image.fullPath,
+        thumbnail: image.fullThumbPath,
+        name: image.id,
+        width: image.width,
+        height: image.height,
+        tags: image.tags || [],
+        type: 'registry'
+      })),
+      isGalleryLoading: false,
+      registryError: ''
     });
   };
 
-  onNewUrl = (event) => {
-    if (event.keyCode !== 13) return;
-    this.loadImageFromUrl();
-  };
-
-  loadImageFromUrl = () => {
-    const url = this.state.newUrl;
-    if (!url) return;
-
-    const previewEl = this.previewImg.current;
-    const handleLoad = () => {
-      const src = previewEl.src;
-      this.setState({
-        preview: {
-          width: previewEl.naturalWidth,
-          height: previewEl.naturalHeight,
-          src,
-          id: '',
-          name: getFilename(src, true),
-          filename: getFilename(src),
-          type: 'new',
-          loaded: true,
-          value: `url(${src})`
-        }
-      });
-      previewEl.removeEventListener('load', handleLoad);
-    };
-
-    previewEl.addEventListener('load', handleLoad);
-    previewEl.src = url;
-    this.imageName.current?.focus();
-  };
-
-  onNameKeyUp = (event) => {
-    if (event.keyCode === 13 && this.isValidAsset()) {
-      this.addNewAsset();
-    }
-  };
-
-  onNameChanged = (event) => {
-    this.setState((prevState) => ({
-      preview: { ...prevState.preview, name: event.target.value }
-    }));
+  ensureRegistry = () => {
+    const loader = AFRAME.INSPECTOR.assetsLoader;
+    if (loader.hasLoaded) this.generateFromRegistry();
+    else loader.load();
   };
 
   toggleNewDialog = () => {
-    this.setState((prevState) => ({
-      addNewDialogOpened: !prevState.addNewDialogOpened
-    }));
-  };
-
-  clear = () => {
-    this.setState({
-      preview: { ...DEFAULT_PREVIEW },
-      newUrl: ''
-    });
-  };
-
-  onUrlChange = (e) => {
-    this.setState({ newUrl: e.target.value });
-  };
-
-  isValidAsset = () => {
-    const { preview } = this.state;
-    return preview.loaded && isValidId(preview.name);
-  };
-
-  addNewAsset = () => {
-    this.setState({ isLoading: true });
-    const { preview } = this.state;
-
-    insertNewAsset('img', preview.name, preview.src, true, () => {
-      this.generateFromAssets();
-      this.setState({ addNewDialogOpened: false, isLoading: false });
-      this.clear();
-    });
-  };
-
-  onChangeFilter = (e) => {
-    this.setState({ filterText: e.target.value });
-  };
-
-  selectRegistryImage = (image) => {
-    this.setState({
-      preview: {
-        width: image.width,
-        height: image.height,
-        src: image.src,
-        id: '',
-        name: getFilename(image.name, true),
-        filename: getFilename(image.src),
-        type: 'registry',
-        loaded: true,
-        value: `url(${image.src})`
+    this.cancelPreview?.();
+    this.setState(
+      (state) => ({
+        addNewDialogOpened: !state.addNewDialogOpened,
+        isPreviewLoading: false,
+        error: '',
+        preview: emptyPreview()
+      }),
+      () => {
+        if (this.state.addNewDialogOpened) this.ensureRegistry();
       }
-    });
-    this.imageName.current?.focus();
-  };
-
-  getFilteredRegistryImages = () => {
-    const filterText = this.state.filterText.toUpperCase();
-    if (!filterText) return this.state.registryImages;
-
-    return this.state.registryImages.filter(
-      (image) =>
-        image.id.toUpperCase().includes(filterText) ||
-        image.name.toUpperCase().includes(filterText) ||
-        image.tags.includes(filterText)
     );
   };
 
-  getSortedAssetImages = () => {
-    return [...this.state.assetsImages].sort((a, b) =>
-      a.id.localeCompare(b.id)
+  loadPreview = (src, suggestedName) => {
+    this.cancelPreview?.();
+    const version = ++this.previewVersion;
+    const image = new Image();
+    let timer;
+    const clear = () => {
+      clearTimeout(timer);
+      image.onload = image.onerror = null;
+    };
+    this.cancelPreview = () => {
+      this.previewVersion++;
+      clear();
+    };
+    this.setState({
+      preview: emptyPreview(),
+      isPreviewLoading: true,
+      error: ''
+    });
+    const fail = () => {
+      clear();
+      if (
+        this.mounted &&
+        this.props.isOpen &&
+        version === this.previewVersion
+      ) {
+        this.setState({
+          isPreviewLoading: false,
+          error:
+            'The image could not be loaded. Check the URL and image permissions, then retry.'
+        });
+      }
+    };
+    image.crossOrigin = 'anonymous';
+    image.onload = () => {
+      clear();
+      if (
+        !this.mounted ||
+        !this.props.isOpen ||
+        version !== this.previewVersion
+      )
+        return;
+      this.setState(
+        {
+          isPreviewLoading: false,
+          preview: {
+            src: image.src,
+            name: suggestedName || assetName(src),
+            width: image.naturalWidth,
+            height: image.naturalHeight,
+            loaded: true
+          }
+        },
+        () => this.imageName.current?.focus()
+      );
+    };
+    image.onerror = fail;
+    timer = setTimeout(fail, 15000);
+    image.src = src;
+  };
+
+  loadImageFromUrl = () => {
+    const src = this.state.newUrl.trim();
+    if (src) this.loadPreview(src);
+  };
+
+  validAsset = () => {
+    const { preview, isLoading, isPreviewLoading } = this.state;
+    const existing = document.getElementById(preview.name);
+    return (
+      preview.loaded &&
+      validId(preview.name) &&
+      !isLoading &&
+      !isPreviewLoading &&
+      (!existing ||
+        (existing.tagName === 'IMG' && existing.src === preview.src))
+    );
+  };
+
+  addNewAsset = () => {
+    if (!this.validAsset()) return;
+    const { preview } = this.state;
+    if (document.getElementById(preview.name)) {
+      this.setState({ addNewDialogOpened: false, preview: emptyPreview() });
+      this.generateFromAssets();
+      return;
+    }
+    this.setState({ isLoading: true, error: '' });
+    insertNewAsset(
+      'img',
+      preview.name,
+      preview.src,
+      true,
+      () => {
+        if (!this.mounted || !this.props.isOpen) return;
+        this.setState({
+          addNewDialogOpened: false,
+          isLoading: false,
+          preview: emptyPreview()
+        });
+        this.generateFromAssets();
+      },
+      (error) => {
+        if (this.mounted && this.props.isOpen)
+          this.setState({ isLoading: false, error: error.message });
+      }
     );
   };
 
   render() {
-    const { isOpen, selectedTexture } = this.props;
-    const { preview, addNewDialogOpened, newUrl, filterText, isLoading } =
-      this.state;
-
-    const validUrl = isValidId(preview.name);
-    const validAsset = this.isValidAsset();
-    const addNewAssetButton = addNewDialogOpened ? 'BACK' : 'LOAD TEXTURE';
-
+    if (!this.props.isOpen) return null;
+    const {
+      preview,
+      addNewDialogOpened,
+      filterText,
+      newUrl,
+      isLoading,
+      isPreviewLoading,
+      isGalleryLoading,
+      error,
+      registryError,
+      assetError
+    } = this.state;
+    const filter = filterText.toLowerCase();
+    const images = this.state.registryImages.filter((image) =>
+      [image.id, ...image.tags].some((text) =>
+        String(text).toLowerCase().includes(filter)
+      )
+    );
+    const existing = document.getElementById(preview.name);
+    const nameConflict =
+      !!preview.name &&
+      (!validId(preview.name) || (existing && existing.src !== preview.src));
     return (
       <Modal
         id="textureModal"
         title="Textures"
-        isOpen={isOpen}
-        onClose={this.onClose}
+        isOpen={this.props.isOpen}
+        onClose={this.props.onClose}
         closeOnClickOutside={false}
       >
-        {/* Toolbar */}
         <div className="texture-toolbar">
-          <button onClick={this.toggleNewDialog}>{addNewAssetButton}</button>
+          <button type="button" onClick={this.toggleNewDialog}>
+            {addNewDialogOpened ? 'Back' : 'Load texture'}
+          </button>
           {addNewDialogOpened && (
             <div className="url-input-group">
               <input
-                type="text"
-                className="imageUrl"
+                type="url"
+                aria-label="Image URL"
                 placeholder="Paste image URL"
                 value={newUrl}
-                onChange={this.onUrlChange}
-                onKeyUp={this.onNewUrl}
+                onChange={(event) => {
+                  this.cancelPreview?.();
+                  this.setState({
+                    newUrl: event.target.value,
+                    preview: emptyPreview(),
+                    isPreviewLoading: false,
+                    error: ''
+                  });
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    this.loadImageFromUrl();
+                  }
+                }}
               />
               <button
-                className="load-url-btn"
+                type="button"
+                disabled={!newUrl.trim() || isPreviewLoading || isLoading}
                 onClick={this.loadImageFromUrl}
-                disabled={!newUrl}
               >
-                LOAD
+                Load
               </button>
             </div>
           )}
         </div>
-
-        {/* Add New Texture Dialog */}
-        <div className={addNewDialogOpened ? '' : 'hide'}>
+        {error && (
+          <p role="alert" className="form-error">
+            {error}
+          </p>
+        )}
+        {addNewDialogOpened ? (
           <div className="newimage">
             <div className="new_asset_options">
-              <div className="registry-section">
-                <span className="section-label">
-                  Select from assets registry:
-                </span>
-                <div className="assets search">
-                  <input
-                    placeholder="Filter textures..."
-                    value={filterText}
-                    onChange={this.onChangeFilter}
-                  />
-                  <AwesomeIcon icon={faSearch} />
-                </div>
-              </div>
-              <div className="gallery">
-                {this.state.isGalleryLoading ? (
-                  <div className="loading-indicator">Loading textures...</div>
+              <p className="section-label">
+                Choose a library texture or enter an image URL.
+              </p>
+              <input
+                aria-label="Filter textures"
+                placeholder="Filter textures..."
+                value={filterText}
+                onChange={(event) =>
+                  this.setState({ filterText: event.target.value })
+                }
+              />
+              {registryError && (
+                <p role="alert" className="form-error">
+                  {registryError} Go back and choose Load texture to retry.
+                </p>
+              )}
+              <div className="gallery" aria-busy={isGalleryLoading}>
+                {isGalleryLoading ? (
+                  <p role="status">Loading texture library...</p>
                 ) : (
-                  this.getFilteredRegistryImages().map((image) => (
+                  images.map((image) => (
                     <ImageItem
                       key={image.src}
                       image={image}
-                      onClick={() => this.selectRegistryImage(image)}
+                      onClick={() =>
+                        this.loadPreview(image.src, assetName(image.src))
+                      }
                     />
                   ))
                 )}
+                {!isGalleryLoading && !registryError && !images.length && (
+                  <p>No matching textures.</p>
+                )}
               </div>
             </div>
-            <div className="preview">
-              <span className="section-label">Name:</span>
+            <div className="preview" aria-busy={isPreviewLoading || isLoading}>
+              <label htmlFor="texture-name">Texture name</label>
               <input
+                id="texture-name"
                 ref={this.imageName}
-                className={preview.name.length > 0 && !validUrl ? 'error' : ''}
                 type="text"
-                placeholder="Enter texture name"
                 value={preview.name}
-                onChange={this.onNameChanged}
-                onKeyUp={this.onNameKeyUp}
+                aria-invalid={nameConflict}
+                aria-describedby={
+                  nameConflict ? 'texture-name-error' : undefined
+                }
+                onChange={(event) =>
+                  this.setState({
+                    preview: { ...preview, name: event.target.value }
+                  })
+                }
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    this.addNewAsset();
+                  }
+                }}
               />
-              <img
-                ref={this.previewImg}
-                width="242px"
-                height="242px"
-                src={preview.src}
-                alt="Preview"
-              />
+              {nameConflict && (
+                <p id="texture-name-error" className="form-error">
+                  Use a unique name starting with a letter; letters, numbers,
+                  hyphens and underscores are allowed.
+                </p>
+              )}
+              {isPreviewLoading && <p role="status">Loading image...</p>}
               {preview.loaded && (
-                <div className="detail">
-                  <span className="title" title={preview.filename}>
-                    {preview.filename}
-                  </span>
-                  <span className="dimensions">
+                <>
+                  <img
+                    width="242"
+                    height="242"
+                    src={preview.src}
+                    alt="Selected texture preview"
+                  />
+                  <p>
                     {preview.width} x {preview.height}
-                  </span>
-                </div>
+                  </p>
+                </>
               )}
               <button
-                disabled={!validAsset || isLoading}
+                type="button"
+                disabled={!this.validAsset()}
                 onClick={this.addNewAsset}
               >
-                {isLoading ? 'LOADING...' : 'LOAD THIS TEXTURE'}
+                {isLoading ? 'Adding texture...' : 'Load this texture'}
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Asset Gallery */}
-        <div className={addNewDialogOpened ? 'hide' : ''}>
+        ) : (
           <div>
-            <span className="section-label">
-              Following are assets loaded in this project:
-            </span>
+            <p className="section-label">Project textures</p>
+            {assetError && (
+              <p role="alert" className="form-error">
+                {assetError} Close and reopen Textures to retry.
+              </p>
+            )}
+            <div className="gallery">
+              {[...this.state.assetsImages]
+                .sort((a, b) => a.id.localeCompare(b.id))
+                .map((image) => (
+                  <ImageItem
+                    key={image.id}
+                    image={image}
+                    isSelected={this.props.selectedTexture === image.value}
+                    onClick={() => this.props.onClose?.(image)}
+                  />
+                ))}
+            </div>
+            {!this.state.assetsImages.length && (
+              <p>No project textures yet. Choose Load texture to add one.</p>
+            )}
           </div>
-          <div className="gallery">
-            {this.getSortedAssetImages().map((image) => (
-              <ImageItem
-                key={image.id}
-                image={image}
-                onClick={() => this.selectTexture(image)}
-                isSelected={selectedTexture === '#' + image.id}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </Modal>
     );
   }

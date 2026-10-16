@@ -1,256 +1,155 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Events from '../../lib/Events';
+import { insertNewAsset } from '../../lib/assetsUtils';
 
-function getUrlFromId(assetId) {
-  return (
-    assetId.length > 1 &&
-    document.querySelector(assetId) &&
-    document.querySelector(assetId).getAttribute('src')
-  );
-}
-
-function GetFilename(url) {
-  if (url) {
-    var m = url.toString().match(/.*\/(.+?)\./);
-    if (m && m.length > 1) {
-      return m[1];
-    }
+function normalize(value) {
+  if (value instanceof HTMLImageElement || value instanceof HTMLVideoElement) {
+    return value.id ? '#' + value.id : value.src;
   }
-  return '';
-}
-
-function insertNewAsset(type, id, src) {
-  var element = null;
-  switch (type) {
-    case 'img':
-      {
-        element = document.createElement('img');
-        element.id = id;
-        element.src = src;
-      }
-      break;
-  }
-  if (element) {
-    document.getElementsByTagName('a-assets')[0].appendChild(element);
-  }
-}
-
-function insertOrGetImageAsset(src) {
-  var id = GetFilename(src);
-  // Search for already loaded asset by src
-  var element = document.querySelector("a-assets > img[src='" + src + "']");
-
-  if (element) {
-    id = element.id;
-  } else {
-    // Check if first char of the ID is a number (Non a valid ID)
-    // In that case a 'i' preffix will be added
-    if (!isNaN(parseInt(id[0], 10))) {
-      id = 'i' + id;
-    }
-    if (document.getElementById(id)) {
-      var i = 1;
-      while (document.getElementById(id + '_' + i)) {
-        i++;
-      }
-      id += '_' + i;
-    }
-    insertNewAsset('img', id, src);
-  }
-
-  return id;
+  return typeof value === 'string' ? value : '';
 }
 
 export default class TextureWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string,
     entity: PropTypes.object,
-    mapName: PropTypes.string,
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     value: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
   };
 
-  static defaultProps = {
-    value: '',
-    mapName: 'nomap',
-    dataURL: ''
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = { value: this.props.value || '' };
-    this.canvas = React.createRef();
-  }
+  state = { value: normalize(this.props.value) };
+  canvas = React.createRef();
+  previewVersion = 0;
 
   componentDidMount() {
-    this.setValue(this.props.value || '');
+    this.paintPreview();
   }
 
-  componentDidUpdate(prevProps) {
-    var component = this.props.entity.components[this.props.componentname];
-    if (!component) {
-      return;
-    }
-    // component.attrValue may be undefined if component is from a mixin
-    var newValue = component.attrValue?.[this.props.name];
-
-    // Only update if the new value differs from our current state
-    // This prevents infinite loops when setValue triggers re-renders
-    if (newValue && newValue !== this.state.value) {
-      this.setValue(newValue);
+  componentDidUpdate(prevProps, prevState) {
+    const value = normalize(this.props.value);
+    // A-Frame may resolve '#id' to an image; compare canonical strings.
+    if (
+      value !== normalize(prevProps.value) ||
+      this.props.entity !== prevProps.entity
+    ) {
+      if (value !== this.state.value) {
+        this.setState({ value });
+        return;
+      }
+      this.paintPreview();
+    } else if (prevState.value !== this.state.value) {
+      this.paintPreview();
     }
   }
 
-  setValue(value) {
-    var canvas = this.canvas.current;
-    var context = canvas.getContext('2d');
+  componentWillUnmount() {
+    this.previewVersion++;
+    this.cancelImage?.();
+  }
 
-    function paintPreviewWithImage(image) {
-      var filename = image.src.replace(/^.*[\\/]/, '');
-      if (image !== undefined && image.width > 0) {
-        canvas.title = filename;
-        var scale = canvas.width / image.width;
+  paintPreview() {
+    const canvas = this.canvas.current;
+    if (!canvas) return;
+    this.cancelImage?.();
+    const version = ++this.previewVersion;
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    const value = this.state.value;
+    const asset = value.startsWith('#')
+      ? document.getElementById(value.slice(1))
+      : null;
+    if (asset instanceof HTMLVideoElement || !value) return;
+    const url =
+      asset?.src ||
+      (value.startsWith('#') ? '' : AFRAME.utils.srcLoader.parseUrl(value));
+    if (!url) return;
+    const image = new Image();
+    const clear = () => {
+      image.onload = image.onerror = null;
+    };
+    this.cancelImage = clear;
+    image.onload = () => {
+      if (
+        version === this.previewVersion &&
+        this.canvas.current &&
+        image.naturalWidth
+      ) {
+        const ratio = Math.min(
+          canvas.width / image.naturalWidth,
+          canvas.height / image.naturalHeight
+        );
+        context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(
           image,
           0,
           0,
-          image.width * scale,
-          image.height * scale
+          image.naturalWidth * ratio,
+          image.naturalHeight * ratio
         );
-        // self.setState({dataURL: canvas.toDataURL()});
-      } else {
-        context.clearRect(0, 0, canvas.width, canvas.height);
       }
-    }
-
-    function paintPreview(texture) {
-      var image = texture.image;
-      paintPreviewWithImage(image);
-    }
-
-    function getTextureFromSrc(src) {
-      for (var hash in AFRAME.INSPECTOR.sceneEl.systems.material.textureCache) {
-        // The key in textureCache is not always a json.
-        // For example <a-videosphere src="#video"> gives a "video" key in textureCache.
-        // So we check for '{' before using JSON.parse here.
-        if (hash[0] === '{' && JSON.parse(hash).src === src) {
-          return AFRAME.INSPECTOR.sceneEl.systems.material.textureCache[hash];
-        }
-      }
-      return null;
-    }
-
-    var url;
-    var isAssetHash = value[0] === '#';
-    var isAssetImg = value instanceof HTMLImageElement;
-    var isAssetVideo = value instanceof HTMLVideoElement;
-    var isAssetImgOrVideo = isAssetImg || isAssetVideo;
-
-    if (isAssetImgOrVideo) {
-      url = value.src;
-    } else if (isAssetHash) {
-      url = getUrlFromId(value);
-    } else {
-      url = AFRAME.utils.srcLoader.parseUrl(value);
-    }
-
-    var texture = getTextureFromSrc(value);
-    var valueType = null;
-    valueType = isAssetImgOrVideo || isAssetHash ? 'asset' : 'url';
-    if (!isAssetVideo && texture) {
-      texture.then(paintPreview);
-    } else if (!isAssetVideo && url) {
-      // The image still didn't load
-      var image = new Image();
-      image.addEventListener(
-        'load',
-        () => {
-          paintPreviewWithImage(image);
-        },
-        false
-      );
-      image.src = url;
-    } else {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    this.setState({
-      value: isAssetImgOrVideo ? '#' + value.id : value,
-      valueType: valueType,
-      url: url
-    });
+      clear();
+    };
+    image.onerror = clear;
+    image.src = url;
   }
 
-  notifyChanged = (value) => {
-    if (this.props.onChange) {
-      this.props.onChange(this.props.name, value);
-    }
-    this.setState({ value: value });
-  };
-
-  onChange = (e) => {
-    var value = e.target.value;
-    this.setState({ value: value });
-    this.notifyChanged(value);
-  };
-
-  removeMap = () => {
-    this.setValue('');
-    this.notifyChanged('');
+  changeValue = (value) => {
+    this.setState({ value });
+    this.props.onChange?.(this.props.name, value);
   };
 
   openDialog = () => {
     Events.emit('opentexturesmodal', this.state.value, (image) => {
-      if (!image) {
+      if (!image || !this.canvas.current) return;
+      if (image.type === 'asset') {
+        this.changeValue(image.value);
         return;
       }
-      var value = image.value;
-      if (image.type !== 'asset') {
-        var assetId = insertOrGetImageAsset(image.src);
-        value = '#' + assetId;
+      const assets = [
+        ...this.props.entity.sceneEl.querySelectorAll('a-assets img')
+      ];
+      const existing = assets.find((asset) => asset.src === image.src);
+      if (existing) {
+        this.changeValue('#' + existing.id);
+        return;
       }
-
-      // Only call onChange - it will update the entity which triggers
-      // componentDidUpdate to sync our state. Don't call setValue here
-      // as that would cause duplicate state updates and potential loops.
-      if (this.props.onChange) {
-        this.props.onChange(this.props.name, value);
-      }
-
-      // Update local state directly without triggering the full setValue flow
-      // to update the preview immediately
-      this.setState({ value: value });
+      const base =
+        'texture-' +
+        (image.id || image.name || 'image').replace(/[^\w-]/g, '-');
+      let id = base;
+      let suffix = 2;
+      while (document.getElementById(id)) id = base + '-' + suffix++;
+      insertNewAsset('img', id, image.src, true, () => {
+        if (this.canvas.current) this.changeValue('#' + id);
+      });
     });
   };
 
   render() {
-    let hint = '';
-    if (this.state.value) {
-      if (this.state.valueType === 'asset') {
-        hint = 'Asset ID: ' + this.state.value + '\nURL: ' + this.state.url;
-      } else {
-        hint = 'URL: ' + this.state.value;
-      }
-    }
-
+    const label = this.props.label || this.props.name;
     return (
       <span className="texture">
         <input
+          id={this.props.id}
+          aria-label={label}
           className="map_value string"
           type="text"
-          title={hint}
           value={this.state.value}
-          onChange={this.onChange}
+          onChange={(event) => this.changeValue(event.target.value)}
         />
-        <canvas
-          ref={this.canvas}
-          width="32"
-          height="16"
-          title={hint}
+        <button
+          type="button"
+          className="texture-picker"
           onClick={this.openDialog}
-        />
+          aria-label={`Choose ${label} texture`}
+          title="Choose texture"
+        >
+          <canvas ref={this.canvas} width="32" height="16" aria-hidden="true" />
+        </button>
       </span>
     );
   }

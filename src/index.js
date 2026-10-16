@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import Events from './lib/Events';
+import Events, { createEventScope } from './lib/Events';
 import { Viewport } from './lib/viewport';
 import { AssetsLoader } from './lib/assetsLoader';
 import { Shortcuts } from './lib/shortcuts';
@@ -8,13 +8,46 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Main from './components/Main';
 import { initCameras } from './lib/cameras';
 import { createEntity } from './lib/entity';
-import { GLTFExporter } from 'three/addons/exporters/GLTFExporter';
+import { ScenePersistence } from './lib/persistence';
+import { EditorViewport } from './lib/editorViewport';
 
 import './style/index.styl';
 
+/* global __webpack_public_path__: writable */
+if (document.currentScript?.src) {
+  __webpack_public_path__ = document.currentScript?.src
+    ? new URL('.', document.currentScript.src).href
+    : __webpack_public_path__;
+}
+let exporterPromise;
+function loadExporter() {
+  if (!exporterPromise) {
+    exporterPromise = import(
+      /* webpackChunkName: "gltf-exporter" */ 'three/addons/exporters/GLTFExporter'
+    )
+      .then(({ GLTFExporter }) => new GLTFExporter())
+      .catch((error) => {
+        exporterPromise = null;
+        throw error;
+      });
+  }
+  return exporterPromise;
+}
+
 function Inspector() {
   this.assetsLoader = new AssetsLoader();
-  this.exporters = { gltf: new GLTFExporter() };
+  this.events = createEventScope();
+  this.exporters = {
+    gltf: {
+      parse: (scene, onDone, onError, options) =>
+        loadExporter()
+          .then((exporter) => exporter.parse(scene, onDone, onError, options))
+          .catch((error) => {
+            if (onError) onError(error);
+            else console.error(error);
+          })
+    }
+  };
   this.history = require('./lib/history');
   this.isFirstOpen = true;
   this.modules = {};
@@ -71,7 +104,7 @@ Inspector.prototype = {
     div.id = 'aframeInspector';
     div.setAttribute('data-aframe-inspector', 'app');
     document.body.appendChild(div);
-    const root = createRoot(div);
+    const root = (this.root = createRoot(div));
     root.render(
       <ErrorBoundary>
         <Main />
@@ -92,6 +125,7 @@ Inspector.prototype = {
     });
 
     this.scene.add(this.sceneHelpers);
+    this.persistence = new ScenePersistence(this);
     this.open();
   },
 
@@ -150,7 +184,7 @@ Inspector.prototype = {
       this.select(null);
     }
 
-    if (entity && emit === undefined) {
+    if (emit === undefined) {
       Events.emit('entityselect', entity);
     }
 
@@ -173,7 +207,8 @@ Inspector.prototype = {
   },
 
   initEvents: function () {
-    window.addEventListener('keydown', (evt) => {
+    this.onToggleKey = (evt) => {
+      if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
       // Alt + Ctrl + i: Shorcut to toggle the inspector
       const shortcutPressed =
         evt.keyCode === 73 &&
@@ -181,27 +216,33 @@ Inspector.prototype = {
       if (shortcutPressed) {
         this.toggle();
       }
-    });
+    };
+    window.addEventListener('keydown', this.onToggleKey);
 
-    Events.on('entityselect', (entity) => {
+    this.events.on('entityselect', (entity) => {
       this.selectEntity(entity, false);
     });
 
-    Events.on('inspectortoggle', (active) => {
+    this.events.on('inspectortoggle', (active) => {
       this.inspectorActive = active;
       this.sceneHelpers.visible = this.inspectorActive;
     });
 
-    Events.on('entitycreate', (definition) => {
+    this.events.on('entitycreate', (definition) => {
       createEntity(definition, (entity) => {
         this.selectEntity(entity);
       });
     });
 
-    document.addEventListener('child-detached', (event) => {
+    this.onChildDetached = (event) => {
       const entity = event.detail.el;
-      AFRAME.INSPECTOR.removeObject(entity.object3D);
-    });
+      if (
+        entity?.object3D &&
+        (event.target === this.sceneEl || event.target.sceneEl === this.sceneEl)
+      )
+        this.removeObject(entity.object3D);
+    };
+    document.addEventListener('child-detached', this.onChildDetached);
   },
 
   selectById: function (id) {
@@ -251,6 +292,8 @@ Inspector.prototype = {
       this.sceneEl.setAttribute('aframe-inspector-removed-embedded');
     }
 
+    if (!this.editorViewport)
+      this.editorViewport = new EditorViewport(this.sceneEl);
     document.body.classList.add('aframe-inspector-opened');
     this.sceneEl.resize();
     this.sceneEl.pause();
@@ -283,95 +326,71 @@ Inspector.prototype = {
    * Reload the inspector UI to reflect current scene HTML.
    * Call this after programmatically modifying the scene DOM.
    */
-  reload: function () {
-    // Deselect current entity.
+  reload: async function () {
+    this.cancelReload?.();
     this.selectEntity(null);
-
-    // Clear all existing helpers.
-    for (const id in this.helpers) {
-      const helper = this.helpers[id];
+    this.editorViewport?.dispose();
+    this.editorViewport = null;
+    this.viewport?.dispose();
+    this.disposeCameras?.();
+    this.persistence?.bindScene(null);
+    for (const helper of Object.values(this.helpers)) {
       this.sceneHelpers.remove(helper);
-      if (helper.dispose) {
-        helper.dispose();
-      }
+      helper.dispose?.();
     }
     this.helpers = {};
-
-    // Remove old sceneHelpers from old scene.
-    if (this.scene && this.sceneHelpers.parent) {
-      this.scene.remove(this.sceneHelpers);
-    }
-
-    // Poll for new scene to register in AFRAME.scenes.
-    const waitForScene = () => {
-      const newSceneEl = AFRAME.scenes[0];
-      if (!newSceneEl) {
-        setTimeout(waitForScene, 100);
-        return;
-      }
-
-      this.sceneEl = newSceneEl;
-
-      const onReady = () => {
-        // Wait for camera too.
-        if (!this.sceneEl.camera) {
-          this.sceneEl.addEventListener('camera-set-active', () => onReady(), {
-            once: true
-          });
-          return;
-        }
-
-        // Re-acquire container (new scene creates new canvas).
-        this.container = document.querySelector('.a-canvas');
-
-        // Re-init cameras for new scene.
-        initCameras(this);
-
-        // Refresh scene object3D reference.
-        this.scene = this.sceneEl.object3D;
-
-        // Re-create sceneHelpers in new scene.
-        this.sceneHelpers = new THREE.Scene();
-        this.sceneHelpers.userData.source = 'INSPECTOR';
-        this.sceneHelpers.visible = true;
-        this.scene.add(this.sceneHelpers);
-
-        // Re-init viewport (transform controls, editor controls, raycaster).
-        this.viewport = new Viewport(this);
-
-        // Rebuild helpers from new entities.
-        this.sceneEl.object3D.traverse((node) => {
-          this.addHelper(node);
-        });
-
-        // Notify React components to update scene reference.
-        Events.emit('scenereload', this.sceneEl);
-
-        // Notify React components to rebuild scenegraph.
-        Events.emit('entitycreated');
-
-        // Enter inspector edit mode on new scene.
-        this.opened = true;
-        Events.emit('inspectortoggle', true);
-        document.body.classList.add('aframe-inspector-opened');
-        this.sceneEl.resize();
-        this.sceneEl.pause();
-        this.sceneEl.isPlaying = true;
-        this.cursor.play();
-        Shortcuts.enable();
+    this.sceneHelpers.parent?.remove(this.sceneHelpers);
+    const ready = await new Promise((resolve) => {
+      const start = Date.now();
+      let timer;
+      const finish = (value) => {
+        clearTimeout(timer);
+        resolve(value);
       };
+      this.cancelReload = () => finish(false);
+      const poll = () => {
+        const scene = AFRAME.scenes[0];
+        if (scene?.hasLoaded && scene.camera) return finish(scene);
+        if (Date.now() - start > 15000) return finish(false);
+        timer = setTimeout(poll, 50);
+      };
+      poll();
+    });
+    if (!ready) return false;
+    this.cancelReload = null;
+    this.sceneEl = ready;
+    this.container = ready.canvas;
+    initCameras(this);
+    this.scene = ready.object3D;
+    this.sceneHelpers = new THREE.Scene();
+    this.sceneHelpers.userData.source = 'INSPECTOR';
+    this.scene.add(this.sceneHelpers);
+    this.viewport = new Viewport(this);
+    this.scene.traverse((node) => {
+      if (node.userData.source !== 'INSPECTOR') this.addHelper(node);
+    });
+    this.persistence?.bindScene(ready);
+    Events.emit('scenereload', ready);
+    Events.emit('entitycreated');
+    this.open();
+    return true;
+  },
 
-      if (this.sceneEl.hasLoaded) {
-        onReady();
-      } else {
-        this.sceneEl.addEventListener('loaded', () => onReady(), {
-          once: true
-        });
-      }
-    };
-
-    // Start polling (small delay to let DOM settle after replaceWith).
-    setTimeout(waitForScene, 50);
+  destroy: function () {
+    this.cancelReload?.();
+    if (this.opened) this.close();
+    this.viewport?.dispose();
+    this.disposeCameras?.();
+    Object.values(this.helpers).forEach((helper) => helper.dispose?.());
+    this.sceneHelpers.parent?.remove(this.sceneHelpers);
+    this.persistence?.dispose();
+    this.assetsLoader.dispose();
+    this.events.dispose();
+    window.removeEventListener('keydown', this.onToggleKey);
+    document.removeEventListener('child-detached', this.onChildDetached);
+    this.root?.unmount();
+    document.getElementById('aframeInspector')?.remove();
+    Shortcuts.disable();
   },
 
   /**
@@ -392,6 +411,8 @@ Inspector.prototype = {
       this.sceneEl.setAttribute('embedded', '');
       this.sceneEl.removeAttribute('aframe-inspector-removed-embedded');
     }
+    this.editorViewport?.dispose();
+    this.editorViewport = null;
     document.body.classList.remove('aframe-inspector-opened');
     this.sceneEl.resize();
     Shortcuts.disable();

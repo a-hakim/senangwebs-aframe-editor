@@ -1,6 +1,7 @@
 import Events from './Events';
 
 export function initRaycaster(inspector) {
+  const canvas = inspector.container;
   // Use cursor="rayOrigin: mouse".
   const mouseCursor = document.createElement('a-entity');
   mouseCursor.setAttribute('id', 'aframeInspectorMouseCursor');
@@ -35,15 +36,16 @@ export function initRaycaster(inspector) {
   mouseCursor.addEventListener('click', handleClick);
   mouseCursor.addEventListener('mouseenter', onMouseEnter);
   mouseCursor.addEventListener('mouseleave', onMouseLeave);
-  inspector.container.addEventListener('mousedown', onMouseDown);
-  inspector.container.addEventListener('mouseup', onMouseUp);
-  inspector.container.addEventListener('dblclick', onDoubleClick);
+  canvas.addEventListener('mousedown', onMouseDown);
+  canvas.addEventListener('mouseup', onMouseUp);
+  canvas.addEventListener('dblclick', onDoubleClick);
 
-  inspector.sceneEl.canvas.addEventListener('mouseleave', () => {
-    setTimeout(() => {
-      Events.emit('raycastermouseleave', null);
-    });
-  });
+  let leaveTimer;
+  const onCanvasLeave = () => {
+    clearTimeout(leaveTimer);
+    leaveTimer = setTimeout(() => Events.emit('raycastermouseleave', null));
+  };
+  canvas.addEventListener('mouseleave', onCanvasLeave);
 
   const onDownPosition = new THREE.Vector2();
   const onUpPosition = new THREE.Vector2();
@@ -110,23 +112,25 @@ export function initRaycaster(inspector) {
     el: mouseCursor,
     enable: () => {
       mouseCursor.setAttribute('raycaster', 'enabled', true);
-      inspector.container.addEventListener('mousedown', onMouseDown);
-      inspector.container.addEventListener('mouseup', onMouseUp);
-      inspector.container.addEventListener('dblclick', onDoubleClick);
+      canvas.addEventListener('mousedown', onMouseDown);
+      canvas.addEventListener('mouseup', onMouseUp);
+      canvas.addEventListener('dblclick', onDoubleClick);
     },
     disable: () => {
       mouseCursor.setAttribute('raycaster', 'enabled', false);
-      inspector.container.removeEventListener('mousedown', onMouseDown);
-      inspector.container.removeEventListener('mouseup', onMouseUp);
-      inspector.container.removeEventListener('dblclick', onDoubleClick);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      canvas.removeEventListener('mouseup', onMouseUp);
+      canvas.removeEventListener('dblclick', onDoubleClick);
     },
     destroy: () => {
+      clearTimeout(leaveTimer);
+      canvas.removeEventListener('mouseleave', onCanvasLeave);
       mouseCursor.removeEventListener('click', handleClick);
       mouseCursor.removeEventListener('mouseenter', onMouseEnter);
       mouseCursor.removeEventListener('mouseleave', onMouseLeave);
-      inspector.container.removeEventListener('mousedown', onMouseDown);
-      inspector.container.removeEventListener('mouseup', onMouseUp);
-      inspector.container.removeEventListener('dblclick', onDoubleClick);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      canvas.removeEventListener('mouseup', onMouseUp);
+      canvas.removeEventListener('dblclick', onDoubleClick);
       if (mouseCursor.parentNode) {
         mouseCursor.parentNode.removeChild(mouseCursor);
       }

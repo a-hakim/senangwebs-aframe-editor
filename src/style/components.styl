@@ -11,6 +11,26 @@ propertyRowDefined() {
   font-weight 600
   color white
 
+.panel-hint
+  padding 12px
+  line-height 1.6
+
+#rightPanel .componentHeader.title
+  box-sizing border-box
+  flex-shrink 0
+
+  button
+    width 40px
+    height 40px
+    padding 0
+    border 0
+    border-radius 0
+    background transparent
+    display flex
+    align-items center
+    justify-content center
+    font-size 16px
+
 .componentHeader.title
   height 40px
   width 100%
@@ -76,6 +96,9 @@ div.vec4
   display flex
 
 .collapsible .static
+  display flex
+  align-items center
+  gap 8px
   background $bglight
   border-bottom 2px solid $bg
   box-sizing content-box
@@ -85,6 +108,27 @@ div.vec4
   font-size 12px
   &:hover
     background $bglighter
+
+  .collapse-toggle
+    background transparent
+    border 0
+    padding 0
+    width 24px
+    height 28px
+    flex-shrink 0
+    display flex
+    align-items center
+    justify-content center
+
+  .collapsible-header
+    flex 1
+    min-width 0
+
+.componentHeaderActions
+  button
+    padding 3px
+    background transparent
+    border 0
 /*
 .collapsible
   &.collapsed
@@ -115,6 +159,7 @@ div.vec4
   margin-right 10px
   margin-left 2px
   width 0
+  margin 0 !important
 
 .collapsible.collapsed .static .collapse-button
   border-left-color $white

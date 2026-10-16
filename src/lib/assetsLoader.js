@@ -2,105 +2,78 @@ import Events from './Events';
 
 const assetsBaseUrl =
   window.AFRAME_SAMPLE_ASSETS_ROOT || 'https://aframe.io/sample-assets/';
-const assetsRelativeUrl = { images: 'dist/images.json' };
-const collectionAssetsRoot = window.COLLECTION_ASSETS_ROOT;
 
-/**
- * Asynchronously load and register components from the registry.
- */
 export function AssetsLoader() {
   this.images = [];
   this.hasLoaded = false;
+  this.isLoading = false;
+  this.error = '';
 }
 
 AssetsLoader.prototype = {
-  /**
-   * XHR the assets JSON.
-   */
   load: function () {
-    if (collectionAssetsRoot) {
-      this.loadCollection();
-      return;
-    }
-
-    var xhr = new XMLHttpRequest();
-    var url = assetsBaseUrl + assetsRelativeUrl.images;
-
-    // @todo Remove the sync call and use a callback
-    xhr.open('GET', url);
-
-    xhr.onload = () => {
-      var data = JSON.parse(xhr.responseText);
-      this.images = data.images;
-      this.images.forEach((image) => {
-        image.fullPath = assetsBaseUrl + data.basepath.images + image.path;
-        image.fullThumbPath =
-          assetsBaseUrl + data.basepath.images_thumbnails + image.thumbnail;
-      });
-      Events.emit('assetsimagesload', this.images);
+    if (this.isLoading) return;
+    const collection = window.COLLECTION_ASSETS_ROOT;
+    const xhr = (this.xhr = new XMLHttpRequest());
+    this.isLoading = true;
+    this.error = '';
+    Events.emit('assetsimagesloading');
+    const fail = () => {
+      this.isLoading = false;
+      this.hasLoaded = false;
+      this.error =
+        'The texture library could not be loaded. Check your connection and retry.';
+      Events.emit('assetsimageserror', this.error);
     };
-    xhr.onerror = () => {
-      console.error('Error loading registry file.');
-    };
-    xhr.send();
-
-    this.hasLoaded = true;
-  },
-
-  /**
-   * XHR the collection assets JSON.
-   */
-  loadCollection: function () {
-    if (!collectionAssetsRoot) return;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', collectionAssetsRoot);
-
+    xhr.open('GET', collection || assetsBaseUrl + 'dist/images.json');
+    xhr.timeout = 15000;
+    xhr.onerror = xhr.ontimeout = fail;
     xhr.onload = () => {
       try {
-        var data = JSON.parse(xhr.responseText);
-        if (Array.isArray(data)) {
-          // Clear all existing assets including those loaded from load()
-          this.images = [];
-
-          data.forEach((item) => {
-            // Extract filename from URL to use as ID
-            var filename = item.src.split('/').pop() || '';
-            var id =
-              filename
-                .split('.')
-                .shift()
-                .replace(/\s/, '-')
-                .replace(/^\d+\s*/, '')
-                .replace(/[\W]/, '')
-                .toLowerCase() || 'img' + Math.floor(Math.random() * 10000);
-
-            var isDuplicate = this.images.some(function (existingImage) {
-              return (
-                existingImage.id === id || existingImage.fullPath === item.src
-              );
-            });
-
-            if (!isDuplicate) {
-              this.images.push({
-                id: id,
-                fullPath: item.src,
-                fullThumbPath: item.src,
-                tags: []
-              });
-            }
-          });
-          Events.emit('assetsimagesload', this.images);
+        if (xhr.status < 200 || xhr.status >= 300)
+          throw new Error('HTTP ' + xhr.status);
+        const data = JSON.parse(xhr.responseText);
+        if (collection) {
+          if (!Array.isArray(data)) throw new Error('Invalid collection');
+          this.images = data
+            .filter((item) => item && typeof item.src === 'string')
+            .map((item, index) => ({
+              id: item.id || 'image-' + index,
+              fullPath: item.src,
+              // Without a supplied thumbnail, defer the full image until selection.
+              fullThumbPath: item.thumbnail || item.thumb || '',
+              width: item.width,
+              height: item.height,
+              tags: item.tags || []
+            }));
+        } else {
+          if (!Array.isArray(data.images)) throw new Error('Invalid catalog');
+          this.images = data.images.map((image) => ({
+            ...image,
+            fullPath: assetsBaseUrl + data.basepath.images + image.path,
+            fullThumbPath: image.thumbnail
+              ? assetsBaseUrl +
+                data.basepath.images_thumbnails +
+                image.thumbnail
+              : ''
+          }));
         }
-      } catch (e) {
-        console.error('Error parsing collection file.', e);
+        this.isLoading = false;
+        this.hasLoaded = true;
+        Events.emit('assetsimagesload', this.images);
+      } catch (error) {
+        fail();
       }
     };
-    xhr.onerror = () => {
-      console.error('Error loading collection file.');
-    };
     xhr.send();
+  },
 
-    this.hasLoaded = true;
+  loadCollection: function () {
+    this.load();
+  },
+
+  dispose: function () {
+    this.xhr?.abort();
+    this.isLoading = false;
   }
 };

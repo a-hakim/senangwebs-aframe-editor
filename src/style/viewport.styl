@@ -1,6 +1,8 @@
 @import './lib';
 
 #viewportBar
+  max-width calc(100vw - 16px)
+  z-index 1
   align-items center
   color $white
   position absolute
@@ -166,3 +168,20 @@
   display none
   +media--1024()
     display block
+
+#transformToolbar
+  .button
+    width 40px
+    height 40px
+    padding 0
+    background transparent
+    border 0
+    border-radius 0
+
+    svg
+      width 18px
+      height 18px
+
+@media (max-width: 1000px)
+  #viewportBar .viewportHud-menubar
+    display none

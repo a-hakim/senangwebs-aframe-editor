@@ -8,10 +8,16 @@ import { getOS } from './utils';
 
 const os = getOS();
 
+function dialogOpen() {
+  return !!document.querySelector('[role="dialog"][aria-modal="true"]');
+}
+
 function shouldCaptureKeyEvent(event) {
   return (
-    event.target.closest('#cameraToolbar') ||
-    (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA')
+    !dialogOpen() &&
+    !event.target.closest(
+      'input, textarea, select, button, [contenteditable="true"], [role="combobox"]'
+    )
   );
 }
 
@@ -22,6 +28,7 @@ export const Shortcuts = {
     modules: {}
   },
   onKeyUp: function (event) {
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     if (!shouldCaptureKeyEvent(event) || !AFRAME.INSPECTOR.opened) {
       return;
     }
@@ -117,6 +124,35 @@ export const Shortcuts = {
     }
   },
   onKeyDown: function (event) {
+    if (dialogOpen() || !AFRAME.INSPECTOR.opened) return;
+    const command = os === 'macos' ? event.metaKey : event.ctrlKey;
+    if (
+      command &&
+      event.altKey &&
+      (event.code === 'KeyR' || event.keyCode === 82)
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      document.activeElement?.blur();
+      setTimeout(() => Events.emit('scenerestore'), 0);
+      return;
+    }
+    if (command && event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      event.stopPropagation();
+      document.activeElement?.blur();
+      setTimeout(
+        () => Events.emit(event.shiftKey ? 'scenedownload' : 'scenesave'),
+        0
+      );
+      return;
+    }
+    if (command && event.key.toLowerCase() === 'f') {
+      event.preventDefault();
+      Events.emit('togglesidebar', { which: 'scenegraph', show: true });
+      requestAnimationFrame(() => document.getElementById('filter')?.focus());
+      return;
+    }
     if (!shouldCaptureKeyEvent(event) || !AFRAME.INSPECTOR.opened) {
       return;
     }
@@ -135,16 +171,13 @@ export const Shortcuts = {
         }
 
         // v: paste copied entity
-        if (event.keyCode === 86) {
+        if (
+          event.keyCode === 86 &&
+          AFRAME.INSPECTOR.entityToCopy?.isConnected
+        ) {
+          event.preventDefault();
           cloneEntity(AFRAME.INSPECTOR.entityToCopy);
         }
-      }
-
-      // s: focus search input
-      if (event.keyCode === 83) {
-        event.preventDefault();
-        event.stopPropagation();
-        document.getElementById('filter').focus();
       }
     }
 

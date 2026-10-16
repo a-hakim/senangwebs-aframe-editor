@@ -32,7 +32,13 @@ export default class PropertyRow extends React.Component {
 
   constructor(props) {
     super(props);
-    this.id = props.componentname + ':' + props.name;
+    this.id =
+      'inspector-' +
+      props.entity.object3D.uuid +
+      '-' +
+      props.componentname +
+      '-' +
+      props.name;
   }
 
   getWidget() {
@@ -52,6 +58,11 @@ export default class PropertyRow extends React.Component {
         : props.data;
 
     const widgetProps = {
+      id: this.id,
+      label:
+        props.componentname === props.name
+          ? props.name
+          : props.componentname + ' ' + props.name,
       componentname: props.componentname,
       entity: props.entity,
       isSingle: props.isSingle,
@@ -67,6 +78,7 @@ export default class PropertyRow extends React.Component {
       value: value
     };
     const numberWidgetProps = {
+      step: props.schema.step || (type === 'int' ? 1 : 0.01),
       min: props.schema.hasOwnProperty('min') ? props.schema.min : -Infinity,
       max: props.schema.hasOwnProperty('max') ? props.schema.max : Infinity
     };
@@ -135,7 +147,15 @@ export default class PropertyRow extends React.Component {
 
     return (
       <div className={className}>
-        <label htmlFor={this.id} className="text" title={title}>
+        <label
+          htmlFor={
+            ['vec2', 'vec3', 'vec4'].includes(props.schema.type)
+              ? this.id + '-x'
+              : this.id
+          }
+          className="text"
+          title={title}
+        >
           {props.name}
         </label>
         {this.getWidget(props.schema.type)}

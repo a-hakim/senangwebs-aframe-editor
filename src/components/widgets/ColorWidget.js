@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 export default class ColorWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string.isRequired,
     entity: PropTypes.object,
     name: PropTypes.string.isRequired,
@@ -70,6 +72,7 @@ export default class ColorWidget extends React.Component {
     return (
       <span className="color-widget">
         <input
+          aria-label={(this.props.label || this.props.name) + ' picker'}
           type="color"
           className="color"
           value={this.state.pickerValue}
@@ -78,6 +81,8 @@ export default class ColorWidget extends React.Component {
         />
         <input
           type="text"
+          id={this.props.id}
+          aria-label={this.props.label || this.props.name}
           className="color_value"
           value={this.state.value}
           onKeyUp={this.onKeyUp}

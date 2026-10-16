@@ -126,6 +126,7 @@ function insertAfter(newNode, referenceNode) {
  * @param  {Element} entity Entity to clone
  */
 export function cloneEntity(entity) {
+  if (!entity) return;
   entity.flushToDOM();
 
   const clone = prepareForSerialization(entity);

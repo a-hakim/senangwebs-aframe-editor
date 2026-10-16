@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import PrimitiveIcon from '../icons/Primitives';
+import Modal from './Modal';
 
 const PRIMITIVES = [
   { type: 'a-box', label: 'Box', icon: PrimitiveIcon.BOX },
@@ -59,48 +60,34 @@ export default function ModalPrimitive({ isOpen, onClose, onSelectPrimitive }) {
     onSelectPrimitive(primitiveType);
   };
 
-  // Stop propagation to prevent closing modal when clicking inside
-  const handleModalContentClick = (e) => {
-    e.stopPropagation();
-  };
-
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal-content"
-        id="primitive-modal"
-        onClick={handleModalContentClick}
-      >
-        <div className="modal-header">
-          <h3>Select Primitive</h3>
-          <span className="close" onClick={onClose}>
-            ×
-          </span>
-        </div>
-        <div className="modal-body">
-          <div className="primitive-grid">
-            {PRIMITIVES.map((primitive) => (
-              <button
-                key={primitive.type}
-                className="primitive-button"
-                onClick={() => handleSelect(primitive.type)}
-                title={`Add ${primitive.label}`}
-              >
-                {typeof primitive.icon === 'string' ? (
-                  <div
-                    style={{ width: '50px', height: '50px', margin: '0 auto' }}
-                    dangerouslySetInnerHTML={{ __html: primitive.icon }}
-                  />
-                ) : (
-                  primitive.icon
-                )}
-                {primitive.label}
-              </button>
-            ))}
-          </div>
-        </div>
+    <Modal
+      id="primitive-modal"
+      title="Select Primitive"
+      isOpen={isOpen}
+      onClose={onClose}
+    >
+      <div className="primitive-grid">
+        {PRIMITIVES.map((primitive) => (
+          <button
+            key={primitive.type}
+            className="primitive-button"
+            onClick={() => handleSelect(primitive.type)}
+            title={`Add ${primitive.label}`}
+          >
+            {typeof primitive.icon === 'string' ? (
+              <div
+                style={{ width: '50px', height: '50px', margin: '0 auto' }}
+                dangerouslySetInnerHTML={{ __html: primitive.icon }}
+              />
+            ) : (
+              primitive.icon
+            )}
+            {primitive.label}
+          </button>
+        ))}
       </div>
-    </div>
+    </Modal>
   );
 }
 

@@ -39,7 +39,7 @@ export default class ModalHelp extends React.Component {
         { key: ['g'], description: 'Toggle grid visibility' },
         { key: ['n'], description: 'Add new entity' },
         { key: ['o'], description: 'Toggle local between global transform' },
-        { key: ['supr | backspace'], description: 'Delete selected entity' }
+        { key: ['delete | backspace'], description: 'Delete selected entity' }
       ],
       [
         { key: ['0'], description: 'Toggle panels' },
@@ -51,9 +51,18 @@ export default class ModalHelp extends React.Component {
         { key: ['6'], description: 'Back view' },
         { key: ['7'], description: 'Front view' },
 
-        { key: ['ctrl | cmd', 'x'], description: 'Cut selected entity' },
-        { key: ['ctrl | cmd', 'c'], description: 'Copy selected entity' },
-        { key: ['ctrl | cmd', 'v'], description: 'Paste entity' },
+        { key: ['ctrl | cmd', 's'], description: 'Save browser draft' },
+        {
+          key: ['ctrl | cmd', 'shift', 's'],
+          description: 'Download scene HTML'
+        },
+        {
+          key: ['ctrl | cmd', 'alt', 'r'],
+          description: 'Restore browser draft'
+        },
+        { key: ['ctrl | cmd', 'f'], description: 'Search scene entities' },
+        { key: ['ctrl | cmd', 'c'], description: 'Copy selected entity' },
+        { key: ['ctrl | cmd', 'v'], description: 'Paste entity' },
         { key: ['h'], description: 'Show this help' },
         { key: ['Esc'], description: 'Unselect entity' },
         { key: ['ctrl', 'alt', 'i'], description: 'Switch Edit and VR Modes' }

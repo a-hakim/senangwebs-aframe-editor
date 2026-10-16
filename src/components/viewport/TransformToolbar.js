@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import clsx from 'clsx';
-import Events from '../../lib/Events';
+import Events, { createEventScope } from '../../lib/Events';
 
 var TransformButtons = [
   { value: 'translate', icon: <AwesomeIcon icon={faArrowsAlt} /> },
@@ -18,6 +18,12 @@ var TransformButtons = [
 ];
 
 export default class TransformToolbar extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,11 +33,14 @@ export default class TransformToolbar extends React.Component {
   }
 
   componentDidMount() {
-    Events.on('transformmodechange', (mode) => {
+    this.events.on('scenereload', () =>
+      this.setState({ selectedTransform: 'translate', localSpace: false })
+    );
+    this.events.on('transformmodechange', (mode) => {
       this.setState({ selectedTransform: mode });
     });
 
-    Events.on('transformspacechange', () => {
+    this.events.on('transformspacechange', () => {
       Events.emit(
         'transformspacechanged',
         this.state.localSpace ? 'world' : 'local'
@@ -61,14 +70,17 @@ export default class TransformToolbar extends React.Component {
         });
 
         return (
-          <a
+          <button
+            type="button"
             title={option.value}
+            aria-label={option.value}
+            aria-pressed={selected}
             key={i}
             onClick={this.changeTransformMode.bind(this, option.value)}
             className={classes}
           >
             {option.icon}
-          </a>
+          </button>
         );
       }.bind(this)
     );

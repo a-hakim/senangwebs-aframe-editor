@@ -24,6 +24,9 @@
   justify-content space-between
   align-items center
 
+#primitive-modal .modal-content
+  width 600px
+
 .modal-body
   display flex
   flex-direction column
@@ -88,3 +91,7 @@
 
 .modal-close-button:hover
   background-color #888
+
+@media (max-width: 620px)
+  #primitive-modal .primitive-grid
+    grid-template-columns repeat(auto-fit, minmax(85px, 1fr))

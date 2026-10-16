@@ -65,6 +65,7 @@ export default class Mixin extends React.Component {
           <span className="text">mixins</span>
           <span className="mixinValue">
             <Select
+              aria-label="Mixins"
               id="mixinSelect"
               classNamePrefix="select"
               options={this.getMixinOptions()}

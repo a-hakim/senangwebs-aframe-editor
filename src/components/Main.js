@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { AwesomeIcon } from './AwesomeIcon';
-import Events from '../lib/Events';
+import { createEventScope } from '../lib/Events';
 import ComponentsSidebar from './components/Sidebar';
 import ModalTextures from './modals/ModalTextures';
 import ModalHelp from './modals/ModalHelp';
@@ -14,165 +14,147 @@ import SceneGraph from './scenegraph/SceneGraph';
 import CameraToolbar from './viewport/CameraToolbar';
 import TransformToolbar from './viewport/TransformToolbar';
 import ViewportHUD from './viewport/ViewportHUD';
+import Swal from 'sweetalert2';
 import pkg from '../../package.json';
 
-THREE.ImageUtils.crossOrigin = '';
-
 export default class Main extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      entity: null,
-      inspectorEnabled: true,
-      isModalTexturesOpen: false,
-      sceneEl: AFRAME.scenes[0],
-      visible: {
-        scenegraph: true,
-        attributes: false // Set this to false
-      }
-    };
-
-    Events.on('togglesidebar', (event) => {
-      if (event.which === 'all') {
-        if (this.state.visible.scenegraph || this.state.visible.attributes) {
-          this.setState({
-            visible: {
-              scenegraph: false,
-              attributes: false
-            }
-          });
-        } else {
-          this.setState({
-            visible: {
-              scenegraph: true,
-              attributes: true
-            }
-          });
-        }
-      } else if (event.which === 'attributes') {
-        this.setState((prevState) => ({
-          visible: {
-            ...prevState.visible,
-            attributes: !prevState.visible.attributes
-          }
-        }));
-      } else if (event.which === 'scenegraph') {
-        this.setState((prevState) => ({
-          visible: {
-            ...prevState.visible,
-            scenegraph: !prevState.visible.scenegraph
-          }
-        }));
-      }
-    });
-  }
+  events = createEventScope();
+  state = {
+    entity: null,
+    inspectorEnabled: true,
+    isModalTexturesOpen: false,
+    isHelpOpen: false,
+    sceneEl: AFRAME.scenes[0],
+    visible: { scenegraph: true, attributes: false },
+    save: {},
+    restoring: false
+  };
 
   componentDidMount() {
-    Events.on('opentexturesmodal', this.handleOpenTexturesModal);
-    Events.on('entityselect', this.handleEntitySelect);
-    Events.on('inspectortoggle', this.handleInspectorToggle);
-    Events.on('openhelpmodal', this.handleOpenHelpModal);
-    Events.on('scenereload', this.handleSceneReload);
+    this.media = window.matchMedia('(max-width: 1000px)');
+    this.media.addEventListener('change', this.onResize);
+    this.events.on('togglesidebar', this.onToggleSidebar);
+    this.events.on('opentexturesmodal', (selectedTexture, textureOnClose) =>
+      this.setState({
+        selectedTexture,
+        textureOnClose,
+        isModalTexturesOpen: true
+      })
+    );
+    this.events.on('entityselect', (entity) =>
+      this.setState((state) => ({
+        entity,
+        visible: entity
+          ? {
+              scenegraph: this.media.matches ? false : state.visible.scenegraph,
+              attributes: true
+            }
+          : state.visible
+      }))
+    );
+    this.events.on('inspectortoggle', (inspectorEnabled) =>
+      this.setState({ inspectorEnabled })
+    );
+    this.events.on('openhelpmodal', () => this.setState({ isHelpOpen: true }));
+    this.events.on('scenereload', (sceneEl) =>
+      this.setState({ sceneEl, entity: null })
+    );
+    this.events.on('scenesavestate', (save) => this.setState({ save }));
+    this.events.on('scenerestore', this.restoreDraft);
+    this.setState({ save: AFRAME.INSPECTOR.persistence.getState() });
   }
 
   componentWillUnmount() {
-    Events.off('opentexturesmodal', this.handleOpenTexturesModal);
-    Events.off('entityselect', this.handleEntitySelect);
-    Events.off('inspectortoggle', this.handleInspectorToggle);
-    Events.off('openhelpmodal', this.handleOpenHelpModal);
-    Events.off('scenereload', this.handleSceneReload);
+    this.events.dispose();
+    this.media.removeEventListener('change', this.onResize);
   }
 
-  handleOpenTexturesModal = (selectedTexture, textureOnClose) => {
-    this.setState({
-      selectedTexture: selectedTexture,
-      isModalTexturesOpen: true,
-      textureOnClose: textureOnClose
+  onResize = () => {
+    if (this.media.matches) {
+      this.setState((state) => ({
+        visible: {
+          scenegraph: !state.entity && state.visible.scenegraph,
+          attributes: !!state.entity && state.visible.attributes
+        }
+      }));
+    }
+  };
+
+  onToggleSidebar = ({ which, show }) => {
+    this.setState((state) => {
+      if (which === 'all') {
+        const show = !state.visible.scenegraph && !state.visible.attributes;
+        return {
+          visible: {
+            scenegraph: show,
+            attributes: show && !this.media.matches && !!state.entity
+          }
+        };
+      }
+      const visible = {
+        ...state.visible,
+        [which]: show === undefined ? !state.visible[which] : show
+      };
+      if (this.media.matches && visible[which])
+        visible[which === 'scenegraph' ? 'attributes' : 'scenegraph'] = false;
+      return { visible };
     });
   };
 
-  handleEntitySelect = (entity) => {
-    // Set the selected entity and ensure the attributes sidebar is visible
-    this.setState({
-      entity: entity,
-      visible: { ...this.state.visible, attributes: true }
-    });
-  };
-
-  handleInspectorToggle = (enabled) => {
-    this.setState({ inspectorEnabled: enabled });
-  };
-
-  handleSceneReload = (newSceneEl) => {
-    this.setState({ entity: null, sceneEl: newSceneEl });
-  };
-
-  handleOpenHelpModal = () => {
-    this.setState({ isHelpOpen: true });
-  };
-
-  handleClose = () => {
-    Events.emit('togglesidebar', { which: 'attributes' });
-  };
-
-  onCloseHelpModal = (value) => {
-    this.setState({ isHelpOpen: false });
-  };
-
-  onModalTextureOnClose = (value) => {
-    this.setState({ isModalTexturesOpen: false });
-    if (this.state.textureOnClose) {
-      this.state.textureOnClose(value);
+  restoreDraft = async () => {
+    if (this.state.restoring || !this.state.save.hasDraft) return;
+    if (this.state.save.dirty) {
+      const result = await Swal.fire({
+        title: 'Restore saved draft?',
+        text: 'Your current unsaved changes will be replaced.',
+        showCancelButton: true,
+        confirmButtonText: 'Restore draft'
+      });
+      if (!result.isConfirmed) return;
+    }
+    this.setState({ restoring: true });
+    try {
+      await AFRAME.INSPECTOR.persistence.restoreDraft();
+    } finally {
+      this.setState({ restoring: false });
     }
   };
 
-  toggleEdit = () => {
-    if (this.state.inspectorEnabled) {
-      AFRAME.INSPECTOR.close();
-    } else {
-      AFRAME.INSPECTOR.open();
-    }
-  };
-
-  renderSceneGraphToggle() {
-    if (!this.state.inspectorEnabled || this.state.visible.scenegraph) {
-      return null;
-    }
-    return (
-      <div className="toggle-sidebar left">
-        <a
-          onClick={() => {
-            Events.emit('togglesidebar', { which: 'scenegraph' });
-          }}
-          title="Show scenegraph"
-        >
-          <AwesomeIcon icon={faPlus} />
-        </a>
-      </div>
-    );
-  }
+  toggleEdit = () => AFRAME.INSPECTOR.toggle();
 
   render() {
-    const scene = this.state.sceneEl;
-
+    const { visible, save, entity, inspectorEnabled } = this.state;
     return (
-      <div>
-        <a
+      <div className="editor-ui">
+        <button
+          type="button"
           id="previewSceneBtn"
           className="toggle-edit"
           onClick={this.toggleEdit}
+          aria-label={inspectorEnabled ? 'Preview scene' : 'Return to editor'}
+          title={inspectorEnabled ? 'Preview scene' : 'Return to editor'}
         >
           <AwesomeIcon icon={faVrCardboard} />
-        </a>
-
-        {this.renderSceneGraphToggle()}
-
+        </button>
+        {inspectorEnabled && !visible.scenegraph && (
+          <div className="toggle-sidebar left">
+            <button
+              type="button"
+              aria-label="Show scenegraph"
+              title="Show scenegraph"
+              onClick={() =>
+                this.onToggleSidebar({ which: 'scenegraph', show: true })
+              }
+            >
+              <AwesomeIcon icon={faPlus} />
+            </button>
+          </div>
+        )}
         <div
           id="inspectorContainer"
-          className={this.state.inspectorEnabled ? '' : 'hidden'}
+          className={inspectorEnabled ? '' : 'hidden'}
         >
-          <div id="leftPanel">
+          <div id="leftPanel" hidden={!visible.scenegraph}>
             <div className="scenegraph-menubar">
               <div id="scenegraph-menu-back">
                 <a
@@ -185,15 +167,14 @@ export default class Main extends React.Component {
                   <span>senangwebs-aframe-editor</span>
                 </a>
               </div>
-              <div id="scenegraph-panel-action"></div>
+              <div id="scenegraph-panel-action" />
             </div>
             <SceneGraph
-              scene={scene}
-              selectedEntity={this.state.entity}
-              visible={this.state.visible.scenegraph}
+              scene={this.state.sceneEl}
+              selectedEntity={entity}
+              visible={visible.scenegraph}
             />
           </div>
-
           <div id="viewportBar">
             <CameraToolbar />
             <TransformToolbar />
@@ -201,27 +182,38 @@ export default class Main extends React.Component {
               <ViewportHUD />
             </div>
           </div>
-
-          <div
-            id="rightPanel"
-            className={this.state.visible.attributes ? '' : 'hidden'}
-          >
+          <div id="rightPanel" hidden={!visible.attributes}>
             <div className="componentHeader title">
-              {/* <a>
-                <AwesomeIcon icon={faBars} />
-              </a> */}
-              <div id="entity-panel-action"></div>
-              <a onClick={this.handleClose}>
+              <div id="entity-panel-action" />
+              <button
+                type="button"
+                aria-label="Close properties"
+                title="Close properties"
+                onClick={() => this.onToggleSidebar({ which: 'attributes' })}
+              >
                 <AwesomeIcon icon={faTimes} />
-              </a>
+              </button>
             </div>
-            <ComponentsSidebar
-              entity={this.state.entity}
-              visible={this.state.visible.attributes} // This prop might become redundant depending on CSS, but leave for now
-            />
+            {entity ? (
+              <ComponentsSidebar entity={entity} visible={visible.attributes} />
+            ) : (
+              <p className="panel-hint">
+                Select an entity in the scene or scene tree to edit its
+                properties.
+              </p>
+            )}
           </div>
-
           <div id="actionBar">
+            <div className="save-feedback" aria-live="polite">
+              {(save.message || save.dirty) && (
+                <span role="status">{save.message || 'Unsaved changes'}</span>
+              )}
+              {save.error && (
+                <span role="alert" className="form-error">
+                  {save.error}
+                </span>
+              )}
+            </div>
             <div id="sw-info">
               <span>
                 <b>Senangwebs Webverse</b>
@@ -232,15 +224,20 @@ export default class Main extends React.Component {
             </div>
           </div>
         </div>
-
         <ModalHelp
           isOpen={this.state.isHelpOpen}
-          onClose={this.onCloseHelpModal}
+          onClose={() => this.setState({ isHelpOpen: false })}
         />
         <ModalTextures
           isOpen={this.state.isModalTexturesOpen}
           selectedTexture={this.state.selectedTexture}
-          onClose={this.onModalTextureOnClose}
+          onClose={(value) => {
+            const callback = this.state.textureOnClose;
+            this.setState(
+              { isModalTexturesOpen: false, textureOnClose: null },
+              () => callback?.(value)
+            );
+          }}
         />
       </div>
     );

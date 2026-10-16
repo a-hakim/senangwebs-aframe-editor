@@ -1,8 +1,14 @@
 import React from 'react';
 import EntityRepresentation from '../EntityRepresentation';
-import Events from '../../lib/Events';
+import { createEventScope } from '../../lib/Events';
 
 export default class ViewportHUD extends React.Component {
+  events = createEventScope();
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -12,12 +18,13 @@ export default class ViewportHUD extends React.Component {
   }
 
   componentDidMount() {
-    Events.on('raycastermouseenter', (el) => {
+    this.events.on('scenereload', () => this.setState({ hoveredEntity: null }));
+    this.events.on('raycastermouseenter', (el) => {
       this.setState({ hoveredEntity: el });
     });
 
-    Events.on('raycastermouseleave', (el) => {
-      this.setState({ hoveredEntity: el });
+    this.events.on('raycastermouseleave', () => {
+      this.setState({ hoveredEntity: null });
     });
   }
 

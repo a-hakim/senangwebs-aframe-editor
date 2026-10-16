@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 export default class BooleanWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string.isRequired,
     entity: PropTypes.object,
     name: PropTypes.string.isRequired,
@@ -34,11 +36,12 @@ export default class BooleanWidget extends React.Component {
   };
 
   render() {
-    var id = this.props.componentname + '.' + this.props.name;
+    var id = this.props.id || this.props.componentname + '.' + this.props.name;
 
     return (
       <input
         id={id}
+        aria-label={this.props.label || this.props.name}
         type="checkbox"
         checked={this.state.value}
         value={this.state.value}

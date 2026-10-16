@@ -4,6 +4,7 @@ import clsx from 'clsx';
 
 export default class Collapsible extends React.Component {
   static propTypes = {
+    label: PropTypes.string,
     className: PropTypes.string,
     collapsed: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.array, PropTypes.element])
@@ -24,7 +25,7 @@ export default class Collapsible extends React.Component {
 
   toggleVisibility = (event) => {
     // Don't collapse if we click on actions like clipboard
-    if (event.target.nodeName === 'A') return;
+    if (event.target.closest('button, a, input, select, textarea')) return;
     this.setState({ collapsed: !this.state.collapsed });
   };
 
@@ -47,7 +48,19 @@ export default class Collapsible extends React.Component {
     return (
       <div id={this.props.id} className={rootClasses}>
         <div className="static" onClick={this.toggleVisibility}>
-          <div className="collapse-button" />
+          <button
+            type="button"
+            className="collapse-toggle"
+            aria-label={
+              this.props.id === 'componentEntityHeader'
+                ? 'Toggle entity properties'
+                : 'Toggle ' + (this.props.label || 'component')
+            }
+            aria-expanded={!this.state.collapsed}
+            onClick={() => this.setState({ collapsed: !this.state.collapsed })}
+          >
+            <span className="collapse-button" aria-hidden="true" />
+          </button>
           {this.props.children[0]}
         </div>
         <div className={contentClasses}>{this.props.children[1]}</div>

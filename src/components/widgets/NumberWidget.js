@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 export default class NumberWidget extends React.Component {
   static propTypes = {
+    id: PropTypes.string,
+    label: PropTypes.string,
     componentname: PropTypes.string,
     entity: PropTypes.object,
     max: PropTypes.number,
@@ -19,161 +21,135 @@ export default class NumberWidget extends React.Component {
     max: Infinity,
     value: 0,
     precision: 3,
-    step: 1
+    step: 0.01
   };
+  state = { displayValue: this.format(this.props.value), error: '' };
+  input = React.createRef();
+  distance = 0;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: this.props.value,
-      displayValue:
-        typeof this.props.value === 'number'
-          ? this.props.value.toFixed(this.props.precision)
-          : ''
-    };
-    this.input = React.createRef();
+  format(value) {
+    return Number.isFinite(value) ? value.toFixed(this.props.precision) : '';
   }
 
-  componentDidMount() {
-    this.distance = 0;
-    this.onMouseDownValue = 0;
-    this.prevPointer = [0, 0];
-
-    this.setValue(this.props.value);
-    this.onBlur();
-  }
-
-  onMouseMove = (event) => {
-    const currentValue = parseFloat(this.state.value);
-    const pointer = [event.clientX, event.clientY];
-    const delta =
-      pointer[0] - this.prevPointer[0] - (pointer[1] - this.prevPointer[1]);
-    this.distance += delta;
-
-    // Add minimum tolerance to reduce unintentional drags when clicking on input.
-    // if (Math.abs(delta) <= 2) { return; }
-
-    let value =
-      this.onMouseDownValue +
-      ((this.distance / (event.shiftKey ? 5 : 50)) * this.props.step) / 2;
-    value = Math.min(this.props.max, Math.max(this.props.min, value));
-    if (currentValue !== value) {
-      this.setValue(value);
+  componentDidUpdate(prevProps) {
+    if (!Object.is(this.props.value, prevProps.value)) {
+      this.setState({ displayValue: this.format(this.props.value), error: '' });
     }
-    this.prevPointer = [event.clientX, event.clientY];
-  };
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mouseup', this.onMouseUp);
+  }
+
+  setValue(raw) {
+    let value =
+      typeof raw === 'number' ? raw : raw.trim() === '' ? NaN : Number(raw);
+    if (!Number.isFinite(value)) {
+      this.setState({ error: 'Enter a finite number.' });
+      return false;
+    }
+    if (this.props.precision === 0) value = Math.round(value);
+    value = Math.min(this.props.max, Math.max(this.props.min, value));
+    value = Number(value.toFixed(this.props.precision));
+    this.setState({ displayValue: this.format(value), error: '' });
+    if (!Object.is(value, this.props.value))
+      this.props.onChange?.(this.props.name, value);
+    return true;
+  }
 
   onMouseDown = (event) => {
+    if (event.button !== 0) return;
     event.preventDefault();
     this.distance = 0;
-    this.onMouseDownValue = this.state.value;
-    this.prevPointer = [event.clientX, event.clientY];
-    document.addEventListener('mousemove', this.onMouseMove, false);
-    document.addEventListener('mouseup', this.onMouseUp, false);
+    this.startValue = Number(this.props.value) || 0;
+    this.pointer = [event.clientX, event.clientY];
+    document.addEventListener('mousemove', this.onMouseMove);
+    document.addEventListener('mouseup', this.onMouseUp);
+  };
+
+  onMouseMove = (event) => {
+    this.distance +=
+      event.clientX - this.pointer[0] - (event.clientY - this.pointer[1]);
+    this.pointer = [event.clientX, event.clientY];
+    if (Math.abs(this.distance) < 2) return;
+    const step =
+      this.props.precision === 0
+        ? Math.max(1, this.props.step)
+        : this.props.step;
+    this.setValue(
+      this.startValue +
+        Math.trunc(this.distance / (event.shiftKey ? 1 : 5)) * step
+    );
   };
 
   onMouseUp = () => {
-    document.removeEventListener('mousemove', this.onMouseMove, false);
-    document.removeEventListener('mouseup', this.onMouseUp, false);
-
-    if (Math.abs(this.distance) < 2) {
+    document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mouseup', this.onMouseUp);
+    if (Math.abs(this.distance) < 2 && this.input.current) {
       this.input.current.focus();
       this.input.current.select();
     }
   };
 
-  setValue(value) {
-    if (value === this.state.value) return;
-
-    if (value !== undefined) {
-      if (this.props.precision === 0) {
-        value = parseInt(value);
-      } else {
-        value = parseFloat(value);
-      }
-
-      // If we inadvertently typed a character in the field, set value to the previous value from props
-      if (isNaN(value)) {
-        value = this.props.value;
-      }
-
-      if (value < this.props.min) {
-        value = this.props.min;
-      }
-      if (value > this.props.max) {
-        value = this.props.max;
-      }
-
-      this.setState({
-        value: value,
-        displayValue: value.toFixed(this.props.precision)
-      });
-
-      if (this.props.onChange) {
-        this.props.onChange(this.props.name, parseFloat(value.toFixed(5)));
-      }
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    // This will be triggered typically when the element is changed directly with
-    // element.setAttribute.
-
-    // We use Object.is instead of === for comparison here so that comparing two NaN doesn't trigger an infinite update.
-    // Object.is(NaN, NaN) is true, NaN === NaN is false
-    if (!Object.is(this.props.value, prevProps.value)) {
-      this.setState({
-        value: this.props.value,
-        displayValue: this.props.value.toFixed(this.props.precision)
-      });
-    }
-  }
-
-  onBlur = () => {
-    this.setValue(parseFloat(this.input.current.value));
-    this.setState({ class: '' });
-  };
-
-  onChange = (e) => {
-    this.setState({ value: e.target.value, displayValue: e.target.value });
-  };
-
   onKeyDown = (event) => {
-    event.stopPropagation();
-
-    // enter.
-    if (event.keyCode === 13) {
-      this.setValue(parseFloat(this.input.current.value));
-      this.input.current.blur();
-      return;
-    }
-
-    // up.
-    if (event.keyCode === 38) {
-      this.setValue(parseFloat(this.state.value) + 0.01);
-      return;
-    }
-
-    // down.
-    if (event.keyCode === 40) {
-      this.setValue(parseFloat(this.state.value) - 0.01);
-      return;
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.setValue(this.input.current.value)) this.input.current.blur();
+    } else if (event.key === 'Escape') {
+      event.stopPropagation();
+      this.setState({ displayValue: this.format(this.props.value), error: '' });
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      event.stopPropagation();
+      let step =
+        this.props.precision === 0
+          ? Math.max(1, this.props.step)
+          : this.props.step;
+      if (event.shiftKey) step *= 10;
+      if (event.altKey && this.props.precision !== 0)
+        step = Math.max(10 ** -this.props.precision, step / 10);
+      const current = Number(this.input.current.value);
+      this.setValue(
+        (Number.isFinite(current) ? current : this.props.value) +
+          (event.key === 'ArrowUp' ? step : -step)
+      );
     }
   };
 
   render() {
     return (
-      <input
-        ref={this.input}
-        className="number"
-        type="text"
-        value={this.state.displayValue}
-        onKeyDown={this.onKeyDown}
-        onChange={this.onChange}
-        onMouseDown={this.onMouseDown}
-        onFocus={this.onFocus}
-        onBlur={this.onBlur}
-      />
+      <>
+        <input
+          id={this.props.id}
+          aria-label={this.props.label || this.props.name}
+          ref={this.input}
+          className="number"
+          type="text"
+          inputMode="decimal"
+          value={this.state.displayValue}
+          aria-invalid={!!this.state.error}
+          aria-describedby={
+            this.state.error ? this.props.id + '-error' : undefined
+          }
+          onChange={(event) =>
+            this.setState({ displayValue: event.target.value, error: '' })
+          }
+          onKeyDown={this.onKeyDown}
+          onMouseDown={this.onMouseDown}
+          onBlur={() => this.setValue(this.input.current.value)}
+        />
+        {this.state.error && (
+          <span
+            id={this.props.id + '-error'}
+            className="field-error"
+            role="alert"
+          >
+            {this.state.error}
+          </span>
+        )}
+      </>
     );
   }
 }
