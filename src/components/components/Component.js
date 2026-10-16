@@ -6,6 +6,7 @@ import PropertyRow from './PropertyRow';
 import Collapsible from '../Collapsible';
 import Events, { createEventScope } from '../../lib/Events';
 import Swal from 'sweetalert2';
+import { record } from '../../lib/history';
 
 const isSingleProperty = AFRAME.schema.isSingleProperty;
 
@@ -68,10 +69,13 @@ export default class Component extends React.Component {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        this.props.entity.removeAttribute(componentName);
-        Events.emit('componentremove', {
-          entity: this.props.entity,
-          component: componentName
+        record('Remove component', () => {
+          if (!this.props.entity.isConnected) return;
+          this.props.entity.removeAttribute(componentName);
+          Events.emit('componentremove', {
+            entity: this.props.entity,
+            component: componentName
+          });
         });
       }
     });

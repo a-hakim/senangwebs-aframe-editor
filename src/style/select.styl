@@ -43,8 +43,11 @@
 .select__label
   font-size 14px
 
-.select__option--is-focused
-  background $bg
+.select__option--is-focused,
+.select__option--is-selected,
+.select__option:active
+  background $primary
+  color $bgdark
 
 .select__value-container
   height 32px

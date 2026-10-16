@@ -1,4 +1,5 @@
 import Events from './Events';
+import { record } from './history';
 
 export function insertNewAsset(
   type,
@@ -15,6 +16,8 @@ export function insertNewAsset(
     return;
   }
   const element = document.createElement('img');
+  const history = AFRAME.INSPECTOR?.history;
+  const generation = history?.generation;
   element.id = id;
   if (anonymousCrossOrigin) element.crossOrigin = 'anonymous';
   let timer;
@@ -33,17 +36,34 @@ export function insertNewAsset(
   };
   element.onload = () => {
     finish();
-    Events.emit('scenechanged');
-    onLoadedCallback?.(element);
+    if (
+      !scene.isConnected ||
+      history?.disposed ||
+      generation !== history?.generation
+    ) {
+      onErrorCallback?.(
+        new Error('The scene changed before the image loaded.')
+      );
+      return;
+    }
+    try {
+      record('Add texture asset', () => {
+        let assets = scene.querySelector('a-assets');
+        if (!assets) {
+          assets = document.createElement('a-assets');
+          scene.insertBefore(assets, scene.firstChild);
+        }
+        assets.appendChild(element);
+        onLoadedCallback?.(element);
+        Events.emit('scenechanged');
+      });
+    } catch (error) {
+      onErrorCallback?.(error);
+    }
   };
   element.onerror = fail;
   timer = setTimeout(fail, 15000);
-  let assets = scene.querySelector('a-assets');
-  if (!assets) {
-    assets = document.createElement('a-assets');
-    scene.insertBefore(assets, scene.firstChild);
-  }
-  assets.appendChild(element);
+  // Load off-scene: failures leave neither a history entry nor an empty a-assets.
   element.src = src;
   return element;
 }

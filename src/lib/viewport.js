@@ -4,6 +4,7 @@ import EditorControls from './EditorControls.js';
 
 import { initRaycaster } from './raycaster';
 import Events, { createEventScope } from './Events';
+import { updateEntity } from './entity';
 
 /**
  * Transform controls stuff mostly.
@@ -53,6 +54,7 @@ export function Viewport(inspector) {
     inspector.container
   );
   transformControls.size = 0.75;
+  let historyGroup;
   transformControls.addEventListener('objectChange', (evt) => {
     const object = transformControls.object;
     if (object === undefined) {
@@ -78,21 +80,22 @@ export function Viewport(inspector) {
 
     // We need to call setAttribute for component attrValue to be up to date,
     // so that entity.flushToDOM() works correctly when duplicating an entity.
-    transformControls.object.el.setAttribute(component, value);
-
-    Events.emit('entityupdate', {
-      component: component,
-      entity: transformControls.object.el,
-      property: '',
-      value: value
-    });
+    inspector.history.inGroup(historyGroup, () =>
+      updateEntity(object.el, component, '', value)
+    );
   });
 
   transformControls.addEventListener('mouseDown', () => {
+    historyGroup = inspector.history.beginGroup(
+      'Transform entity',
+      transformControls
+    );
     controls.enabled = false;
   });
 
   transformControls.addEventListener('mouseUp', () => {
+    inspector.history.endGroup(historyGroup);
+    historyGroup = null;
     controls.enabled = true;
   });
 
@@ -116,6 +119,8 @@ export function Viewport(inspector) {
   });
 
   function disableControls() {
+    inspector.history?.endGroup(historyGroup);
+    historyGroup = null;
     mouseCursor.disable();
     transformControls.dispose();
     controls.enabled = false;
@@ -268,6 +273,7 @@ export function Viewport(inspector) {
   this.dispose = () => {
     if (disposed) return;
     disposed = true;
+    inspector.history?.endGroup(historyGroup);
     events.dispose();
     cancelModelLoad();
     removers.splice(0).forEach((remove) => remove());
@@ -282,11 +288,12 @@ export function Viewport(inspector) {
       sceneHelpers.remove(object);
       object.traverse((node) => {
         if (node.geometry) geometries.add(node.geometry);
-        if (node.material)
+        if (node.material) {
           (Array.isArray(node.material)
             ? node.material
             : [node.material]
           ).forEach((material) => materials.add(material));
+        }
       });
     });
     geometries.forEach((geometry) => geometry.dispose());

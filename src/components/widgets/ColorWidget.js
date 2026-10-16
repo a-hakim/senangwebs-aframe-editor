@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { recordInput, finishInput } from '../../lib/history';
 
 export default class ColorWidget extends React.Component {
   static propTypes = {
@@ -36,8 +37,10 @@ export default class ColorWidget extends React.Component {
       pickerValue: pickerValue
     });
 
-    if (this.props.onChange) {
-      this.props.onChange(this.props.name, value);
+    if (this.props.onChange && value !== this.props.value) {
+      recordInput(this, 'Edit ' + this.props.componentname, () =>
+        this.props.onChange(this.props.name, value)
+      );
     }
   }
 
@@ -50,6 +53,10 @@ export default class ColorWidget extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    finishInput(this);
+  }
+
   getHexString(value) {
     return '#' + this.color.set(value).getHexString();
   }
@@ -60,12 +67,11 @@ export default class ColorWidget extends React.Component {
 
   onKeyUp = (e) => {
     e.stopPropagation();
-    // if (e.keyCode === 13)
-    this.setValue(e.target.value);
+    if (e.key === 'Enter') finishInput(this);
   };
 
   onChangeText = (e) => {
-    this.setState({ value: e.target.value });
+    this.setValue(e.target.value);
   };
 
   render() {
@@ -78,6 +84,7 @@ export default class ColorWidget extends React.Component {
           value={this.state.pickerValue}
           title={this.state.value}
           onChange={this.onChange}
+          onBlur={() => finishInput(this)}
         />
         <input
           type="text"
@@ -87,6 +94,7 @@ export default class ColorWidget extends React.Component {
           value={this.state.value}
           onKeyUp={this.onKeyUp}
           onChange={this.onChangeText}
+          onBlur={() => finishInput(this)}
         />
       </span>
     );

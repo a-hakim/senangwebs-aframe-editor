@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { recordInput, finishInput } from '../../lib/history';
 
 export default class NumberWidget extends React.Component {
   static propTypes = {
@@ -23,6 +24,7 @@ export default class NumberWidget extends React.Component {
     precision: 3,
     step: 0.01
   };
+
   state = { displayValue: this.format(this.props.value), error: '' };
   input = React.createRef();
   distance = 0;
@@ -38,6 +40,7 @@ export default class NumberWidget extends React.Component {
   }
 
   componentWillUnmount() {
+    finishInput(this);
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }
@@ -53,8 +56,13 @@ export default class NumberWidget extends React.Component {
     value = Math.min(this.props.max, Math.max(this.props.min, value));
     value = Number(value.toFixed(this.props.precision));
     this.setState({ displayValue: this.format(value), error: '' });
-    if (!Object.is(value, this.props.value))
-      this.props.onChange?.(this.props.name, value);
+    if (!Object.is(value, this.props.value)) {
+      recordInput(
+        this,
+        'Edit ' + (this.props.componentname || this.props.name),
+        () => this.props.onChange?.(this.props.name, value)
+      );
+    }
     return true;
   }
 
@@ -84,6 +92,7 @@ export default class NumberWidget extends React.Component {
   };
 
   onMouseUp = () => {
+    finishInput(this);
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     if (Math.abs(this.distance) < 2 && this.input.current) {
@@ -98,6 +107,7 @@ export default class NumberWidget extends React.Component {
       event.stopPropagation();
       if (this.setValue(this.input.current.value)) this.input.current.blur();
     } else if (event.key === 'Escape') {
+      finishInput(this);
       event.stopPropagation();
       this.setState({ displayValue: this.format(this.props.value), error: '' });
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
@@ -108,8 +118,9 @@ export default class NumberWidget extends React.Component {
           ? Math.max(1, this.props.step)
           : this.props.step;
       if (event.shiftKey) step *= 10;
-      if (event.altKey && this.props.precision !== 0)
+      if (event.altKey && this.props.precision !== 0) {
         step = Math.max(10 ** -this.props.precision, step / 10);
+      }
       const current = Number(this.input.current.value);
       this.setValue(
         (Number.isFinite(current) ? current : this.props.value) +
@@ -138,7 +149,10 @@ export default class NumberWidget extends React.Component {
           }
           onKeyDown={this.onKeyDown}
           onMouseDown={this.onMouseDown}
-          onBlur={() => this.setValue(this.input.current.value)}
+          onBlur={() => {
+            this.setValue(this.input.current.value);
+            finishInput(this);
+          }}
         />
         {this.state.error && (
           <span

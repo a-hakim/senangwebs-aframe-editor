@@ -13,7 +13,7 @@ export class EditorViewport {
       width: '100vw',
       height: '100vh',
       overflow: 'hidden',
-      zIndex: '2147483000'
+      zIndex: '0'
     });
     // A host may zoom its body; the editor uses viewport coordinates.
     const zoom = [document.body, document.documentElement].reduce(

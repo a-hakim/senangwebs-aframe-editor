@@ -1,9 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import Events from '../../lib/Events';
+import { createEventScope } from '../../lib/Events';
+import { updateEntity } from '../../lib/entity';
 
 export default class Mixin extends React.Component {
+  events = createEventScope();
+
+  componentDidMount() {
+    this.events.on('historyreplayed', () =>
+      this.setState({ mixins: this.getMixinValue() })
+    );
+  }
+
+  componentWillUnmount() {
+    this.events.dispose();
+  }
+
   static propTypes = {
     entity: PropTypes.object.isRequired
   };
@@ -48,14 +61,7 @@ export default class Mixin extends React.Component {
 
     this.setState({ mixins: value });
     const mixinStr = value.map((v) => v.value).join(' ');
-    entity.setAttribute('mixin', mixinStr);
-
-    Events.emit('entityupdate', {
-      component: 'mixin',
-      entity: entity,
-      property: '',
-      value: mixinStr
-    });
+    updateEntity(entity, 'mixin', '', mixinStr);
   };
 
   render() {

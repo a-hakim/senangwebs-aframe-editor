@@ -19,7 +19,7 @@ body.aframe-inspector-opened
   // Keep editor controls separate from host-page styling and layout.
   position fixed
   inset 0
-  z-index 2147483001
+  z-index 10
   pointer-events none
 
   @import './scenegraph';
@@ -114,7 +114,6 @@ body.aframe-inspector-opened
     appearance none
     background $bgdark
     border 1px solid $grayalt
-    border-radius 6px
     color #eee
     cursor pointer
     font inherit
@@ -269,6 +268,7 @@ body.aframe-inspector-opened
 
   input[type="checkbox"]
     appearance auto
+    accent-color $primary
     cursor pointer
     margin 0
     height 18px
@@ -497,7 +497,7 @@ body.aframe-inspector-opened
 
 .swal2-container
   background-color rgba(0, 0, 0, 0) !important
-  z-index 2147483002 !important
+  z-index 10 !important
 
   .swal2-popup
     background #18181B !important
@@ -520,11 +520,11 @@ body.aframe-inspector-opened
   .swal2-icon
     margin-top 0 !important
     border-width 3px !important
-    
+
     &.swal2-warning
       border-color #f8bb86 !important
       color #f8bb86 !important
-      
+
       .swal2-icon-content
         font-size 60px !important
 
@@ -544,7 +544,7 @@ body.aframe-inspector-opened
     font-size 16px !important
     margin 0 !important
     transition all 0.2s ease
-    
+
     &:focus
       box-shadow none !important
 
@@ -564,7 +564,7 @@ body.aframe-inspector-opened
     box-shadow none !important
     height 48px !important
     margin 1rem auto !important
-    
+
     &:focus
       border-color $primary !important
       box-shadow none !important

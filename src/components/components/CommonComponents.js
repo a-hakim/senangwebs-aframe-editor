@@ -9,14 +9,17 @@ import { updateEntity } from '../../lib/entity';
 import EntityRepresentation from '../EntityRepresentation';
 import Events, { createEventScope } from '../../lib/Events';
 import { saveBlob } from '../../lib/utils';
+import { record } from '../../lib/history';
 
 // @todo Take this out and use updateEntity?
 function changeId(componentName, value) {
-  var entity = AFRAME.INSPECTOR.selectedEntity;
-  if (entity.id !== value) {
-    entity.id = value;
-    Events.emit('entityidchange', entity);
-  }
+  return record('Change entity ID', () => {
+    var entity = AFRAME.INSPECTOR.selectedEntity;
+    if (entity.id !== value) {
+      entity.id = value;
+      Events.emit('entityidchange', entity);
+    }
+  });
 }
 
 export default class CommonComponents extends React.Component {
@@ -31,6 +34,7 @@ export default class CommonComponents extends React.Component {
   };
 
   componentDidMount() {
+    this.events.on('entityidchange', () => this.forceUpdate());
     this.events.on('entityupdate', (detail) => {
       if (detail.entity !== this.props.entity) {
         return;

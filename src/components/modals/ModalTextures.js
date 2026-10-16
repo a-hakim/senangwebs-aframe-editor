@@ -31,7 +31,7 @@ const emptyPreview = () => ({
 });
 
 function ImageItem({ image, onClick, isSelected }) {
-  const src = image.type === 'registry' ? image.thumbnail : image.src;
+  const src = image.thumbnail || image.src;
   return (
     <button
       type="button"

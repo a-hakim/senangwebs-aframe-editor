@@ -6,6 +6,7 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import Toolbar from './Toolbar';
 import Events, { createEventScope } from '../../lib/Events';
+import { record, whenLoaded } from '../../lib/history';
 
 const ROW_HEIGHT = 40;
 const OVERSCAN = 5;
@@ -17,6 +18,7 @@ export default class SceneGraph extends React.Component {
     selectedEntity: PropTypes.object,
     visible: PropTypes.bool
   };
+
   state = {
     entities: [],
     expandedElements: new WeakMap(),
@@ -24,6 +26,7 @@ export default class SceneGraph extends React.Component {
     scrollTop: 0,
     height: 600
   };
+
   events = createEventScope();
   outliner = React.createRef();
   rowIds = new WeakMap();
@@ -38,8 +41,9 @@ export default class SceneGraph extends React.Component {
       this.events.on(name, this.rebuildEntityOptions)
     );
     this.events.on('entityupdate', (detail) => {
-      if (detail.component === 'mixin' || detail.component === 'scenegraph')
+      if (detail.component === 'mixin' || detail.component === 'scenegraph') {
         this.rebuildEntityOptions();
+      }
     });
     this.bindScene(this.props.scene);
     this.observeSize();
@@ -68,8 +72,9 @@ export default class SceneGraph extends React.Component {
     if (
       prevProps.selectedEntity !== this.props.selectedEntity &&
       this.props.selectedEntity
-    )
+    ) {
       this.revealSelection();
+    }
     if (prevProps.visible !== this.props.visible) this.observeSize();
   }
 
@@ -92,8 +97,9 @@ export default class SceneGraph extends React.Component {
   }
 
   onChildChange = (event) => {
-    if (!event.detail.el?.closest?.('[data-aframe-inspector]'))
+    if (!event.detail.el?.closest?.('[data-aframe-inspector]')) {
       this.batchChanges();
+    }
   };
 
   rebuildEntityOptions = () => {
@@ -124,8 +130,9 @@ export default class SceneGraph extends React.Component {
           [entity.id, entity.tagName, entity.className].some((text) =>
             String(text).toLowerCase().includes(filter.toLowerCase())
           )
-        )
+        ) {
           return true;
+        }
         try {
           return entity.matches(filter);
         } catch (error) {
@@ -141,8 +148,9 @@ export default class SceneGraph extends React.Component {
     });
 
   rowId = (entity) => {
-    if (!this.rowIds.has(entity))
+    if (!this.rowIds.has(entity)) {
       this.rowIds.set(entity, 'scene-tree-item-' + ++nextTreeId);
+    }
     return this.rowIds.get(entity);
   };
 
@@ -169,8 +177,9 @@ export default class SceneGraph extends React.Component {
       if (index < 0 || !element) return;
       const top = index * ROW_HEIGHT;
       if (top < element.scrollTop) element.scrollTop = top;
-      else if (top + ROW_HEIGHT > element.scrollTop + element.clientHeight)
+      else if (top + ROW_HEIGHT > element.scrollTop + element.clientHeight) {
         element.scrollTop = top + ROW_HEIGHT - element.clientHeight;
+      }
       this.setState({ scrollTop: element.scrollTop });
     });
   };
@@ -210,21 +219,22 @@ export default class SceneGraph extends React.Component {
           selected &&
           !this.state.filter &&
           !this.state.expandedElements.get(selected)
-        )
+        ) {
           this.toggleExpandedCollapsed(selected);
-        else next = Math.min(rows.length - 1, index + 1);
+        } else next = Math.min(rows.length - 1, index + 1);
         break;
       case 'ArrowLeft':
         if (
           selected &&
           !this.state.filter &&
           this.state.expandedElements.get(selected)
-        )
+        ) {
           this.toggleExpandedCollapsed(selected);
-        else
+        } else {
           next = rows.findIndex(
             ({ entity }) => entity === selected?.parentElement
           );
+        }
         break;
       case 'Enter':
       case ' ':
@@ -254,51 +264,52 @@ export default class SceneGraph extends React.Component {
       : 'inside';
     const parent = place === 'inside' ? target : target.parentElement;
     if (!parent?.object3D) return;
-    original.object3D.updateWorldMatrix(true, false);
-    parent.object3D.updateWorldMatrix(true, false);
-    const matrix = new THREE.Matrix4()
-      .copy(parent.object3D.matrixWorld)
-      .invert()
-      .multiply(original.object3D.matrixWorld);
-    const position = new THREE.Vector3();
-    const quaternion = new THREE.Quaternion();
-    const scale = new THREE.Vector3();
-    matrix.decompose(position, quaternion, scale);
-    // Serialize every descendant before cloning so component edits survive reparenting.
-    [original, ...original.querySelectorAll('*')].forEach((node) =>
-      node.flushToDOM?.()
-    );
-    const clone = original.cloneNode(true);
-    const rotation = new THREE.Euler().setFromQuaternion(quaternion);
-    clone.setAttribute('position', position.toArray().join(' '));
-    clone.setAttribute(
-      'rotation',
-      [rotation.x, rotation.y, rotation.z]
-        .map(THREE.MathUtils.radToDeg)
-        .join(' ')
-    );
-    clone.setAttribute('scale', scale.toArray().join(' '));
-    clone.addEventListener(
-      'loaded',
-      () => {
+    return record('Move entity', () => {
+      original.object3D.updateWorldMatrix(true, false);
+      parent.object3D.updateWorldMatrix(true, false);
+      const matrix = new THREE.Matrix4()
+        .copy(parent.object3D.matrixWorld)
+        .invert()
+        .multiply(original.object3D.matrixWorld);
+      const position = new THREE.Vector3();
+      const quaternion = new THREE.Quaternion();
+      const scale = new THREE.Vector3();
+      matrix.decompose(position, quaternion, scale);
+      // Serialize every descendant before cloning so component edits survive reparenting.
+      [original, ...original.querySelectorAll('*')].forEach((node) =>
+        node.flushToDOM?.()
+      );
+      const clone = original.cloneNode(true);
+      const rotation = new THREE.Euler().setFromQuaternion(quaternion);
+      clone.setAttribute('position', position.toArray().join(' '));
+      clone.setAttribute(
+        'rotation',
+        [rotation.x, rotation.y, rotation.z]
+          .map(THREE.MathUtils.radToDeg)
+          .join(' ')
+      );
+      clone.setAttribute('scale', scale.toArray().join(' '));
+      whenLoaded(clone, () => {
         this.selectEntity(clone);
         Events.emit('entitycreated', clone);
-      },
-      { once: true }
-    );
-    try {
-      if (place === 'inside') parent.appendChild(clone);
-      else
-        parent.insertBefore(
-          clone,
-          place === 'before' ? target : target.nextSibling
-        );
-      original.remove();
-      Events.emit('scenechanged');
-      this.rebuildEntityOptions();
-    } catch (error) {
-      clone.remove();
-    }
+      });
+      try {
+        if (place === 'inside') parent.appendChild(clone);
+        else {
+          parent.insertBefore(
+            clone,
+            place === 'before' ? target : target.nextSibling
+          );
+        }
+        original.remove();
+        AFRAME.INSPECTOR.history.transfer(original, clone);
+        Events.emit('scenechanged');
+        this.rebuildEntityOptions();
+      } catch (error) {
+        clone.remove();
+        throw error;
+      }
+    });
   };
 
   render() {
@@ -344,8 +355,9 @@ export default class SceneGraph extends React.Component {
                 type="button"
                 aria-label="Clear scene search"
                 onClick={() => {
-                  if (this.outliner.current)
+                  if (this.outliner.current) {
                     this.outliner.current.scrollTop = 0;
+                  }
                   this.setState({ filter: '', scrollTop: 0 });
                 }}
               >

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { recordInput, finishInput } from '../../lib/history';
 
 export default class InputWidget extends React.Component {
   static propTypes = {
@@ -21,7 +22,11 @@ export default class InputWidget extends React.Component {
     var value = e.target.value;
     this.setState({ value: value });
     if (this.props.onChange) {
-      this.props.onChange(this.props.name, value);
+      recordInput(
+        this,
+        'Edit ' + (this.props.componentname || this.props.name),
+        () => this.props.onChange(this.props.name, value)
+      );
     }
   };
 
@@ -29,6 +34,10 @@ export default class InputWidget extends React.Component {
     if (this.props.value !== prevProps.value) {
       this.setState({ value: this.props.value });
     }
+  }
+
+  componentWillUnmount() {
+    finishInput(this);
   }
 
   render() {
@@ -40,6 +49,10 @@ export default class InputWidget extends React.Component {
         className="string"
         value={this.state.value || ''}
         onChange={this.onChange}
+        onBlur={() => finishInput(this)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') finishInput(this);
+        }}
       />
     );
   }

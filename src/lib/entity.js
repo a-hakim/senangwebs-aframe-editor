@@ -1,6 +1,7 @@
 import Events from './Events';
 import { equal } from './utils';
 import Swal from 'sweetalert2';
+import { record, whenLoaded } from './history';
 
 /**
  * Update a component.
@@ -11,25 +12,27 @@ import Swal from 'sweetalert2';
  * @param {string|number|object} value - New value.
  */
 export function updateEntity(entity, component, property, value) {
-  if (property) {
-    if (value === null || value === undefined) {
-      // Remove property.
-      entity.removeAttribute(component, property);
+  return record('Edit ' + component, () => {
+    if (property) {
+      if (value === null || value === undefined) {
+        // Remove property.
+        entity.removeAttribute(component, property);
+      } else {
+        // Set property.
+        entity.setAttribute(component, property, value);
+      }
     } else {
-      // Set property.
-      entity.setAttribute(component, property, value);
+      if (value === null || value === undefined) {
+        // Remove component.
+        entity.removeAttribute(component);
+      } else {
+        // Set component.
+        entity.setAttribute(component, value);
+      }
     }
-  } else {
-    if (value === null || value === undefined) {
-      // Remove component.
-      entity.removeAttribute(component);
-    } else {
-      // Set component.
-      entity.setAttribute(component, value);
-    }
-  }
 
-  Events.emit('entityupdate', { entity, component, property, value });
+    Events.emit('entityupdate', { entity, component, property, value });
+  });
 }
 
 /**
@@ -40,11 +43,13 @@ export function updateEntity(entity, component, property, value) {
  */
 export function removeEntity(entity, force) {
   if (entity) {
-    const performRemove = () => {
-      var closest = findClosestEntity(entity);
-      entity.parentNode.removeChild(entity);
-      AFRAME.INSPECTOR.selectEntity(closest);
-    };
+    const performRemove = () =>
+      record('Delete entity', () => {
+        if (!entity.parentNode || entity === AFRAME.INSPECTOR.sceneEl) return;
+        var closest = findClosestEntity(entity);
+        entity.parentNode.removeChild(entity);
+        AFRAME.INSPECTOR.selectEntity(closest);
+      });
 
     if (force === true) {
       performRemove();
@@ -127,23 +132,22 @@ function insertAfter(newNode, referenceNode) {
  */
 export function cloneEntity(entity) {
   if (!entity) return;
-  entity.flushToDOM();
+  return record('Duplicate entity', () => {
+    entity.flushToDOM();
 
-  const clone = prepareForSerialization(entity);
-  clone.addEventListener(
-    'loaded',
-    function () {
+    const clone = prepareForSerialization(entity);
+    whenLoaded(clone, () => {
       AFRAME.INSPECTOR.selectEntity(clone);
       Events.emit('entityclone', clone);
-    },
-    { once: true }
-  );
+    });
 
-  // Get a valid unique ID for the entity
-  if (entity.id) {
-    clone.id = getUniqueId(entity.id);
-  }
-  insertAfter(clone, entity);
+    // Get a valid unique ID for the entity
+    if (entity.id) {
+      clone.id = getUniqueId(entity.id);
+    }
+    insertAfter(clone, entity);
+    return clone;
+  });
 }
 
 /**
@@ -378,7 +382,7 @@ function getFromAttribute(component, propertyName, source) {
  */
 function getMixedValue(component, propertyName, source) {
   var value;
-  var reversedMixins = source.mixinEls.reverse();
+  var reversedMixins = source.mixinEls.slice().reverse();
   for (var i = 0; value === undefined && i < reversedMixins.length; i++) {
     var mixin = reversedMixins[i];
     /* eslint-disable-next-line no-prototype-builtins */
@@ -542,31 +546,29 @@ export function getComponentClipboardRepresentation(entity, componentName) {
  * @return {Element} Entity created
  */
 export function createEntity(definition, cb) {
-  const entity = document.createElement(definition.element || 'a-entity');
-  if (definition.id) {
-    entity.id = definition.id;
-  }
+  return record('Create entity', () => {
+    const entity = document.createElement(definition.element || 'a-entity');
+    if (definition.id) {
+      entity.id = definition.id;
+    }
 
-  if (definition.class) {
-    entity.setAttribute('class', definition.class);
-  }
+    if (definition.class) {
+      entity.setAttribute('class', definition.class);
+    }
 
-  // load default attributes
-  for (let attr in definition.components) {
-    entity.setAttribute(attr, definition.components[attr]);
-  }
+    // load default attributes
+    for (let attr in definition.components) {
+      entity.setAttribute(attr, definition.components[attr]);
+    }
 
-  // Ensure the components are loaded before update the UI
-  entity.addEventListener(
-    'loaded',
-    () => {
+    // Ensure the components are loaded before update the UI
+    whenLoaded(entity, () => {
       Events.emit('entitycreated', entity);
-      cb(entity);
-    },
-    { once: true }
-  );
+      cb?.(entity);
+    });
 
-  AFRAME.scenes[0].appendChild(entity);
+    AFRAME.scenes[0].appendChild(entity);
 
-  return entity;
+    return entity;
+  });
 }

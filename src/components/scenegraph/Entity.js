@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { AwesomeIcon } from '../AwesomeIcon';
 import clsx from 'clsx';
-import { removeEntity, cloneEntity } from '../../lib/entity';
+import { removeEntity, cloneEntity, updateEntity } from '../../lib/entity';
 import EntityRepresentation from '../EntityRepresentation';
 import Events from '../../lib/Events';
 
@@ -45,13 +45,7 @@ export default class Entity extends React.Component {
       entity.tagName.toLowerCase() === 'a-scene'
         ? entity.object3D.visible
         : entity.getAttribute('visible');
-    entity.setAttribute('visible', !visible);
-    Events.emit('entityupdate', {
-      entity,
-      component: 'visible',
-      property: '',
-      value: !visible
-    });
+    updateEntity(entity, 'visible', '', !visible);
     this.forceUpdate();
   };
 

@@ -46,7 +46,7 @@ const PRIMITIVES = [
   },
   {
     type: 'a-entity',
-    label: 'Empty Entity',
+    label: 'Empty',
     icon: PrimitiveIcon.EMPTY
   }
 ];

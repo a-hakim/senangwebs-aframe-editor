@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Events from '../../lib/Events';
 import { insertNewAsset } from '../../lib/assetsUtils';
+import { recordInput, finishInput } from '../../lib/history';
 
 function normalize(value) {
   if (value instanceof HTMLImageElement || value instanceof HTMLVideoElement) {
@@ -47,6 +48,7 @@ export default class TextureWidget extends React.Component {
   }
 
   componentWillUnmount() {
+    finishInput(this);
     this.previewVersion++;
     this.cancelImage?.();
   }
@@ -82,13 +84,15 @@ export default class TextureWidget extends React.Component {
           canvas.width / image.naturalWidth,
           canvas.height / image.naturalHeight
         );
+        const width = image.naturalWidth * ratio;
+        const height = image.naturalHeight * ratio;
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(
           image,
-          0,
-          0,
-          image.naturalWidth * ratio,
-          image.naturalHeight * ratio
+          (canvas.width - width) / 2,
+          (canvas.height - height) / 2,
+          width,
+          height
         );
       }
       clear();
@@ -139,7 +143,15 @@ export default class TextureWidget extends React.Component {
           className="map_value string"
           type="text"
           value={this.state.value}
-          onChange={(event) => this.changeValue(event.target.value)}
+          onChange={(event) =>
+            recordInput(this, 'Edit texture', () =>
+              this.changeValue(event.target.value)
+            )
+          }
+          onBlur={() => finishInput(this)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') finishInput(this);
+          }}
         />
         <button
           type="button"
@@ -148,7 +160,7 @@ export default class TextureWidget extends React.Component {
           aria-label={`Choose ${label} texture`}
           title="Choose texture"
         >
-          <canvas ref={this.canvas} width="32" height="16" aria-hidden="true" />
+          <canvas ref={this.canvas} width="32" height="32" aria-hidden="true" />
         </button>
       </span>
     );

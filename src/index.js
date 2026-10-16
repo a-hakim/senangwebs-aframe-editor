@@ -10,6 +10,7 @@ import { initCameras } from './lib/cameras';
 import { createEntity } from './lib/entity';
 import { ScenePersistence } from './lib/persistence';
 import { EditorViewport } from './lib/editorViewport';
+import { History } from './lib/history';
 
 import './style/index.styl';
 
@@ -48,7 +49,6 @@ function Inspector() {
           })
     }
   };
-  this.history = require('./lib/history');
   this.isFirstOpen = true;
   this.modules = {};
   this.opened = false;
@@ -75,6 +75,28 @@ function Inspector() {
 }
 
 Inspector.prototype = {
+  undo: function () {
+    return this.history.undo();
+  },
+  redo: function () {
+    return this.history.redo();
+  },
+  canUndo: function () {
+    return this.history?.canUndo() || false;
+  },
+  canRedo: function () {
+    return this.history?.canRedo() || false;
+  },
+  transaction: function (label, callback) {
+    return this.history.transaction(label, callback);
+  },
+  clearHistory: function () {
+    return this.history.clear();
+  },
+  getHistoryState: function () {
+    return this.history.getState();
+  },
+
   init: function () {
     // Wait for camera.
     if (!this.sceneEl.camera) {
@@ -126,6 +148,7 @@ Inspector.prototype = {
 
     this.scene.add(this.sceneHelpers);
     this.persistence = new ScenePersistence(this);
+    this.history = new History(this);
     this.open();
   },
 
@@ -239,8 +262,9 @@ Inspector.prototype = {
       if (
         entity?.object3D &&
         (event.target === this.sceneEl || event.target.sceneEl === this.sceneEl)
-      )
+      ) {
         this.removeObject(entity.object3D);
+      }
     };
     document.addEventListener('child-detached', this.onChildDetached);
   },
@@ -292,8 +316,9 @@ Inspector.prototype = {
       this.sceneEl.setAttribute('aframe-inspector-removed-embedded');
     }
 
-    if (!this.editorViewport)
+    if (!this.editorViewport) {
       this.editorViewport = new EditorViewport(this.sceneEl);
+    }
     document.body.classList.add('aframe-inspector-opened');
     this.sceneEl.resize();
     this.sceneEl.pause();
@@ -327,6 +352,7 @@ Inspector.prototype = {
    * Call this after programmatically modifying the scene DOM.
    */
   reload: async function () {
+    this.history?.reset();
     this.cancelReload?.();
     this.selectEntity(null);
     this.editorViewport?.dispose();
@@ -370,6 +396,7 @@ Inspector.prototype = {
       if (node.userData.source !== 'INSPECTOR') this.addHelper(node);
     });
     this.persistence?.bindScene(ready);
+    this.history?.reset();
     Events.emit('scenereload', ready);
     Events.emit('entitycreated');
     this.open();
@@ -377,6 +404,7 @@ Inspector.prototype = {
   },
 
   destroy: function () {
+    this.history?.dispose();
     this.cancelReload?.();
     if (this.opened) this.close();
     this.viewport?.dispose();
@@ -398,6 +426,7 @@ Inspector.prototype = {
    * @return {[type]} [description]
    */
   close: function () {
+    this.history?.endGroup();
     this.opened = false;
     Events.emit('inspectortoggle', false);
 

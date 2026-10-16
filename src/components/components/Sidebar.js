@@ -15,11 +15,13 @@ export default class Sidebar extends React.Component {
   }
 
   componentDidMount() {
+    Events.on('historyreplayed', this.handleComponentChange);
     Events.on('componentremove', this.handleComponentChange);
     Events.on('componentadd', this.handleComponentChange);
   }
 
   componentWillUnmount() {
+    Events.off('historyreplayed', this.handleComponentChange);
     Events.off('componentremove', this.handleComponentChange);
     Events.off('componentadd', this.handleComponentChange);
   }

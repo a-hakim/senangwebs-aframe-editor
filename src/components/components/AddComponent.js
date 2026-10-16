@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Events from '../../lib/Events';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
+import { record } from '../../lib/history';
 
 export default class AddComponent extends React.Component {
   static propTypes = {
@@ -41,8 +42,11 @@ export default class AddComponent extends React.Component {
   };
 
   applyComponent(entity, componentName) {
-    entity.setAttribute(componentName, '');
-    Events.emit('componentadd', { entity: entity, component: componentName });
+    return record('Add component', () => {
+      if (!entity.isConnected) return;
+      entity.setAttribute(componentName, '');
+      Events.emit('componentadd', { entity: entity, component: componentName });
+    });
   }
 
   /**
